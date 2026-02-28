@@ -32,11 +32,11 @@ export function Testimonials() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section className="py-24 md:py-32 lg:py-40 bg-slate-50" ref={ref}>
+    <section className="relative z-10 py-24 md:py-32 lg:py-40 bg-slate-50/80" ref={ref}>
       <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
         {/* Section Header */}
         <div className="text-center mb-16 md:mb-20">
-          <p className="text-sm uppercase tracking-[0.2em] text-violet-600 font-medium">
+          <p className="text-sm uppercase tracking-[0.2em] text-teal-600 font-medium">
             Results
           </p>
           <h2 className="font-serif text-4xl md:text-5xl font-bold tracking-tighter text-slate-900 mt-4">
@@ -60,7 +60,7 @@ export function Testimonials() {
             >
               {/* Decorative Quote */}
               <span
-                className="absolute -top-4 left-8 text-8xl text-violet-200 font-serif leading-none select-none"
+                className="absolute -top-4 left-8 text-8xl text-teal-200 font-serif leading-none select-none"
                 aria-hidden="true"
               >
                 &ldquo;

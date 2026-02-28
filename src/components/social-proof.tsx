@@ -56,7 +56,7 @@ export function SocialProof() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section className="bg-slate-50 py-16 md:py-20" ref={ref}>
+    <section className="relative z-10 bg-slate-50/80 py-16 md:py-20" ref={ref}>
       <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
           {stats.map((stat, i) => (

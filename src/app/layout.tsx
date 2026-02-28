@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { AuraBackground } from "@/components/aura-background";
 
 export const metadata: Metadata = {
   title: "Hannah White | Elite Career Strategist",
@@ -30,7 +31,8 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-white text-slate-900 font-sans antialiased">
         <Navbar />
-        <main>{children}</main>
+        <AuraBackground />
+        <main className="relative">{children}</main>
         <Footer />
       </body>
     </html>

@@ -19,7 +19,7 @@ interface ButtonProps {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-violet-600 hover:bg-violet-700 text-white shadow-clay hover:shadow-clay-hover",
+    "bg-teal-500 hover:bg-teal-600 text-white shadow-glow hover:shadow-glow-lg",
   secondary:
     "border border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50",
   ghost: "text-slate-600 hover:text-slate-900 hover:bg-slate-50",
@@ -42,21 +42,27 @@ export function Button({
   type = "button",
 }: ButtonProps) {
   const classes = cn(
-    "inline-flex items-center justify-center rounded-full font-medium transition-colors duration-200 min-h-[44px] min-w-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2",
+    "inline-flex items-center justify-center rounded-full font-medium transition-all duration-300 min-h-[44px] min-w-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2",
     variantStyles[variant],
     sizeStyles[size],
     disabled && "opacity-50 cursor-not-allowed",
     className
   );
 
+  const springTransition = {
+    type: "spring" as const,
+    stiffness: 300,
+    damping: 20,
+  };
+
   if (href) {
     return (
       <motion.a
         href={href}
         className={classes}
-        whileHover={{ scale: 1.03 }}
+        whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        transition={springTransition}
       >
         {children}
       </motion.a>
@@ -66,9 +72,9 @@ export function Button({
   return (
     <motion.button
       className={classes}
-      whileHover={disabled ? undefined : { scale: 1.03 }}
+      whileHover={disabled ? undefined : { scale: 1.02 }}
       whileTap={disabled ? undefined : { scale: 0.98 }}
-      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+      transition={springTransition}
       onClick={onClick}
       disabled={disabled}
       type={type}

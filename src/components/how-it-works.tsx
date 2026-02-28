@@ -29,11 +29,11 @@ export function HowItWorks() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section className="py-24 md:py-32 lg:py-40 bg-white" ref={ref}>
+    <section className="relative z-10 py-24 md:py-32 lg:py-40 bg-white" ref={ref}>
       <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
         {/* Section Header */}
         <div className="text-center mb-16 md:mb-20">
-          <p className="text-sm uppercase tracking-[0.2em] text-violet-600 font-medium">
+          <p className="text-sm uppercase tracking-[0.2em] text-teal-600 font-medium">
             The Process
           </p>
           <h2 className="font-serif text-4xl md:text-5xl font-bold tracking-tighter text-slate-900 mt-4">

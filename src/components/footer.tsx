@@ -1,6 +1,6 @@
 export function Footer() {
   return (
-    <footer className="border-t border-slate-100">
+    <footer className="relative z-10 border-t border-slate-100 bg-white">
       <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24 py-24 md:py-32">
         <div className="flex flex-col items-center text-center">
           {/* Brand */}
@@ -32,7 +32,7 @@ export function Footer() {
           <div className="flex gap-6 mt-10">
             <a
               href="#"
-              className="text-slate-400 hover:text-slate-600 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="text-slate-400 hover:text-teal-600 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="LinkedIn"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -41,7 +41,7 @@ export function Footer() {
             </a>
             <a
               href="#"
-              className="text-slate-400 hover:text-slate-600 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="text-slate-400 hover:text-teal-600 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="X (Twitter)"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
