@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 type BadgeVariant = "elite" | "rising" | "needs-architecting" | "default";
 
 const variantStyles: Record<BadgeVariant, string> = {
-  elite: "bg-violet-100 text-violet-700 border-violet-200",
+  elite: "bg-teal-100 text-teal-700 border-teal-200",
   rising: "bg-amber-50 text-amber-700 border-amber-200",
   "needs-architecting": "bg-slate-100 text-slate-600 border-slate-200",
   default: "bg-slate-100 text-slate-600 border-slate-200",

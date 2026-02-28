@@ -54,11 +54,11 @@ export function ServicesPreview() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="services" className="py-24 md:py-32 lg:py-40 bg-slate-50" ref={ref}>
+    <section id="services" className="relative z-10 py-24 md:py-32 lg:py-40 bg-slate-50/80" ref={ref}>
       <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
         {/* Section Header */}
         <div className="text-center mb-16 md:mb-20">
-          <p className="text-sm uppercase tracking-[0.2em] text-violet-600 font-medium">
+          <p className="text-sm uppercase tracking-[0.2em] text-teal-600 font-medium">
             Investment
           </p>
           <h2 className="font-serif text-4xl md:text-5xl font-bold tracking-tighter text-slate-900 mt-4">
@@ -114,7 +114,7 @@ export function ServicesPreview() {
                       key={feature}
                       className="flex items-start gap-3 text-slate-600"
                     >
-                      <Check className="w-5 h-5 text-violet-600 flex-shrink-0 mt-0.5" />
+                      <Check className="w-5 h-5 text-teal-500 flex-shrink-0 mt-0.5" />
                       <span>{feature}</span>
                     </li>
                   ))}

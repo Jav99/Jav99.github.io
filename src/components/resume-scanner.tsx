@@ -87,10 +87,10 @@ export function ResumeScanner() {
   }, []);
 
   return (
-    <section id="audit" className="py-24 md:py-32 lg:py-40">
+    <section id="audit" className="relative z-10 py-24 md:py-32 lg:py-40">
       <div className="max-w-3xl mx-auto px-8 md:px-16 text-center">
         {/* Section Header */}
-        <p className="text-sm uppercase tracking-[0.2em] text-violet-600 font-medium">
+        <p className="text-sm uppercase tracking-[0.2em] text-teal-600 font-medium">
           Free AI Audit
         </p>
         <h2 className="font-serif text-4xl md:text-5xl font-bold tracking-tighter text-slate-900 mt-4">
@@ -171,7 +171,7 @@ export function ResumeScanner() {
                     >
                       <Card className="p-6">
                         <div className="flex gap-4">
-                          <span className="flex-shrink-0 w-8 h-8 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-sm font-bold">
+                          <span className="flex-shrink-0 w-8 h-8 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-sm font-bold">
                             {i + 1}
                           </span>
                           <p className="text-slate-600 leading-relaxed">
@@ -190,8 +190,8 @@ export function ResumeScanner() {
                   initial="hidden"
                   animate="visible"
                 >
-                  <Card className="p-8 border-l-4 border-l-violet-500 text-left">
-                    <p className="text-xs uppercase tracking-widest text-violet-600 font-medium mb-3">
+                  <Card className="p-8 border-l-4 border-l-teal-500 text-left">
+                    <p className="text-xs uppercase tracking-widest text-teal-600 font-medium mb-3">
                       Hannah&apos;s Take
                     </p>
                     <p className="text-slate-700 leading-relaxed font-medium text-lg">
@@ -214,7 +214,7 @@ export function ResumeScanner() {
                       {result.score}/100
                     </span>
                     . You&apos;re leaving{" "}
-                    <span className="font-bold text-violet-600">
+                    <span className="font-bold text-teal-600">
                       {100 - result.score} points
                     </span>{" "}
                     of salary negotiation on the table.

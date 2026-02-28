@@ -14,8 +14,8 @@ export default function SuccessPage() {
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="flex justify-center mb-8">
-          <div className="w-20 h-20 rounded-full bg-violet-100 flex items-center justify-center">
-            <CheckCircle className="w-10 h-10 text-violet-600" />
+          <div className="w-20 h-20 rounded-full bg-teal-100 flex items-center justify-center">
+            <CheckCircle className="w-10 h-10 text-teal-600" />
           </div>
         </div>
 
@@ -40,24 +40,24 @@ export default function SuccessPage() {
 
         {/* Reassurance */}
         <div className="mt-16 p-8 bg-slate-50 rounded-3xl border border-slate-100">
-          <p className="text-sm uppercase tracking-widest text-violet-600 font-medium">
+          <p className="text-sm uppercase tracking-widest text-teal-600 font-medium">
             What Happens Next
           </p>
           <div className="mt-4 space-y-3 text-left text-slate-600">
             <div className="flex items-start gap-3">
-              <span className="w-6 h-6 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+              <span className="w-6 h-6 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                 1
               </span>
               <p>Complete the intake form with your career goals and context.</p>
             </div>
             <div className="flex items-start gap-3">
-              <span className="w-6 h-6 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+              <span className="w-6 h-6 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                 2
               </span>
               <p>Hannah reviews your resume and begins the strategic rewrite.</p>
             </div>
             <div className="flex items-start gap-3">
-              <span className="w-6 h-6 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+              <span className="w-6 h-6 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                 3
               </span>
               <p>

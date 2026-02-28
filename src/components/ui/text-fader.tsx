@@ -47,17 +47,15 @@ export function TextFader({
         {messages.map((_, i) => (
           <div
             key={i}
-            className={cn(
+            className={[
               "h-1.5 rounded-full transition-all duration-500",
-              i <= index ? "w-8 bg-violet-500" : "w-4 bg-slate-200"
-            )}
+              i <= index ? "w-8 bg-teal-500" : "w-4 bg-slate-200",
+            ]
+              .filter(Boolean)
+              .join(" ")}
           />
         ))}
       </div>
     </div>
   );
-}
-
-function cn(...classes: (string | boolean | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
 }

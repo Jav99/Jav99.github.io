@@ -63,15 +63,15 @@ export function FileUpload({
       className={cn(
         "border-2 border-dashed rounded-2xl p-16 text-center cursor-pointer transition-all duration-200",
         isDragging
-          ? "border-violet-400 bg-violet-50/50"
-          : "border-slate-200 hover:border-violet-300 hover:bg-violet-50/30"
+          ? "border-teal-400 bg-teal-50/50"
+          : "border-slate-200 hover:border-teal-300 hover:bg-teal-50/30"
       )}
     >
       <label className="cursor-pointer flex flex-col items-center gap-4">
         <Upload
           className={cn(
             "transition-colors duration-200",
-            isDragging ? "text-violet-400" : "text-slate-300"
+            isDragging ? "text-teal-400" : "text-slate-300"
           )}
           size={48}
           strokeWidth={1.5}
@@ -79,7 +79,7 @@ export function FileUpload({
         <div>
           <p className="text-slate-700 font-medium">
             Drag your resume here or{" "}
-            <span className="text-violet-600 underline underline-offset-4">
+            <span className="text-teal-600 underline underline-offset-4">
               click to browse
             </span>
           </p>

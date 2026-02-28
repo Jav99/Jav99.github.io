@@ -16,7 +16,7 @@ export function About() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="about" className="py-24 md:py-32 lg:py-40" ref={ref}>
+    <section id="about" className="relative z-10 py-24 md:py-32 lg:py-40" ref={ref}>
       <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           {/* Left: Visual / Portrait Placeholder */}
@@ -25,9 +25,9 @@ export function About() {
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="aspect-[4/5] rounded-3xl bg-gradient-to-br from-slate-100 to-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden">
+            <div className="aspect-[4/5] rounded-3xl bg-gradient-to-br from-teal-50 to-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden">
               <div className="text-center px-12">
-                <span className="font-serif text-8xl text-slate-200 select-none">
+                <span className="font-serif text-8xl text-teal-200 select-none">
                   HW
                 </span>
                 <p className="text-sm text-slate-300 mt-4 uppercase tracking-widest">
@@ -47,7 +47,7 @@ export function About() {
               ease: [0.16, 1, 0.3, 1],
             }}
           >
-            <p className="text-sm uppercase tracking-[0.2em] text-violet-600 font-medium">
+            <p className="text-sm uppercase tracking-[0.2em] text-teal-600 font-medium">
               Your Strategist
             </p>
             <h2 className="font-serif text-4xl md:text-5xl font-bold tracking-tighter text-slate-900 mt-4">
@@ -71,7 +71,7 @@ export function About() {
               {credentials.map((cred) => (
                 <span
                   key={cred}
-                  className="px-4 py-2 rounded-full bg-slate-100 text-slate-600 text-sm font-medium"
+                  className="px-4 py-2 rounded-full bg-teal-50 text-teal-700 text-sm font-medium border border-teal-100"
                 >
                   {cred}
                 </span>

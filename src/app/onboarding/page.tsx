@@ -11,7 +11,7 @@ export default function OnboardingPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       >
-        <p className="text-sm uppercase tracking-[0.2em] text-violet-600 font-medium">
+        <p className="text-sm uppercase tracking-[0.2em] text-teal-600 font-medium">
           Onboarding
         </p>
         <h1 className="font-serif text-4xl md:text-5xl font-bold tracking-tighter text-slate-900 mt-4">
