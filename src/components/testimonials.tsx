@@ -1,7 +1,10 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useLayoutEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const testimonials = [
   {
@@ -28,11 +31,34 @@ const testimonials = [
 ];
 
 export function Testimonials() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.set(".testimonial-card", { y: 30 });
+
+      gsap.to(".testimonial-card", {
+        scrollTrigger: {
+          trigger: ".testimonials-grid",
+          start: "top 85%",
+          once: true,
+        },
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.12,
+        ease: "power3.out",
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section className="relative z-10 py-24 md:py-32 lg:py-40 bg-slate-50/80" ref={ref}>
+    <section
+      ref={sectionRef}
+      className="relative z-10 py-24 md:py-32 lg:py-40 bg-slate-50/80"
+    >
       <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
         {/* Section Header */}
         <div className="text-center mb-16 md:mb-20">
@@ -45,18 +71,11 @@ export function Testimonials() {
         </div>
 
         {/* Testimonials Grid */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((t, i) => (
-            <motion.div
+        <div className="testimonials-grid grid md:grid-cols-3 gap-8">
+          {testimonials.map((t) => (
+            <div
               key={t.name}
-              className="bg-white rounded-3xl shadow-clay border border-slate-100 p-10 relative"
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{
-                duration: 0.6,
-                delay: i * 0.12,
-                ease: [0.16, 1, 0.3, 1],
-              }}
+              className="testimonial-card opacity-0 bg-white rounded-3xl shadow-clay border border-slate-100 p-10 relative"
             >
               {/* Decorative Quote */}
               <span
@@ -78,7 +97,7 @@ export function Testimonials() {
                   {t.role}, {t.company}
                 </p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

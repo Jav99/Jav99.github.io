@@ -1,7 +1,10 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useLayoutEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const steps = [
   {
@@ -25,11 +28,34 @@ const steps = [
 ];
 
 export function HowItWorks() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.set(".step-card", { y: 30 });
+
+      gsap.to(".step-card", {
+        scrollTrigger: {
+          trigger: ".steps-grid",
+          start: "top 85%",
+          once: true,
+        },
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.15,
+        ease: "power3.out",
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section className="relative z-10 py-24 md:py-32 lg:py-40 bg-white" ref={ref}>
+    <section
+      ref={sectionRef}
+      className="relative z-10 py-24 md:py-32 lg:py-40 bg-white"
+    >
       <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
         {/* Section Header */}
         <div className="text-center mb-16 md:mb-20">
@@ -42,18 +68,11 @@ export function HowItWorks() {
         </div>
 
         {/* Steps Grid */}
-        <div className="grid md:grid-cols-3 gap-8 md:gap-12">
-          {steps.map((step, i) => (
-            <motion.div
+        <div className="steps-grid grid md:grid-cols-3 gap-8 md:gap-12">
+          {steps.map((step) => (
+            <div
               key={step.number}
-              className="relative text-center md:text-left"
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{
-                duration: 0.6,
-                delay: i * 0.15,
-                ease: [0.16, 1, 0.3, 1],
-              }}
+              className="step-card opacity-0 relative text-center md:text-left"
             >
               {/* Large Background Number */}
               <span className="text-7xl md:text-8xl font-bold text-slate-100 font-serif leading-none select-none">
@@ -65,7 +84,7 @@ export function HowItWorks() {
               <p className="text-slate-500 leading-relaxed mt-2">
                 {step.description}
               </p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
