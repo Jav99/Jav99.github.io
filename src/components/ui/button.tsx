@@ -1,7 +1,8 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
 
 type ButtonVariant = "primary" | "secondary" | "ghost";
 type ButtonSize = "default" | "lg" | "sm";
@@ -41,6 +42,8 @@ export function Button({
   disabled,
   type = "button",
 }: ButtonProps) {
+  const ref = useRef<HTMLElement>(null);
+
   const classes = cn(
     "inline-flex items-center justify-center rounded-full font-medium transition-all duration-300 min-h-[44px] min-w-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2",
     variantStyles[variant],
@@ -49,37 +52,58 @@ export function Button({
     className
   );
 
-  const springTransition = {
-    type: "spring" as const,
-    stiffness: 300,
-    damping: 20,
-  };
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || disabled) return;
+
+    const handleEnter = () => {
+      gsap.to(el, { scale: 1.02, duration: 0.25, ease: "back.out(2)" });
+    };
+    const handleLeave = () => {
+      gsap.to(el, { scale: 1, duration: 0.25, ease: "power2.out" });
+    };
+    const handleDown = () => {
+      gsap.to(el, { scale: 0.98, duration: 0.1, ease: "power2.in" });
+    };
+    const handleUp = () => {
+      gsap.to(el, { scale: 1.02, duration: 0.1, ease: "power2.out" });
+    };
+
+    el.addEventListener("mouseenter", handleEnter);
+    el.addEventListener("mouseleave", handleLeave);
+    el.addEventListener("mousedown", handleDown);
+    el.addEventListener("mouseup", handleUp);
+
+    return () => {
+      el.removeEventListener("mouseenter", handleEnter);
+      el.removeEventListener("mouseleave", handleLeave);
+      el.removeEventListener("mousedown", handleDown);
+      el.removeEventListener("mouseup", handleUp);
+      gsap.killTweensOf(el);
+    };
+  }, [disabled]);
 
   if (href) {
     return (
-      <motion.a
+      <a
+        ref={ref as React.RefObject<HTMLAnchorElement>}
         href={href}
         className={classes}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        transition={springTransition}
       >
         {children}
-      </motion.a>
+      </a>
     );
   }
 
   return (
-    <motion.button
+    <button
+      ref={ref as React.RefObject<HTMLButtonElement>}
       className={classes}
-      whileHover={disabled ? undefined : { scale: 1.02 }}
-      whileTap={disabled ? undefined : { scale: 0.98 }}
-      transition={springTransition}
       onClick={onClick}
       disabled={disabled}
       type={type}
     >
       {children}
-    </motion.button>
+    </button>
   );
 }

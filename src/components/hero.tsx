@@ -1,23 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef, useLayoutEffect } from "react";
+import gsap from "gsap";
 import { Button } from "@/components/ui/button";
-
-const stagger = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.12, delayChildren: 0.1 },
-  },
-};
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, ease: [0.25, 0.4, 0.25, 1] },
-  },
-};
 
 function PhoneMockup() {
   return (
@@ -87,29 +72,77 @@ function PhoneMockup() {
 function FloatingCard({
   children,
   className,
-  delay = 0,
   animClass = "animate-float",
 }: {
   children: React.ReactNode;
   className?: string;
-  delay?: number;
   animClass?: string;
 }) {
   return (
-    <motion.div
-      className={`absolute bg-slate-900/70 backdrop-blur-xl border border-slate-700/40 rounded-2xl px-4 py-3 shadow-xl ${animClass} ${className}`}
-      initial={{ opacity: 0, scale: 0.85, y: 10 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ duration: 0.7, delay, ease: [0.25, 0.4, 0.25, 1] }}
+    <div
+      className={`floating-card absolute bg-slate-900/70 backdrop-blur-xl border border-slate-700/40 rounded-2xl px-4 py-3 shadow-xl opacity-0 ${animClass} ${className}`}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 
 export function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Set initial transform states (opacity handled via CSS class)
+      gsap.set(".hero-animate", { y: 24 });
+      gsap.set(".hero-phone", { y: 40 });
+      gsap.set(".floating-card", { scale: 0.85, y: 10 });
+
+      const tl = gsap.timeline({
+        defaults: { ease: "power3.out" },
+        delay: 0.1,
+      });
+
+      // Stagger hero text elements in
+      tl.to(".hero-animate", {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.12,
+      });
+
+      // Phone mockup slides up
+      tl.to(
+        ".hero-phone",
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+        },
+        "-=0.4"
+      );
+
+      // Floating stat cards pop in with stagger
+      tl.to(
+        ".floating-card",
+        {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.7,
+          stagger: 0.2,
+        },
+        "-=0.6"
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative min-h-screen bg-surface-dark overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="relative min-h-screen bg-surface-dark overflow-hidden"
+    >
       {/* Aura glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div
@@ -130,47 +163,30 @@ export function Hero() {
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-8 md:px-16 lg:px-24 pt-24 pb-16">
-        <motion.div
-          className="max-w-4xl mx-auto text-center"
-          variants={stagger}
-          initial="hidden"
-          animate="visible"
-        >
+        <div className="max-w-4xl mx-auto text-center">
           {/* Eyebrow */}
-          <motion.p
-            variants={fadeUp}
-            className="text-sm uppercase tracking-[0.25em] text-teal-400 font-medium"
-          >
+          <p className="hero-animate opacity-0 text-sm uppercase tracking-[0.25em] text-teal-400 font-medium">
             Career Strategist &amp; Ex-Recruiter
-          </motion.p>
+          </p>
 
           {/* Headline */}
-          <motion.h1
-            variants={fadeUp}
-            className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white leading-[1.05] mt-6 text-balance"
-          >
+          <h1 className="hero-animate opacity-0 font-serif text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white leading-[1.05] mt-6 text-balance">
             Your Resume Is
             <br />
             <span className="bg-gradient-to-r from-teal-300 to-teal-500 bg-clip-text text-transparent">
               Costing You Money.
             </span>
-          </motion.h1>
+          </h1>
 
           {/* Subheadline */}
-          <motion.p
-            variants={fadeUp}
-            className="text-lg md:text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto mt-6"
-          >
+          <p className="hero-animate opacity-0 text-lg md:text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto mt-6">
             I&apos;m Hannah White &mdash; ex-Head of Recruiting at Tier-1 Tech.
             I&apos;ve read 10,000+ resumes. Let me tell you what&apos;s wrong
             with yours.
-          </motion.p>
+          </p>
 
           {/* CTAs */}
-          <motion.div
-            variants={fadeUp}
-            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
+          <div className="hero-animate opacity-0 mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" href="#audit">
               Rate My Resume &mdash; Free
             </Button>
@@ -182,26 +198,16 @@ export function Hero() {
             >
               View Services
             </Button>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Phone mockup with floating cards */}
-        <motion.div
-          className="relative mt-16 md:mt-20"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 1,
-            delay: 0.5,
-            ease: [0.25, 0.4, 0.25, 1],
-          }}
-        >
+        <div className="hero-phone opacity-0 relative mt-16 md:mt-20">
           <PhoneMockup />
 
           {/* Floating stat cards */}
           <FloatingCard
             className="-left-20 md:-left-36 top-6"
-            delay={0.8}
             animClass="animate-float"
           >
             <div className="flex items-center gap-3">
@@ -219,7 +225,6 @@ export function Hero() {
 
           <FloatingCard
             className="-right-16 md:-right-32 top-20"
-            delay={1.0}
             animClass="animate-float-delayed"
           >
             <div>
@@ -234,7 +239,6 @@ export function Hero() {
 
           <FloatingCard
             className="-left-12 md:-left-28 bottom-12"
-            delay={1.2}
             animClass="animate-float-slow"
           >
             <div>
@@ -244,7 +248,7 @@ export function Hero() {
               <p className="text-white font-semibold text-sm">3x Higher</p>
             </div>
           </FloatingCard>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

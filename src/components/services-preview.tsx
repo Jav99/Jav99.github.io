@@ -1,11 +1,14 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useLayoutEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Check } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const plans = [
   {
@@ -50,11 +53,35 @@ const plans = [
 ];
 
 export function ServicesPreview() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.set(".service-card", { y: 30 });
+
+      gsap.to(".service-card", {
+        scrollTrigger: {
+          trigger: ".services-grid",
+          start: "top 85%",
+          once: true,
+        },
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.12,
+        ease: "power3.out",
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section id="services" className="relative z-10 py-24 md:py-32 lg:py-40 bg-slate-50/80" ref={ref}>
+    <section
+      id="services"
+      ref={sectionRef}
+      className="relative z-10 py-24 md:py-32 lg:py-40 bg-slate-50/80"
+    >
       <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
         {/* Section Header */}
         <div className="text-center mb-16 md:mb-20">
@@ -71,18 +98,9 @@ export function ServicesPreview() {
         </div>
 
         {/* Pricing Grid */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {plans.map((plan, i) => (
-            <motion.div
-              key={plan.name}
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{
-                duration: 0.6,
-                delay: i * 0.12,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-            >
+        <div className="services-grid grid md:grid-cols-3 gap-8">
+          {plans.map((plan) => (
+            <div key={plan.name} className="service-card opacity-0">
               <Card
                 featured={plan.featured}
                 className={`p-10 flex flex-col h-full ${
@@ -131,7 +149,7 @@ export function ServicesPreview() {
                   </Button>
                 </div>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
