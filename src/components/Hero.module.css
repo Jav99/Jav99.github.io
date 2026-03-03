@@ -1,16 +1,16 @@
-/* ── Full-viewport hero container ────────────────────────── */
+/* ── Full-viewport hero ─────────────────────────────────── */
 .hero {
   position: relative;
   width: 100%;
   height: 100vh;
-  background: #f8fafc;
+  background: #ffffff;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* ── Canvas layer (behind phone) ─────────────────────────── */
+/* ── Canvas layer (behind phone) ────────────────────────── */
 .canvasWrap {
   position: absolute;
   inset: 0;
@@ -18,124 +18,121 @@
   pointer-events: none;
 }
 
-/* ── Soft radial background glow ─────────────────────────── */
-.backgroundGlow {
-  position: absolute;
-  top: 42%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(200, 210, 230, 0.25) 0%,
-    transparent 70%
-  );
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ── Phone wrapper — receives scroll transforms ──────────── */
+/* ── Phone wrapper — receives scroll transforms ─────────── */
 .phoneAnchor {
   position: relative;
   z-index: 10;
-  margin-top: -5vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   will-change: transform;
 }
 
-/* ── Drop sequence (900ms fall + 120ms impact + 120ms settle) */
+/* ── Drop sequence (1000ms) ─────────────────────────────── */
 .phoneDrop {
-  animation: phoneDrop 1140ms both;
+  animation: phoneDrop 1000ms both;
+  transform-origin: center bottom;
   will-change: transform, opacity;
 }
 
-/* ── Idle float after landing ────────────────────────────── */
+/* ── Idle float after landing ───────────────────────────── */
 .phoneFloat {
   animation: phoneFloat 6s ease-in-out infinite;
   will-change: transform;
 }
 
-/* ── iPhone image ────────────────────────────────────────── */
+/* ── iPhone image ───────────────────────────────────────── */
 .phoneImage {
   display: block;
-  width: 280px;
+  width: 260px;
   height: auto;
   user-select: none;
   -webkit-user-drag: none;
-  filter: drop-shadow(0 8px 30px rgba(0, 0, 0, 0.12));
+  filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.08));
+  transition: filter 600ms ease-out;
 }
 
 @media (min-width: 768px) {
   .phoneImage {
-    width: 340px;
+    width: 320px;
   }
 }
 
-/* ── Ground shadow (ellipse under phone) ─────────────────── */
+/* Stronger shadow after landing — dynamic impact shadow */
+.phoneFloat .phoneImage {
+  filter: drop-shadow(0 16px 48px rgba(0, 0, 0, 0.18));
+}
+
+/* ── Ground shadow (ellipse under phone) ────────────────── */
 .groundShadow {
-  width: 200px;
-  height: 20px;
-  margin-top: -8px;
+  width: 180px;
+  height: 18px;
+  margin-top: -6px;
   border-radius: 50%;
   background: radial-gradient(
     ellipse at center,
-    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.18) 0%,
     transparent 70%
   );
   opacity: 0;
-  transition: opacity 600ms ease-out;
+  transform: scaleX(0.5);
+  transition:
+    opacity 400ms ease-out,
+    transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @media (min-width: 768px) {
   .groundShadow {
-    width: 240px;
-    height: 24px;
+    width: 220px;
+    height: 22px;
   }
 }
 
 .groundShadowVisible {
   opacity: 1;
+  transform: scaleX(1);
 }
 
-/* ── Keyframes ───────────────────────────────────────────── */
+/* ── Keyframes ──────────────────────────────────────────── */
 
 /*
-  phoneDrop timeline (1140ms total):
-    0%      → start 320px above, invisible
-    8%      → fade in
-    78.9%   → reached final Y (900ms mark)
-    89.5%   → subtle impact squish (1020ms mark)
-    100%    → settle to rest (1140ms mark)
+  phoneDrop timeline (1000ms):
+    0%   → start 400px above, invisible
+    3%   → fade in, still at -400px
+    70%  → landed at Y=0 (spring bezier — strong snap with overshoot)
+    82%  → impact squash (scaleY 0.98, slight downward push)
+    92%  → micro bounce up (-8px)
+    100% → settle to rest
 */
 @keyframes phoneDrop {
   0% {
-    transform: translateY(-320px) scale(1);
+    transform: translateY(-400px) scaleX(1) scaleY(1);
     opacity: 0;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
-  8% {
+  3% {
+    transform: translateY(-400px) scaleX(1) scaleY(1);
     opacity: 1;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
-  78.9% {
-    transform: translateY(0) scale(1);
-    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+  70% {
+    transform: translateY(0) scaleX(1) scaleY(1);
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
-  89.5% {
-    transform: translateY(0) scale(1.02);
+  82% {
+    transform: translateY(3px) scaleX(1.03) scaleY(0.98);
     animation-timing-function: ease-in-out;
   }
+  92% {
+    transform: translateY(-8px) scaleX(0.995) scaleY(1.01);
+    animation-timing-function: ease-out;
+  }
   100% {
-    transform: translateY(0) scale(1);
+    transform: translateY(0) scaleX(1) scaleY(1);
   }
 }
 
 /*
-  phoneFloat: subtle 4px vertical drift, 6s infinite
+  phoneFloat: subtle 5px vertical drift, 6s infinite
 */
 @keyframes phoneFloat {
   0%,
@@ -143,6 +140,6 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
   }
 }

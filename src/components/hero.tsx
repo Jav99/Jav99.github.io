@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState, useEffect, useCallback } from 'react';
-import { PaintBloom } from './PaintBloom';
+import { PaintSplash } from './PaintSplash';
 import { useScrollProgress } from '@/hooks/useScrollProgress';
 import styles from './Hero.module.css';
 
@@ -11,20 +11,20 @@ export function Hero() {
   const [hasLanded, setHasLanded] = useState(false);
   const scrollProgressRef = useScrollProgress(containerRef);
 
-  /* Flip to floating animation after the drop sequence completes */
+  /* Flip to idle float animation after the drop sequence completes */
   const handleDropEnd = useCallback(() => {
     setHasLanded(true);
   }, []);
 
-  /* Scroll-driven transforms: subtle rotation + parallax on phone wrapper */
+  /* Scroll-driven transforms: rotation + parallax lift on phone wrapper */
   useEffect(() => {
     let rafId = 0;
 
     function applyScroll() {
       if (!phoneScrollRef.current) return;
       const p = scrollProgressRef.current;
-      const rotation = p * 2;    // max 2deg
-      const translateY = p * -20; // max -20px
+      const rotation = p * 3;     // max 3deg
+      const translateY = p * -30; // max -30px lift
       phoneScrollRef.current.style.transform =
         `translateY(${translateY}px) rotate(${rotation}deg)`;
     }
@@ -44,12 +44,9 @@ export function Hero() {
 
   return (
     <section ref={containerRef} className={styles.hero}>
-      {/* Soft radial background glow */}
-      <div className={styles.backgroundGlow} />
-
-      {/* Canvas: liquid ink bloom behind phone */}
+      {/* Canvas: paint splash particle system behind phone */}
       <div className={styles.canvasWrap}>
-        <PaintBloom scrollProgressRef={scrollProgressRef} />
+        <PaintSplash scrollProgressRef={scrollProgressRef} />
       </div>
 
       {/* iPhone with scroll-driven wrapper */}
@@ -58,16 +55,15 @@ export function Hero() {
           className={hasLanded ? styles.phoneFloat : styles.phoneDrop}
           onAnimationEnd={!hasLanded ? handleDropEnd : undefined}
         >
-          {/* Replace /iphone.png with your transparent-background iPhone PNG */}
           <img
             src="/iphone.png"
-            alt="iPhone"
+            alt="iPhone showing resume score"
             className={styles.phoneImage}
             draggable={false}
           />
         </div>
 
-        {/* Ground shadow — fades in after landing */}
+        {/* Dynamic ground shadow — expands on impact */}
         <div
           className={`${styles.groundShadow} ${
             hasLanded ? styles.groundShadowVisible : ''
