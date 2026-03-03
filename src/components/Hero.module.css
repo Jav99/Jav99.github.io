@@ -1,0 +1,148 @@
+/* ── Full-viewport hero container ────────────────────────── */
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #f8fafc;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Canvas layer (behind phone) ─────────────────────────── */
+.canvasWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── Soft radial background glow ─────────────────────────── */
+.backgroundGlow {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(200, 210, 230, 0.25) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Phone wrapper — receives scroll transforms ──────────── */
+.phoneAnchor {
+  position: relative;
+  z-index: 10;
+  margin-top: -5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  will-change: transform;
+}
+
+/* ── Drop sequence (900ms fall + 120ms impact + 120ms settle) */
+.phoneDrop {
+  animation: phoneDrop 1140ms both;
+  will-change: transform, opacity;
+}
+
+/* ── Idle float after landing ────────────────────────────── */
+.phoneFloat {
+  animation: phoneFloat 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* ── iPhone image ────────────────────────────────────────── */
+.phoneImage {
+  display: block;
+  width: 280px;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 8px 30px rgba(0, 0, 0, 0.12));
+}
+
+@media (min-width: 768px) {
+  .phoneImage {
+    width: 340px;
+  }
+}
+
+/* ── Ground shadow (ellipse under phone) ─────────────────── */
+.groundShadow {
+  width: 200px;
+  height: 20px;
+  margin-top: -8px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.1) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 600ms ease-out;
+}
+
+@media (min-width: 768px) {
+  .groundShadow {
+    width: 240px;
+    height: 24px;
+  }
+}
+
+.groundShadowVisible {
+  opacity: 1;
+}
+
+/* ── Keyframes ───────────────────────────────────────────── */
+
+/*
+  phoneDrop timeline (1140ms total):
+    0%      → start 320px above, invisible
+    8%      → fade in
+    78.9%   → reached final Y (900ms mark)
+    89.5%   → subtle impact squish (1020ms mark)
+    100%    → settle to rest (1140ms mark)
+*/
+@keyframes phoneDrop {
+  0% {
+    transform: translateY(-320px) scale(1);
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  8% {
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  78.9% {
+    transform: translateY(0) scale(1);
+    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+  }
+  89.5% {
+    transform: translateY(0) scale(1.02);
+    animation-timing-function: ease-in-out;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+/*
+  phoneFloat: subtle 4px vertical drift, 6s infinite
+*/
+@keyframes phoneFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
