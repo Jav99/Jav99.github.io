@@ -38,8 +38,8 @@ export function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${
         scrolled
-          ? "bg-white/90 backdrop-blur-xl border-b border-slate-100 shadow-sm"
-          : "bg-transparent"
+          ? "bg-slate-950/95 backdrop-blur-xl border-b border-slate-800 shadow-lg"
+          : "bg-slate-950"
       }`}
     >
       <nav
@@ -49,7 +49,7 @@ export function Navbar() {
         {/* Brand */}
         <a
           href="/"
-          className="font-serif text-xl font-semibold tracking-tight text-slate-900"
+          className="font-serif text-xl font-semibold tracking-tight text-white"
         >
           Hannah White
         </a>
@@ -63,8 +63,8 @@ export function Navbar() {
               onClick={(e) => handleNavClick(e, link.href)}
               className={`text-sm tracking-wide uppercase transition-colors duration-300 ${
                 scrolled
-                  ? "text-slate-500 hover:text-slate-900"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "text-slate-400 hover:text-white"
+                  : "text-slate-300 hover:text-white"
               }`}
             >
               {link.label}
@@ -88,11 +88,11 @@ export function Navbar() {
         >
           {mobileOpen ? (
             <X
-              className="w-6 h-6 text-slate-900"
+              className="w-6 h-6 text-white"
             />
           ) : (
             <Menu
-              className="w-6 h-6 text-slate-900"
+              className="w-6 h-6 text-white"
             />
           )}
         </button>
@@ -106,7 +106,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25, ease: [0.25, 0.4, 0.25, 1] }}
-            className="md:hidden bg-white/95 backdrop-blur-xl border-b border-slate-100 overflow-hidden"
+            className="md:hidden bg-slate-950/95 backdrop-blur-xl border-b border-slate-800 overflow-hidden"
           >
             <div className="flex flex-col items-center gap-6 py-8 px-8">
               {navLinks.map((link, i) => (
@@ -121,7 +121,7 @@ export function Navbar() {
                     delay: i * 0.05,
                     ease: [0.25, 0.4, 0.25, 1],
                   }}
-                  className="text-base tracking-wide uppercase text-slate-600 hover:text-slate-900 transition-colors min-h-[44px] flex items-center"
+                  className="text-base tracking-wide uppercase text-slate-300 hover:text-white transition-colors min-h-[44px] flex items-center"
                 >
                   {link.label}
                 </motion.a>
