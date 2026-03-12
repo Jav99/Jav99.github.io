@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger);
 const plans = [
   {
     name: "Resume Rewrite",
-    price: "$497",
+    price: "$149",
     period: "one-time",
     features: [
       "Full resume rewrite",
@@ -24,31 +24,16 @@ const plans = [
     featured: false,
   },
   {
-    name: "Career Strategy",
-    price: "$997",
+    name: "LinkedIn Bundle",
+    price: "$249",
     period: "one-time",
     features: [
       "Everything in Resume Rewrite",
-      "LinkedIn profile overhaul",
-      "Cover letter template",
-      "30-min strategy call",
-      "2 rounds of revisions",
+      "LinkedIn profile banner design",
+      "Profile section updates document",
+      "Step-by-step update instructions",
     ],
     featured: true,
-  },
-  {
-    name: "Executive Package",
-    price: "$2,497",
-    period: "one-time",
-    features: [
-      "Everything in Career Strategy",
-      "Personal brand positioning",
-      "Interview preparation guide",
-      "Salary negotiation playbook",
-      "60-min executive coaching call",
-      "Unlimited revisions",
-    ],
-    featured: false,
   },
 ];
 
@@ -98,7 +83,7 @@ export function ServicesPreview() {
         </div>
 
         {/* Pricing Grid */}
-        <div className="services-grid grid md:grid-cols-3 gap-8">
+        <div className="services-grid grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
           {plans.map((plan) => (
             <div key={plan.name} className="service-card opacity-0">
               <Card

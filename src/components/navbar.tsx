@@ -6,9 +6,10 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
-  { label: "Services", href: "#services" },
+  { label: "Home", href: "#" },
   { label: "About", href: "#about" },
-  { label: "Resume Audit", href: "#audit" },
+  { label: "Services", href: "#services" },
+  { label: "Watch", href: "#watch" },
 ];
 
 export function Navbar() {
@@ -48,9 +49,7 @@ export function Navbar() {
         {/* Brand */}
         <a
           href="/"
-          className={`font-serif text-xl font-semibold tracking-tight transition-colors duration-500 ${
-            scrolled ? "text-slate-900" : "text-white"
-          }`}
+          className="font-serif text-xl font-semibold tracking-tight text-slate-900"
         >
           Hannah White
         </a>
@@ -62,10 +61,10 @@ export function Navbar() {
               key={link.href}
               href={link.href}
               onClick={(e) => handleNavClick(e, link.href)}
-              className={`text-sm tracking-wide uppercase transition-colors duration-500 ${
+              className={`text-sm tracking-wide uppercase transition-colors duration-300 ${
                 scrolled
                   ? "text-slate-500 hover:text-slate-900"
-                  : "text-slate-300 hover:text-white"
+                  : "text-slate-600 hover:text-slate-900"
               }`}
             >
               {link.label}
@@ -89,15 +88,11 @@ export function Navbar() {
         >
           {mobileOpen ? (
             <X
-              className={`w-6 h-6 transition-colors duration-500 ${
-                scrolled ? "text-slate-900" : "text-white"
-              }`}
+              className="w-6 h-6 text-slate-900"
             />
           ) : (
             <Menu
-              className={`w-6 h-6 transition-colors duration-500 ${
-                scrolled ? "text-slate-900" : "text-white"
-              }`}
+              className="w-6 h-6 text-slate-900"
             />
           )}
         </button>
