@@ -1,32 +1,30 @@
 'use client';
 
-import { useRef, useState, useEffect, useCallback } from 'react';
-import { PaintSplash } from './PaintSplash';
-import { useScrollProgress } from '@/hooks/useScrollProgress';
+import { useRef, useEffect } from 'react';
 import styles from './Hero.module.css';
 
 export function Hero() {
-  const containerRef = useRef<HTMLElement>(null);
-  const phoneScrollRef = useRef<HTMLDivElement>(null);
-  const [hasLanded, setHasLanded] = useState(false);
-  const scrollProgressRef = useScrollProgress(containerRef);
+  const sectionRef = useRef<HTMLElement>(null);
+  const gradientLeftRef = useRef<HTMLDivElement>(null);
+  const gradientRightRef = useRef<HTMLDivElement>(null);
 
-  /* Flip to idle float animation after the drop sequence completes */
-  const handleDropEnd = useCallback(() => {
-    setHasLanded(true);
-  }, []);
-
-  /* Scroll-driven transforms: rotation + parallax lift on phone wrapper */
+  /* Scroll-driven gradient motion */
   useEffect(() => {
     let rafId = 0;
 
     function applyScroll() {
-      if (!phoneScrollRef.current) return;
-      const p = scrollProgressRef.current;
-      const rotation = p * 3;     // max 3deg
-      const translateY = p * -30; // max -30px lift
-      phoneScrollRef.current.style.transform =
-        `translateY(${translateY}px) rotate(${rotation}deg)`;
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const p = Math.min(Math.max(-rect.top / (rect.height * 0.5), 0), 1);
+
+      if (gradientLeftRef.current) {
+        gradientLeftRef.current.style.transform =
+          `translate(${p * -70}px, ${p * -110}px) scale(${1 + p * 0.18})`;
+      }
+      if (gradientRightRef.current) {
+        gradientRightRef.current.style.transform =
+          `translate(${p * 70}px, ${p * -90}px) scale(${1 + p * 0.14})`;
+      }
     }
 
     function onScroll() {
@@ -35,40 +33,102 @@ export function Hero() {
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
-
     return () => {
       window.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(rafId);
     };
-  }, [scrollProgressRef]);
+  }, []);
 
   return (
-    <section ref={containerRef} className={styles.hero}>
-      {/* Canvas: paint splash particle system behind phone */}
-      <div className={styles.canvasWrap}>
-        <PaintSplash scrollProgressRef={scrollProgressRef} />
+    <section ref={sectionRef} className={styles.hero}>
+      {/* ── Headline area ──────────────────────────── */}
+      <div className={styles.content}>
+        <h1 className={styles.headline}>
+          Expert-Led Resume Growth
+        </h1>
+        <p className={styles.subtitle}>
+          From career gaps to dream offers — manage your professional
+          narrative with human-led strategic audits.
+        </p>
+        <div className={styles.ctas}>
+          <a href="#audit" className={styles.ctaPrimary}>
+            Rate for Free
+          </a>
+          <a href="#services" className={styles.ctaSecondary}>
+            Learn More
+          </a>
+        </div>
       </div>
 
-      {/* iPhone with scroll-driven wrapper */}
-      <div ref={phoneScrollRef} className={styles.phoneAnchor}>
-        <div
-          className={hasLanded ? styles.phoneFloat : styles.phoneDrop}
-          onAnimationEnd={!hasLanded ? handleDropEnd : undefined}
-        >
-          <img
-            src="/iphone.png"
-            alt="iPhone showing resume score"
-            className={styles.phoneImage}
-            draggable={false}
-          />
-        </div>
+      {/* ── Showcase: gradient background + phone + cards ── */}
+      <div className={styles.showcase}>
+        <div ref={gradientLeftRef} className={styles.gradientLeft} />
+        <div ref={gradientRightRef} className={styles.gradientRight} />
 
-        {/* Dynamic ground shadow — expands on impact */}
-        <div
-          className={`${styles.groundShadow} ${
-            hasLanded ? styles.groundShadowVisible : ''
-          }`}
-        />
+        <div className={styles.phoneArea}>
+          {/* ATS Score — top left */}
+          <div className={`${styles.floatingCard} ${styles.atsCard}`}>
+            <div className={styles.cardIconCircle}>
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                <path d="M5 9l3 3 5-6" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <span className={styles.cardLabel}>ATS SCORE</span>
+            <span className={styles.cardValue}>95%</span>
+          </div>
+
+          {/* Engagement — bottom left */}
+          <div className={`${styles.floatingCard} ${styles.engagementCard}`}>
+            <div className={styles.cardLabelRow}>
+              <span className={styles.cardLabel}>ENGAGEMENT</span>
+              <span className={styles.cardBadgeGreen}>+12%</span>
+            </div>
+            <div className={styles.barChart}>
+              <div className={styles.bar} data-h="45" />
+              <div className={styles.bar} data-h="65" />
+              <div className={styles.bar} data-h="50" />
+              <div className={`${styles.bar} ${styles.barGreen}`} data-h="85" />
+            </div>
+            <span className={styles.cardValue}>40%</span>
+          </div>
+
+          {/* iPhone */}
+          <div className={styles.phoneFrame}>
+            <img
+              src="/iphone.png"
+              alt="iPhone showing resume score of 8.5 out of 10"
+              className={styles.phoneImage}
+              draggable={false}
+            />
+          </div>
+
+          {/* Expert Rating — top right */}
+          <div className={`${styles.floatingCard} ${styles.expertCard}`}>
+            <div className={styles.starsRow}>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <span key={i} className={styles.starGreen} aria-hidden="true">★</span>
+              ))}
+            </div>
+            <span className={styles.cardLabel}>EXPERT RATING</span>
+            <p className={styles.cardQuote}>
+              &ldquo;Strategic impact is exceptionally high.&rdquo;
+            </p>
+          </div>
+
+          {/* Interview Ready — bottom right */}
+          <div className={`${styles.floatingCard} ${styles.interviewCard}`}>
+            <div className={styles.interviewIcon}>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M6.5 10.5l2.5 2.5 5-5.5" stroke="#10B981" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                <rect x="1.5" y="1.5" width="17" height="17" rx="4" stroke="#10B981" strokeWidth="1.5" />
+              </svg>
+            </div>
+            <div>
+              <span className={styles.cardTextBold}>Interview</span>
+              <span className={styles.cardTextBold}>Ready</span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
