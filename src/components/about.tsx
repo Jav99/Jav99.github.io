@@ -25,15 +25,15 @@ export function About() {
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="aspect-[4/5] rounded-3xl bg-gradient-to-br from-teal-50 to-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden">
-              <div className="text-center px-12">
-                <span className="font-serif text-8xl text-teal-200 select-none">
-                  HW
-                </span>
-                <p className="text-sm text-slate-300 mt-4 uppercase tracking-widest">
-                  Portrait
-                </p>
-              </div>
+            <div className="aspect-[4/5] rounded-3xl bg-gradient-to-br from-teal-50 to-slate-50 border border-slate-100 overflow-hidden">
+              <img
+                src="/hannah.jpg"
+                alt="Hannah White — Career Strategist and Ex-Recruiter"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = "/hannah.svg";
+                }}
+              />
             </div>
           </motion.div>
 
