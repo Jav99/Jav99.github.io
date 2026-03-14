@@ -3,7 +3,7 @@
   position: relative;
   width: 100%;
   background: #ffffff;
-  overflow: hidden;
+  overflow: visible;
   padding-top: 120px;
 }
 
@@ -88,6 +88,7 @@
 .showcase {
   position: relative;
   padding: 20px 0 100px;
+  overflow: visible;
 }
 
 /* ── Animated gradient blobs ─────────────────────────────── */
@@ -170,7 +171,8 @@
   z-index: 5;
   flex-shrink: 0;
   will-change: transform, opacity;
-  transition: transform 0.1s linear, opacity 0.1s linear;
+  transform: scale(2);
+  transform-origin: center center;
 }
 
 .phoneImage {
@@ -201,7 +203,6 @@
   opacity: 0;
   animation: fadeInUp 0.7s ease-out forwards;
   will-change: transform, opacity;
-  transition: transform 0.1s linear, opacity 0.1s linear;
 }
 
 /* ATS Score — top left */

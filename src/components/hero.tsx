@@ -13,62 +13,76 @@ export function Hero() {
   const expertRef = useRef<HTMLDivElement>(null);
   const interviewRef = useRef<HTMLDivElement>(null);
 
-  /* Scroll-driven gradient motion + phone parallax */
+  /* Smooth scroll-driven parallax with lerp for buttery interpolation */
   useEffect(() => {
     let rafId = 0;
+    let current = 0; // smoothed progress value
+    let running = true;
 
-    function applyScroll() {
-      if (!sectionRef.current) return;
+    /* Ease-out cubic for extra smoothness */
+    function easeOut(t: number) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    function tick() {
+      if (!running || !sectionRef.current) {
+        if (running) rafId = requestAnimationFrame(tick);
+        return;
+      }
+
       const rect = sectionRef.current.getBoundingClientRect();
-      const p = Math.min(Math.max(-rect.top / (rect.height * 0.5), 0), 1);
+      const raw = Math.min(Math.max(-rect.top / (rect.height * 0.5), 0), 1);
 
+      /* Lerp for smooth interpolation — no jank */
+      current += (raw - current) * 0.08;
+      const p = easeOut(current);
+
+      /* Gradient blobs drift downward into the next section */
       if (gradientLeftRef.current) {
         gradientLeftRef.current.style.transform =
-          `translate(${p * -70}px, ${p * -110}px) scale(${1 + p * 0.18})`;
+          `translate(${p * -90}px, ${p * 180}px) scale(${1 + p * 0.35})`;
       }
       if (gradientRightRef.current) {
         gradientRightRef.current.style.transform =
-          `translate(${p * 70}px, ${p * -90}px) scale(${1 + p * 0.14})`;
+          `translate(${p * 110}px, ${p * 200}px) scale(${1 + p * 0.3})`;
       }
 
-      /* Phone rises slower than scroll (parallax) and scales down slightly */
+      /* Phone: starts at 2x scale, settles to 1x as user scrolls */
+      const phoneScale = 2 - p * 1; // 2 → 1
       if (phoneRef.current) {
         phoneRef.current.style.transform =
-          `translateY(${p * -60}px) scale(${1 - p * 0.05})`;
-        phoneRef.current.style.opacity = `${1 - p * 0.3}`;
+          `translateY(${p * -80}px) scale(${phoneScale})`;
+        phoneRef.current.style.opacity = `${1 - p * 0.2}`;
       }
 
-      /* Cards drift outward + fade as user scrolls away */
+      /* Cards drift outward + fade */
       if (atsRef.current) {
         atsRef.current.style.transform =
-          `translate(${p * -40}px, ${p * -30}px)`;
-        atsRef.current.style.opacity = `${1 - p * 0.6}`;
+          `translate(${p * -55}px, ${p * -40}px)`;
+        atsRef.current.style.opacity = `${1 - p * 0.7}`;
       }
       if (engagementRef.current) {
         engagementRef.current.style.transform =
-          `translate(${p * -50}px, ${p * 20}px)`;
-        engagementRef.current.style.opacity = `${1 - p * 0.6}`;
+          `translate(${p * -65}px, ${p * 30}px)`;
+        engagementRef.current.style.opacity = `${1 - p * 0.7}`;
       }
       if (expertRef.current) {
         expertRef.current.style.transform =
-          `translate(${p * 40}px, ${p * -35}px)`;
-        expertRef.current.style.opacity = `${1 - p * 0.6}`;
+          `translate(${p * 55}px, ${p * -45}px)`;
+        expertRef.current.style.opacity = `${1 - p * 0.7}`;
       }
       if (interviewRef.current) {
         interviewRef.current.style.transform =
-          `translate(${p * 50}px, ${p * 25}px)`;
-        interviewRef.current.style.opacity = `${1 - p * 0.6}`;
+          `translate(${p * 65}px, ${p * 35}px)`;
+        interviewRef.current.style.opacity = `${1 - p * 0.7}`;
       }
+
+      rafId = requestAnimationFrame(tick);
     }
 
-    function onScroll() {
-      cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(applyScroll);
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
+    rafId = requestAnimationFrame(tick);
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      running = false;
       cancelAnimationFrame(rafId);
     };
   }, []);
