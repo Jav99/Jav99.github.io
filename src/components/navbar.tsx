@@ -36,11 +36,12 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
         scrolled
           ? "bg-slate-950/95 backdrop-blur-xl border-b border-slate-800 shadow-lg"
           : "bg-slate-950"
       }`}
+      style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
     >
       <nav
         className="flex items-center justify-between h-20 px-8 md:px-16 lg:px-24 max-w-[1440px] mx-auto"
@@ -86,26 +87,43 @@ export function Navbar() {
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileOpen}
         >
-          {mobileOpen ? (
-            <X
-              className="w-6 h-6 text-white"
-            />
-          ) : (
-            <Menu
-              className="w-6 h-6 text-white"
-            />
-          )}
+          <AnimatePresence mode="wait" initial={false}>
+            {mobileOpen ? (
+              <motion.span
+                key="close"
+                initial={{ opacity: 0, rotate: -90, scale: 0.8 }}
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                exit={{ opacity: 0, rotate: 90, scale: 0.8 }}
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              >
+                <X className="w-6 h-6 text-white" />
+              </motion.span>
+            ) : (
+              <motion.span
+                key="menu"
+                initial={{ opacity: 0, rotate: 90, scale: 0.8 }}
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                exit={{ opacity: 0, rotate: -90, scale: 0.8 }}
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              >
+                <Menu className="w-6 h-6 text-white" />
+              </motion.span>
+            )}
+          </AnimatePresence>
         </button>
       </nav>
 
       {/* Mobile Panel */}
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25, ease: [0.25, 0.4, 0.25, 1] }}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{
+              height: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.2, ease: "easeInOut" },
+            }}
             className="md:hidden bg-slate-950/95 backdrop-blur-xl border-b border-slate-800 overflow-hidden"
           >
             <div className="flex flex-col items-center gap-6 py-8 px-8">
@@ -114,12 +132,14 @@ export function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  initial={{ opacity: 0, y: -4 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
                   transition={{
-                    duration: 0.3,
-                    delay: i * 0.05,
-                    ease: [0.25, 0.4, 0.25, 1],
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 25,
+                    delay: i * 0.06,
                   }}
                   className="text-base tracking-wide uppercase text-slate-300 hover:text-white transition-colors min-h-[44px] flex items-center"
                 >
@@ -127,12 +147,14 @@ export function Navbar() {
                 </motion.a>
               ))}
               <motion.div
-                initial={{ opacity: 0, y: -4 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
                 transition={{
-                  duration: 0.3,
-                  delay: 0.15,
-                  ease: [0.25, 0.4, 0.25, 1],
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 25,
+                  delay: navLinks.length * 0.06,
                 }}
               >
                 <Button
