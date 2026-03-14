@@ -2,13 +2,15 @@
 .hero {
   position: relative;
   width: 100%;
-  background: #ffffff;
-  overflow: visible;
+  overflow-x: clip;
+  overflow-y: visible;
   padding-top: 120px;
 }
 
 /* ── Content: headline + subtitle + CTAs ─────────────────── */
 .content {
+  position: relative;
+  z-index: 20;
   text-align: center;
   max-width: 800px;
   margin: 0 auto;
@@ -84,69 +86,19 @@
   transform: translateY(-1px);
 }
 
-/* ── Showcase area: gradients + phone + floating cards ───── */
+/* ── Showcase area: phone + floating cards ────────────────── */
 .showcase {
   position: relative;
-  padding: 20px 0 100px;
+  padding: 80px 0 100px;
   overflow: visible;
 }
 
-/* ── Animated gradient blobs ─────────────────────────────── */
-.gradientLeft {
-  position: absolute;
-  width: 900px;
-  height: 900px;
-  left: -200px;
-  top: -100px;
-  background: radial-gradient(
-    circle,
-    rgba(120, 215, 245, 0.5) 0%,
-    rgba(140, 225, 250, 0.25) 30%,
-    rgba(170, 238, 255, 0.08) 55%,
-    transparent 72%
-  );
-  border-radius: 50%;
-  filter: blur(40px);
-  will-change: transform;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.gradientRight {
-  position: absolute;
-  width: 900px;
-  height: 900px;
-  right: -200px;
-  top: -20px;
-  background: radial-gradient(
-    circle,
-    rgba(210, 235, 60, 0.45) 0%,
-    rgba(215, 240, 80, 0.2) 30%,
-    rgba(225, 248, 110, 0.06) 55%,
-    transparent 72%
-  );
-  border-radius: 50%;
-  filter: blur(40px);
-  will-change: transform;
-  pointer-events: none;
-  z-index: 0;
-}
-
-@media (max-width: 767px) {
-  .gradientLeft {
-    width: 500px;
-    height: 500px;
-    left: -150px;
-    top: -50px;
-  }
-
-  .gradientRight {
-    width: 500px;
-    height: 500px;
-    right: -150px;
-    top: 20px;
+@media (min-width: 768px) {
+  .showcase {
+    padding-top: 120px;
   }
 }
+
 
 /* ── Phone area (contains phone + floating cards) ────────── */
 .phoneArea {

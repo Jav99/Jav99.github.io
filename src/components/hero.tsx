@@ -5,24 +5,17 @@ import styles from './Hero.module.css';
 
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const gradientLeftRef = useRef<HTMLDivElement>(null);
-  const gradientRightRef = useRef<HTMLDivElement>(null);
   const phoneRef = useRef<HTMLDivElement>(null);
   const atsRef = useRef<HTMLDivElement>(null);
   const engagementRef = useRef<HTMLDivElement>(null);
   const expertRef = useRef<HTMLDivElement>(null);
   const interviewRef = useRef<HTMLDivElement>(null);
 
-  /* Smooth scroll-driven parallax with lerp for buttery interpolation */
+  /* Smooth scroll-driven parallax with lerp */
   useEffect(() => {
     let rafId = 0;
-    let current = 0; // smoothed progress value
+    let current = 0;
     let running = true;
-
-    /* Ease-out cubic for extra smoothness */
-    function easeOut(t: number) {
-      return 1 - Math.pow(1 - t, 3);
-    }
 
     function tick() {
       if (!running || !sectionRef.current) {
@@ -31,50 +24,45 @@ export function Hero() {
       }
 
       const rect = sectionRef.current.getBoundingClientRect();
-      const raw = Math.min(Math.max(-rect.top / (rect.height * 0.5), 0), 1);
+      /* Progress based on how far the showcase (bottom half) has scrolled */
+      const raw = Math.min(Math.max(-rect.top / (rect.height * 0.6), 0), 1);
 
-      /* Lerp for smooth interpolation — no jank */
-      current += (raw - current) * 0.08;
-      const p = easeOut(current);
+      /* Lerp for buttery interpolation */
+      current += (raw - current) * 0.06;
+      const p = current;
 
-      /* Gradient blobs drift downward into the next section */
-      if (gradientLeftRef.current) {
-        gradientLeftRef.current.style.transform =
-          `translate(${p * -90}px, ${p * 180}px) scale(${1 + p * 0.35})`;
-      }
-      if (gradientRightRef.current) {
-        gradientRightRef.current.style.transform =
-          `translate(${p * 110}px, ${p * 200}px) scale(${1 + p * 0.3})`;
-      }
+      /* Smooth ease-out curve */
+      const ep = 1 - Math.pow(1 - p, 3);
 
-      /* Phone: starts at 2x scale, settles to 1x as user scrolls */
-      const phoneScale = 2 - p * 1; // 2 → 1
+      /* Phone: 2x → 1x with gentle upward drift */
+      const phoneScale = 2 - ep * 1;
       if (phoneRef.current) {
         phoneRef.current.style.transform =
-          `translateY(${p * -80}px) scale(${phoneScale})`;
-        phoneRef.current.style.opacity = `${1 - p * 0.2}`;
+          `translateY(${ep * -50}px) scale(${phoneScale})`;
+        phoneRef.current.style.opacity = `${1 - ep * 0.15}`;
       }
 
-      /* Cards drift outward + fade */
+      /* Cards drift outward + fade — only starts after phone begins shrinking */
+      const cardP = Math.max(0, (ep - 0.15) / 0.85); // delayed start
       if (atsRef.current) {
         atsRef.current.style.transform =
-          `translate(${p * -55}px, ${p * -40}px)`;
-        atsRef.current.style.opacity = `${1 - p * 0.7}`;
+          `translate(${cardP * -50}px, ${cardP * -35}px)`;
+        atsRef.current.style.opacity = `${1 - cardP * 0.8}`;
       }
       if (engagementRef.current) {
         engagementRef.current.style.transform =
-          `translate(${p * -65}px, ${p * 30}px)`;
-        engagementRef.current.style.opacity = `${1 - p * 0.7}`;
+          `translate(${cardP * -60}px, ${cardP * 25}px)`;
+        engagementRef.current.style.opacity = `${1 - cardP * 0.8}`;
       }
       if (expertRef.current) {
         expertRef.current.style.transform =
-          `translate(${p * 55}px, ${p * -45}px)`;
-        expertRef.current.style.opacity = `${1 - p * 0.7}`;
+          `translate(${cardP * 50}px, ${cardP * -40}px)`;
+        expertRef.current.style.opacity = `${1 - cardP * 0.8}`;
       }
       if (interviewRef.current) {
         interviewRef.current.style.transform =
-          `translate(${p * 65}px, ${p * 35}px)`;
-        interviewRef.current.style.opacity = `${1 - p * 0.7}`;
+          `translate(${cardP * 60}px, ${cardP * 30}px)`;
+        interviewRef.current.style.opacity = `${1 - cardP * 0.8}`;
       }
 
       rafId = requestAnimationFrame(tick);
@@ -108,11 +96,8 @@ export function Hero() {
         </div>
       </div>
 
-      {/* ── Showcase: gradient background + phone + cards ── */}
+      {/* ── Showcase: phone + floating cards ── */}
       <div className={styles.showcase}>
-        <div ref={gradientLeftRef} className={styles.gradientLeft} />
-        <div ref={gradientRightRef} className={styles.gradientRight} />
-
         <div className={styles.phoneArea}>
           {/* ATS Score — top left */}
           <div ref={atsRef} className={`${styles.floatingCard} ${styles.atsCard}`}>
