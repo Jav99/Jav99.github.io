@@ -5,36 +5,72 @@ import styles from './Hero.module.css';
 
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const gradientLeftRef = useRef<HTMLDivElement>(null);
-  const gradientRightRef = useRef<HTMLDivElement>(null);
+  const phoneRef = useRef<HTMLDivElement>(null);
+  const atsRef = useRef<HTMLDivElement>(null);
+  const engagementRef = useRef<HTMLDivElement>(null);
+  const expertRef = useRef<HTMLDivElement>(null);
+  const interviewRef = useRef<HTMLDivElement>(null);
 
-  /* Scroll-driven gradient motion */
+  /* Smooth scroll-driven parallax with lerp */
   useEffect(() => {
     let rafId = 0;
+    let current = 0;
+    let running = true;
 
-    function applyScroll() {
-      if (!sectionRef.current) return;
+    function tick() {
+      if (!running || !sectionRef.current) {
+        if (running) rafId = requestAnimationFrame(tick);
+        return;
+      }
+
       const rect = sectionRef.current.getBoundingClientRect();
-      const p = Math.min(Math.max(-rect.top / (rect.height * 0.5), 0), 1);
+      /* Progress based on how far the showcase (bottom half) has scrolled */
+      const raw = Math.min(Math.max(-rect.top / (rect.height * 0.6), 0), 1);
 
-      if (gradientLeftRef.current) {
-        gradientLeftRef.current.style.transform =
-          `translate(${p * -70}px, ${p * -110}px) scale(${1 + p * 0.18})`;
+      /* Lerp for buttery interpolation */
+      current += (raw - current) * 0.06;
+      const p = current;
+
+      /* Smooth ease-out curve */
+      const ep = 1 - Math.pow(1 - p, 3);
+
+      /* Phone: 2x → 1x with gentle upward drift */
+      const phoneScale = 2 - ep * 1;
+      if (phoneRef.current) {
+        phoneRef.current.style.transform =
+          `translateY(${ep * -50}px) scale(${phoneScale})`;
+        phoneRef.current.style.opacity = `${1 - ep * 0.15}`;
       }
-      if (gradientRightRef.current) {
-        gradientRightRef.current.style.transform =
-          `translate(${p * 70}px, ${p * -90}px) scale(${1 + p * 0.14})`;
+
+      /* Cards drift outward + fade — only starts after phone begins shrinking */
+      const cardP = Math.max(0, (ep - 0.15) / 0.85); // delayed start
+      if (atsRef.current) {
+        atsRef.current.style.transform =
+          `translate(${cardP * -50}px, ${cardP * -35}px)`;
+        atsRef.current.style.opacity = `${1 - cardP * 0.8}`;
       }
+      if (engagementRef.current) {
+        engagementRef.current.style.transform =
+          `translate(${cardP * -60}px, ${cardP * 25}px)`;
+        engagementRef.current.style.opacity = `${1 - cardP * 0.8}`;
+      }
+      if (expertRef.current) {
+        expertRef.current.style.transform =
+          `translate(${cardP * 50}px, ${cardP * -40}px)`;
+        expertRef.current.style.opacity = `${1 - cardP * 0.8}`;
+      }
+      if (interviewRef.current) {
+        interviewRef.current.style.transform =
+          `translate(${cardP * 60}px, ${cardP * 30}px)`;
+        interviewRef.current.style.opacity = `${1 - cardP * 0.8}`;
+      }
+
+      rafId = requestAnimationFrame(tick);
     }
 
-    function onScroll() {
-      cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(applyScroll);
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
+    rafId = requestAnimationFrame(tick);
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      running = false;
       cancelAnimationFrame(rafId);
     };
   }, []);
@@ -60,14 +96,11 @@ export function Hero() {
         </div>
       </div>
 
-      {/* ── Showcase: gradient background + phone + cards ── */}
+      {/* ── Showcase: phone + floating cards ── */}
       <div className={styles.showcase}>
-        <div ref={gradientLeftRef} className={styles.gradientLeft} />
-        <div ref={gradientRightRef} className={styles.gradientRight} />
-
         <div className={styles.phoneArea}>
           {/* ATS Score — top left */}
-          <div className={`${styles.floatingCard} ${styles.atsCard}`}>
+          <div ref={atsRef} className={`${styles.floatingCard} ${styles.atsCard}`}>
             <div className={styles.cardIconCircle}>
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
                 <path d="M5 9l3 3 5-6" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -78,7 +111,7 @@ export function Hero() {
           </div>
 
           {/* Engagement — bottom left */}
-          <div className={`${styles.floatingCard} ${styles.engagementCard}`}>
+          <div ref={engagementRef} className={`${styles.floatingCard} ${styles.engagementCard}`}>
             <div className={styles.cardLabelRow}>
               <span className={styles.cardLabel}>ENGAGEMENT</span>
               <span className={styles.cardBadgeGreen}>+12%</span>
@@ -93,7 +126,7 @@ export function Hero() {
           </div>
 
           {/* iPhone */}
-          <div className={styles.phoneFrame}>
+          <div ref={phoneRef} className={styles.phoneFrame}>
             <img
               src="/iphone.png"
               alt="iPhone showing resume score of 8.5 out of 10"
@@ -103,7 +136,7 @@ export function Hero() {
           </div>
 
           {/* Expert Rating — top right */}
-          <div className={`${styles.floatingCard} ${styles.expertCard}`}>
+          <div ref={expertRef} className={`${styles.floatingCard} ${styles.expertCard}`}>
             <div className={styles.starsRow}>
               {[1, 2, 3, 4, 5].map((i) => (
                 <span key={i} className={styles.starGreen} aria-hidden="true">★</span>
@@ -116,7 +149,7 @@ export function Hero() {
           </div>
 
           {/* Interview Ready — bottom right */}
-          <div className={`${styles.floatingCard} ${styles.interviewCard}`}>
+          <div ref={interviewRef} className={`${styles.floatingCard} ${styles.interviewCard}`}>
             <div className={styles.interviewIcon}>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                 <path d="M6.5 10.5l2.5 2.5 5-5.5" stroke="#10B981" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
