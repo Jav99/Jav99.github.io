@@ -7,8 +7,13 @@ export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const gradientLeftRef = useRef<HTMLDivElement>(null);
   const gradientRightRef = useRef<HTMLDivElement>(null);
+  const phoneRef = useRef<HTMLDivElement>(null);
+  const atsRef = useRef<HTMLDivElement>(null);
+  const engagementRef = useRef<HTMLDivElement>(null);
+  const expertRef = useRef<HTMLDivElement>(null);
+  const interviewRef = useRef<HTMLDivElement>(null);
 
-  /* Scroll-driven gradient motion */
+  /* Scroll-driven gradient motion + phone parallax */
   useEffect(() => {
     let rafId = 0;
 
@@ -24,6 +29,35 @@ export function Hero() {
       if (gradientRightRef.current) {
         gradientRightRef.current.style.transform =
           `translate(${p * 70}px, ${p * -90}px) scale(${1 + p * 0.14})`;
+      }
+
+      /* Phone rises slower than scroll (parallax) and scales down slightly */
+      if (phoneRef.current) {
+        phoneRef.current.style.transform =
+          `translateY(${p * -60}px) scale(${1 - p * 0.05})`;
+        phoneRef.current.style.opacity = `${1 - p * 0.3}`;
+      }
+
+      /* Cards drift outward + fade as user scrolls away */
+      if (atsRef.current) {
+        atsRef.current.style.transform =
+          `translate(${p * -40}px, ${p * -30}px)`;
+        atsRef.current.style.opacity = `${1 - p * 0.6}`;
+      }
+      if (engagementRef.current) {
+        engagementRef.current.style.transform =
+          `translate(${p * -50}px, ${p * 20}px)`;
+        engagementRef.current.style.opacity = `${1 - p * 0.6}`;
+      }
+      if (expertRef.current) {
+        expertRef.current.style.transform =
+          `translate(${p * 40}px, ${p * -35}px)`;
+        expertRef.current.style.opacity = `${1 - p * 0.6}`;
+      }
+      if (interviewRef.current) {
+        interviewRef.current.style.transform =
+          `translate(${p * 50}px, ${p * 25}px)`;
+        interviewRef.current.style.opacity = `${1 - p * 0.6}`;
       }
     }
 
@@ -67,7 +101,7 @@ export function Hero() {
 
         <div className={styles.phoneArea}>
           {/* ATS Score — top left */}
-          <div className={`${styles.floatingCard} ${styles.atsCard}`}>
+          <div ref={atsRef} className={`${styles.floatingCard} ${styles.atsCard}`}>
             <div className={styles.cardIconCircle}>
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
                 <path d="M5 9l3 3 5-6" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -78,7 +112,7 @@ export function Hero() {
           </div>
 
           {/* Engagement — bottom left */}
-          <div className={`${styles.floatingCard} ${styles.engagementCard}`}>
+          <div ref={engagementRef} className={`${styles.floatingCard} ${styles.engagementCard}`}>
             <div className={styles.cardLabelRow}>
               <span className={styles.cardLabel}>ENGAGEMENT</span>
               <span className={styles.cardBadgeGreen}>+12%</span>
@@ -93,7 +127,7 @@ export function Hero() {
           </div>
 
           {/* iPhone */}
-          <div className={styles.phoneFrame}>
+          <div ref={phoneRef} className={styles.phoneFrame}>
             <img
               src="/iphone.png"
               alt="iPhone showing resume score of 8.5 out of 10"
@@ -103,7 +137,7 @@ export function Hero() {
           </div>
 
           {/* Expert Rating — top right */}
-          <div className={`${styles.floatingCard} ${styles.expertCard}`}>
+          <div ref={expertRef} className={`${styles.floatingCard} ${styles.expertCard}`}>
             <div className={styles.starsRow}>
               {[1, 2, 3, 4, 5].map((i) => (
                 <span key={i} className={styles.starGreen} aria-hidden="true">★</span>
@@ -116,7 +150,7 @@ export function Hero() {
           </div>
 
           {/* Interview Ready — bottom right */}
-          <div className={`${styles.floatingCard} ${styles.interviewCard}`}>
+          <div ref={interviewRef} className={`${styles.floatingCard} ${styles.interviewCard}`}>
             <div className={styles.interviewIcon}>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                 <path d="M6.5 10.5l2.5 2.5 5-5.5" stroke="#10B981" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />

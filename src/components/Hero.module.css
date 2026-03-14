@@ -169,6 +169,8 @@
   position: relative;
   z-index: 5;
   flex-shrink: 0;
+  will-change: transform, opacity;
+  transition: transform 0.1s linear, opacity 0.1s linear;
 }
 
 .phoneImage {
@@ -198,6 +200,8 @@
   z-index: 10;
   opacity: 0;
   animation: fadeInUp 0.7s ease-out forwards;
+  will-change: transform, opacity;
+  transition: transform 0.1s linear, opacity 0.1s linear;
 }
 
 /* ATS Score — top left */
