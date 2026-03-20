@@ -9,21 +9,21 @@ gsap.registerPlugin(ScrollTrigger);
 const testimonials = [
   {
     quote:
-      "Hannah didn\u2019t just rewrite my resume\u2014she repositioned my entire career narrative. Within three weeks, I had interviews at two FAANG companies and a 40% higher salary offer.",
+      "Hannah didn't just rewrite my resume—she repositioned my entire career narrative. Within three weeks, I had interviews at two FAANG companies and a 40% higher salary offer.",
     name: "Sarah Chen",
     role: "Senior Product Manager",
     company: "Previously at Stripe",
   },
   {
     quote:
-      "I\u2019d been sending the same resume for months with zero callbacks. Hannah rewrote it in 48 hours. I landed my dream role within a month.",
+      "I'd been sending the same resume for months with zero callbacks. Hannah rewrote it in 48 hours. I landed my dream role within a month.",
     name: "Marcus Thompson",
     role: "Engineering Director",
     company: "Previously at Meta",
   },
   {
     quote:
-      "The executive package was worth every penny. Hannah\u2019s salary negotiation playbook alone added $35K to my offer. She thinks like a recruiter because she was one.",
+      "The executive package was worth every penny. Hannah's salary negotiation playbook alone added $35K to my offer. She thinks like a recruiter because she was one.",
     name: "Priya Patel",
     role: "VP of Operations",
     company: "Previously at Deloitte",
@@ -35,20 +35,42 @@ export function Testimonials() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.set(".testimonial-card", { y: 30 });
+      /* Header reveal */
+      gsap.fromTo(
+        ".testimonials-header > *",
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".testimonials-header",
+            start: "top 85%",
+            once: true,
+          },
+        }
+      );
 
-      gsap.to(".testimonial-card", {
-        scrollTrigger: {
-          trigger: ".testimonials-grid",
-          start: "top 85%",
-          once: true,
-        },
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        stagger: 0.12,
-        ease: "power3.out",
-      });
+      /* Cards stagger in from bottom with slight rotation */
+      gsap.fromTo(
+        ".testimonial-card",
+        { y: 80, opacity: 0, rotateX: 4 },
+        {
+          y: 0,
+          opacity: 1,
+          rotateX: 0,
+          duration: 0.9,
+          stagger: 0.12,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".testimonials-grid",
+            start: "top 85%",
+            once: true,
+          },
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();
@@ -61,7 +83,7 @@ export function Testimonials() {
     >
       <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
         {/* Section Header */}
-        <div className="text-center mb-16 md:mb-20">
+        <div className="testimonials-header text-center mb-16 md:mb-20">
           <p className="text-sm uppercase tracking-[0.2em] text-teal-600 font-medium">
             Results
           </p>
@@ -71,11 +93,12 @@ export function Testimonials() {
         </div>
 
         {/* Testimonials Grid */}
-        <div className="testimonials-grid grid md:grid-cols-3 gap-8">
+        <div className="testimonials-grid grid md:grid-cols-3 gap-8" style={{ perspective: "1000px" }}>
           {testimonials.map((t) => (
             <div
               key={t.name}
-              className="testimonial-card opacity-0 bg-white rounded-3xl shadow-clay border border-slate-100 p-10 relative"
+              className="testimonial-card bg-white rounded-3xl shadow-clay border border-slate-100 p-10 relative"
+              style={{ transformStyle: "preserve-3d" }}
             >
               {/* Decorative Quote */}
               <span

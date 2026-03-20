@@ -42,20 +42,42 @@ export function ServicesPreview() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.set(".service-card", { y: 30 });
+      /* Header reveal */
+      gsap.fromTo(
+        ".services-header > *",
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".services-header",
+            start: "top 85%",
+            once: true,
+          },
+        }
+      );
 
-      gsap.to(".service-card", {
-        scrollTrigger: {
-          trigger: ".services-grid",
-          start: "top 85%",
-          once: true,
-        },
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        stagger: 0.12,
-        ease: "power3.out",
-      });
+      /* Cards slide up with stagger */
+      gsap.fromTo(
+        ".service-card",
+        { y: 80, opacity: 0, scale: 0.96 },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 0.9,
+          stagger: 0.15,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".services-grid",
+            start: "top 85%",
+            once: true,
+          },
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();
@@ -69,7 +91,7 @@ export function ServicesPreview() {
     >
       <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
         {/* Section Header */}
-        <div className="text-center mb-16 md:mb-20">
+        <div className="services-header text-center mb-16 md:mb-20">
           <p className="text-sm uppercase tracking-[0.2em] text-teal-600 font-medium">
             Investment
           </p>
@@ -85,7 +107,7 @@ export function ServicesPreview() {
         {/* Pricing Grid */}
         <div className="services-grid grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
           {plans.map((plan) => (
-            <div key={plan.name} className="service-card opacity-0">
+            <div key={plan.name} className="service-card">
               <Card
                 featured={plan.featured}
                 className={`p-10 flex flex-col h-full ${

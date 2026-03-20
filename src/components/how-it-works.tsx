@@ -32,19 +32,53 @@ export function HowItWorks() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.set(".step-card", { y: 30 });
+      /* Section header reveal */
+      gsap.fromTo(
+        ".hiw-header > *",
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".hiw-header",
+            start: "top 85%",
+            once: true,
+          },
+        }
+      );
 
-      gsap.to(".step-card", {
-        scrollTrigger: {
-          trigger: ".steps-grid",
-          start: "top 85%",
-          once: true,
-        },
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        stagger: 0.15,
-        ease: "power3.out",
+      /* Cards reveal with stagger + slide from bottom */
+      gsap.fromTo(
+        ".step-card",
+        { y: 60, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".steps-grid",
+            start: "top 85%",
+            once: true,
+          },
+        }
+      );
+
+      /* Parallax on large background numbers */
+      gsap.utils.toArray<HTMLElement>(".step-number").forEach((el) => {
+        gsap.to(el, {
+          y: -30,
+          scrollTrigger: {
+            trigger: el,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 2,
+          },
+        });
       });
     }, sectionRef);
 
@@ -58,7 +92,7 @@ export function HowItWorks() {
     >
       <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
         {/* Section Header */}
-        <div className="text-center mb-16 md:mb-20">
+        <div className="hiw-header text-center mb-16 md:mb-20">
           <p className="text-sm uppercase tracking-[0.2em] text-teal-600 font-medium">
             The Process
           </p>
@@ -72,10 +106,9 @@ export function HowItWorks() {
           {steps.map((step) => (
             <div
               key={step.number}
-              className="step-card opacity-0 relative text-center md:text-left"
+              className="step-card relative text-center md:text-left"
             >
-              {/* Large Background Number */}
-              <span className="text-7xl md:text-8xl font-bold text-slate-100 font-serif leading-none select-none">
+              <span className="step-number text-7xl md:text-8xl font-bold text-slate-100 font-serif leading-none select-none block">
                 {step.number}
               </span>
               <h3 className="font-serif text-xl font-semibold text-slate-900 mt-4">

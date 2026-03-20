@@ -1,92 +1,161 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useLayoutEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Hero.module.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const phoneRef = useRef<HTMLDivElement>(null);
-  const atsRef = useRef<HTMLDivElement>(null);
-  const engagementRef = useRef<HTMLDivElement>(null);
-  const expertRef = useRef<HTMLDivElement>(null);
-  const interviewRef = useRef<HTMLDivElement>(null);
 
-  /* Smooth scroll-driven parallax with lerp */
-  useEffect(() => {
-    let rafId = 0;
-    let current = 0;
-    let running = true;
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      /* ── Staggered headline reveal ── */
+      gsap.fromTo(
+        '.hero-line',
+        { y: 80, opacity: 0, skewY: 3 },
+        {
+          y: 0,
+          opacity: 1,
+          skewY: 0,
+          duration: 1,
+          stagger: 0.12,
+          ease: 'power4.out',
+          delay: 0.2,
+        }
+      );
 
-    function tick() {
-      if (!running || !sectionRef.current) {
-        if (running) rafId = requestAnimationFrame(tick);
-        return;
-      }
+      /* ── Subtitle + CTAs fade up ── */
+      gsap.fromTo(
+        '.hero-fade',
+        { y: 30, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: 'power3.out',
+          delay: 0.7,
+        }
+      );
 
-      const rect = sectionRef.current.getBoundingClientRect();
-      /* Progress based on how far the showcase (bottom half) has scrolled */
-      const raw = Math.min(Math.max(-rect.top / (rect.height * 0.6), 0), 1);
+      /* ── Phone scale-in ── */
+      gsap.fromTo(
+        '.hero-phone',
+        { scale: 2.2, opacity: 0 },
+        {
+          scale: 2,
+          opacity: 1,
+          duration: 1.2,
+          ease: 'power3.out',
+          delay: 0.5,
+        }
+      );
 
-      /* Lerp for buttery interpolation */
-      current += (raw - current) * 0.06;
-      const p = current;
+      /* ── Floating cards stagger in ── */
+      gsap.fromTo(
+        '.hero-card',
+        { y: 40, opacity: 0, scale: 0.9 },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 0.7,
+          stagger: 0.12,
+          ease: 'back.out(1.4)',
+          delay: 0.9,
+        }
+      );
 
-      /* Smooth ease-out curve */
-      const ep = 1 - Math.pow(1 - p, 3);
+      /* ── Scroll-driven: phone shrinks 2x → 1x ── */
+      gsap.to('.hero-phone', {
+        scale: 1,
+        y: -60,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1.5,
+        },
+      });
 
-      /* Phone: 2x → 1x with gentle upward drift */
-      const phoneScale = 2 - ep * 1;
-      if (phoneRef.current) {
-        phoneRef.current.style.transform =
-          `translateY(${ep * -50}px) scale(${phoneScale})`;
-        phoneRef.current.style.opacity = `${1 - ep * 0.15}`;
-      }
+      /* ── Scroll-driven: cards drift outward + fade ── */
+      gsap.to('.ats-card', {
+        x: -70,
+        y: -50,
+        opacity: 0,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: '20% top',
+          end: 'bottom top',
+          scrub: 1.5,
+        },
+      });
+      gsap.to('.engagement-card', {
+        x: -80,
+        y: 40,
+        opacity: 0,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: '20% top',
+          end: 'bottom top',
+          scrub: 1.5,
+        },
+      });
+      gsap.to('.expert-card', {
+        x: 70,
+        y: -55,
+        opacity: 0,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: '20% top',
+          end: 'bottom top',
+          scrub: 1.5,
+        },
+      });
+      gsap.to('.interview-card', {
+        x: 80,
+        y: 45,
+        opacity: 0,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: '20% top',
+          end: 'bottom top',
+          scrub: 1.5,
+        },
+      });
 
-      /* Cards drift outward + fade — only starts after phone begins shrinking */
-      const cardP = Math.max(0, (ep - 0.15) / 0.85); // delayed start
-      if (atsRef.current) {
-        atsRef.current.style.transform =
-          `translate(${cardP * -50}px, ${cardP * -35}px)`;
-        atsRef.current.style.opacity = `${1 - cardP * 0.8}`;
-      }
-      if (engagementRef.current) {
-        engagementRef.current.style.transform =
-          `translate(${cardP * -60}px, ${cardP * 25}px)`;
-        engagementRef.current.style.opacity = `${1 - cardP * 0.8}`;
-      }
-      if (expertRef.current) {
-        expertRef.current.style.transform =
-          `translate(${cardP * 50}px, ${cardP * -40}px)`;
-        expertRef.current.style.opacity = `${1 - cardP * 0.8}`;
-      }
-      if (interviewRef.current) {
-        interviewRef.current.style.transform =
-          `translate(${cardP * 60}px, ${cardP * 30}px)`;
-        interviewRef.current.style.opacity = `${1 - cardP * 0.8}`;
-      }
+      /* ── Scroll-driven: headline parallax up ── */
+      gsap.to('.hero-content', {
+        y: -100,
+        opacity: 0,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: '40% top',
+          scrub: 1,
+        },
+      });
+    }, sectionRef);
 
-      rafId = requestAnimationFrame(tick);
-    }
-
-    rafId = requestAnimationFrame(tick);
-    return () => {
-      running = false;
-      cancelAnimationFrame(rafId);
-    };
+    return () => ctx.revert();
   }, []);
 
   return (
     <section ref={sectionRef} className={styles.hero}>
-      {/* ── Headline area ──────────────────────────── */}
-      <div className={styles.content}>
+      {/* ── Headline area ── */}
+      <div className={`${styles.content} hero-content`}>
         <h1 className={styles.headline}>
-          Expert-Led Resume Growth
+          <span className={`${styles.heroLine} hero-line`}>Expert-Led</span>
+          <span className={`${styles.heroLine} hero-line`}>Resume Growth</span>
         </h1>
-        <p className={styles.subtitle}>
+        <p className={`${styles.subtitle} hero-fade`}>
           From career gaps to dream offers — manage your professional
           narrative with human-led strategic audits.
         </p>
-        <div className={styles.ctas}>
+        <div className={`${styles.ctas} hero-fade`}>
           <a href="#audit" className={styles.ctaPrimary}>
             Rate for Free
           </a>
@@ -100,7 +169,7 @@ export function Hero() {
       <div className={styles.showcase}>
         <div className={styles.phoneArea}>
           {/* ATS Score — top left */}
-          <div ref={atsRef} className={`${styles.floatingCard} ${styles.atsCard}`}>
+          <div className={`${styles.floatingCard} ${styles.atsCard} hero-card ats-card`}>
             <div className={styles.cardIconCircle}>
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
                 <path d="M5 9l3 3 5-6" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -111,7 +180,7 @@ export function Hero() {
           </div>
 
           {/* Engagement — bottom left */}
-          <div ref={engagementRef} className={`${styles.floatingCard} ${styles.engagementCard}`}>
+          <div className={`${styles.floatingCard} ${styles.engagementCard} hero-card engagement-card`}>
             <div className={styles.cardLabelRow}>
               <span className={styles.cardLabel}>ENGAGEMENT</span>
               <span className={styles.cardBadgeGreen}>+12%</span>
@@ -126,7 +195,7 @@ export function Hero() {
           </div>
 
           {/* iPhone */}
-          <div ref={phoneRef} className={styles.phoneFrame}>
+          <div className={`${styles.phoneFrame} hero-phone`}>
             <img
               src="/iphone.png"
               alt="iPhone showing resume score of 8.5 out of 10"
@@ -136,7 +205,7 @@ export function Hero() {
           </div>
 
           {/* Expert Rating — top right */}
-          <div ref={expertRef} className={`${styles.floatingCard} ${styles.expertCard}`}>
+          <div className={`${styles.floatingCard} ${styles.expertCard} hero-card expert-card`}>
             <div className={styles.starsRow}>
               {[1, 2, 3, 4, 5].map((i) => (
                 <span key={i} className={styles.starGreen} aria-hidden="true">★</span>
@@ -149,7 +218,7 @@ export function Hero() {
           </div>
 
           {/* Interview Ready — bottom right */}
-          <div ref={interviewRef} className={`${styles.floatingCard} ${styles.interviewCard}`}>
+          <div className={`${styles.floatingCard} ${styles.interviewCard} hero-card interview-card`}>
             <div className={styles.interviewIcon}>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                 <path d="M6.5 10.5l2.5 2.5 5-5.5" stroke="#10B981" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
