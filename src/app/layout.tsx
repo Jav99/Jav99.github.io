@@ -3,6 +3,7 @@ import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { AuraBackground } from "@/components/aura-background";
+import { SmoothScroll } from "@/components/smooth-scroll";
 
 export const metadata: Metadata = {
   title: "Hannah White | Elite Career Strategist",
@@ -30,10 +31,12 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-white text-slate-900 font-sans antialiased">
-        <Navbar />
-        <AuraBackground />
-        <main className="relative">{children}</main>
-        <Footer />
+        <SmoothScroll>
+          <Navbar />
+          <AuraBackground />
+          <main className="relative">{children}</main>
+          <Footer />
+        </SmoothScroll>
       </body>
     </html>
   );

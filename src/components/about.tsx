@@ -1,8 +1,11 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useLayoutEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const credentials = [
   "Ex-Head of Recruiting",
@@ -12,19 +15,88 @@ const credentials = [
 ];
 
 export function About() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      /* Image slides in from left */
+      gsap.fromTo(
+        ".about-image",
+        { x: -60, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".about-grid",
+            start: "top 80%",
+            once: true,
+          },
+        }
+      );
+
+      /* Bio text slides in from right with stagger */
+      gsap.fromTo(
+        ".about-text > *",
+        { x: 40, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.08,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".about-grid",
+            start: "top 80%",
+            once: true,
+          },
+        }
+      );
+
+      /* Credential badges pop in */
+      gsap.fromTo(
+        ".cred-badge",
+        { scale: 0.8, opacity: 0 },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.08,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: ".cred-badges",
+            start: "top 90%",
+            once: true,
+          },
+        }
+      );
+
+      /* Parallax on image */
+      gsap.to(".about-image", {
+        y: -40,
+        scrollTrigger: {
+          trigger: ".about-grid",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 2,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section id="about" className="relative z-10 py-24 md:py-32 lg:py-40" ref={ref}>
+    <section
+      id="about"
+      ref={sectionRef}
+      className="relative z-10 py-24 md:py-32 lg:py-40"
+    >
       <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
-        <div className="grid md:grid-cols-2 gap-16 items-center">
-          {/* Left: Visual / Portrait Placeholder */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          >
+        <div className="about-grid grid md:grid-cols-2 gap-16 items-center">
+          {/* Left: Portrait */}
+          <div className="about-image">
             <div className="aspect-[4/5] rounded-3xl bg-gradient-to-br from-teal-50 to-slate-50 border border-slate-100 overflow-hidden">
               <img
                 src="/hannah.jpg"
@@ -35,18 +107,10 @@ export function About() {
                 }}
               />
             </div>
-          </motion.div>
+          </div>
 
           {/* Right: Bio */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{
-              duration: 0.7,
-              delay: 0.15,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-          >
+          <div className="about-text">
             <p className="text-sm uppercase tracking-[0.2em] text-teal-600 font-medium">
               Your Strategist
             </p>
@@ -54,24 +118,24 @@ export function About() {
               Meet Hannah White
             </h2>
             <p className="text-lg text-slate-500 leading-relaxed mt-6">
-              I spent a decade as Head of Recruiting at companies you&apos;d
-              recognize instantly. I&apos;ve sat across the table from 10,000+
+              I spent a decade as Head of Recruiting at companies you'd
+              recognize instantly. I've sat across the table from 10,000+
               candidates. I know exactly what makes a hiring manager stop
-              scrolling&mdash;and what makes them hit delete.
+              scrolling—and what makes them hit delete.
             </p>
             <p className="text-lg text-slate-500 leading-relaxed mt-4">
-              Now I use that insider knowledge to architect resumes that don&apos;t
-              just get interviews&mdash;they command top-tier offers. No templates.
+              Now I use that insider knowledge to architect resumes that don't
+              just get interviews—they command top-tier offers. No templates.
               No AI-generated filler. Just sharp, strategic positioning that
               reflects your actual value.
             </p>
 
             {/* Credential Tags */}
-            <div className="flex flex-wrap gap-3 mt-8">
+            <div className="cred-badges flex flex-wrap gap-3 mt-8">
               {credentials.map((cred) => (
                 <span
                   key={cred}
-                  className="px-4 py-2 rounded-full bg-teal-50 text-teal-700 text-sm font-medium border border-teal-100"
+                  className="cred-badge px-4 py-2 rounded-full bg-teal-50 text-teal-700 text-sm font-medium border border-teal-100"
                 >
                   {cred}
                 </span>
@@ -83,7 +147,7 @@ export function About() {
                 Work With Hannah
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

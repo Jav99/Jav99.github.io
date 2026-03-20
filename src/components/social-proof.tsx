@@ -1,90 +1,79 @@
 "use client";
 
-import { motion, useInView, useMotionValue, animate } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useLayoutEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const stats = [
-  { value: 500, suffix: "+", label: "Executives Coached" },
-  { value: 10000, suffix: "+", label: "Resumes Reviewed" },
-  { value: 2.4, prefix: "$", suffix: "M", label: "Salary Negotiated" },
-  { value: 98, suffix: "%", label: "Client Satisfaction" },
+  { value: "500+", label: "Executives Coached" },
+  { value: "10,000+", label: "Resumes Reviewed" },
+  { value: "$2.4M", label: "Salary Negotiated" },
+  { value: "98%", label: "Client Satisfaction" },
 ];
 
-function AnimatedNumber({
-  value,
-  prefix = "",
-  suffix = "",
-  inView,
-}: {
-  value: number;
-  prefix?: string;
-  suffix?: string;
-  inView: boolean;
-}) {
-  const [display, setDisplay] = useState("0");
-  const motionVal = useMotionValue(0);
-
-  useEffect(() => {
-    if (!inView) return;
-    const controls = animate(motionVal, value, {
-      duration: 2,
-      ease: [0.16, 1, 0.3, 1],
-      onUpdate: (v) => {
-        setDisplay(
-          value % 1 !== 0
-            ? v.toFixed(1)
-            : v >= 1000
-              ? Math.round(v).toLocaleString()
-              : Math.round(v).toString()
-        );
-      },
-    });
-    return controls.stop;
-  }, [inView, value, motionVal]);
-
-  return (
-    <span>
-      {prefix}
-      {display}
-      {suffix}
-    </span>
-  );
-}
+/* Triple the items for seamless infinite loop */
+const marqueeItems = [...stats, ...stats, ...stats];
 
 export function SocialProof() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      /* Section fade-in */
+      gsap.fromTo(
+        sectionRef.current,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 92%",
+            once: true,
+          },
+        }
+      );
+
+      /* Infinite marquee ticker */
+      if (trackRef.current) {
+        const totalWidth = trackRef.current.scrollWidth / 3;
+        gsap.to(trackRef.current, {
+          x: -totalWidth,
+          duration: 30,
+          ease: "none",
+          repeat: -1,
+        });
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section className="relative z-10 bg-slate-50/80 py-16 md:py-20" ref={ref}>
-      <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-          {stats.map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{
-                duration: 0.6,
-                delay: i * 0.1,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-            >
-              <p className="font-serif text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
-                <AnimatedNumber
-                  value={stat.value}
-                  prefix={stat.prefix}
-                  suffix={stat.suffix}
-                  inView={inView}
-                />
-              </p>
-              <p className="text-sm text-slate-500 uppercase tracking-widest mt-2">
-                {stat.label}
-              </p>
-            </motion.div>
-          ))}
-        </div>
+    <section
+      ref={sectionRef}
+      className="relative z-10 py-10 md:py-14 overflow-hidden border-y border-slate-100"
+    >
+      <div
+        ref={trackRef}
+        className="flex items-center gap-0 whitespace-nowrap will-change-transform"
+      >
+        {marqueeItems.map((stat, i) => (
+          <div key={i} className="flex items-center gap-8 px-8 md:px-12 shrink-0">
+            <span className="font-serif text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
+              {stat.value}
+            </span>
+            <span className="text-xs uppercase tracking-[0.2em] text-slate-400 font-medium">
+              {stat.label}
+            </span>
+            <span className="text-slate-200 text-2xl select-none" aria-hidden="true">
+              /
+            </span>
+          </div>
+        ))}
       </div>
     </section>
   );
