@@ -13,13 +13,13 @@ export function Hero() {
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       /* ────────────────────────────────────────────
-       * ENTRANCE — headline + scroll indicator fade in
+       * ENTRANCE — headline + scroll indicator
        * ──────────────────────────────────────────── */
       const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
 
       tl.fromTo(
         '.hero-headline',
-        { y: 50, opacity: 0 },
+        { y: 40, opacity: 0 },
         { y: 0, opacity: 1, duration: 1.2 },
         0.3
       );
@@ -34,52 +34,57 @@ export function Hero() {
       /* ────────────────────────────────────────────
        * SCROLL-DRIVEN CINEMATIC SEQUENCE
        *
-       * Section is 300vh. Inner sticky wrapper stays
-       * pinned via CSS `position: sticky`. All GSAP
-       * tweens are scrubbed against the section.
+       * The phone starts at ~5x scale — its black
+       * bezel fills the viewport. Scrolling shrinks
+       * it to 1x, revealing the full device.
        * ──────────────────────────────────────────── */
       const base = {
         trigger: sectionRef.current,
         scrub: true,
       };
 
-      /* Headline fades up and out (0% → 25%) */
-      gsap.to('.hero-headline', {
-        y: -100,
-        opacity: 0,
+      /* Phone shrinks from massive → normal (0% → 70%) */
+      gsap.fromTo(
+        '.hero-phone',
+        { scale: 5 },
+        {
+          scale: 1,
+          immediateRender: false,
+          scrollTrigger: { ...base, start: 'top top', end: '70% top' },
+        }
+      );
+
+      /* Background transitions from dark → white as phone shrinks (20% → 60%) */
+      gsap.to('.hero-sticky-frame', {
+        backgroundColor: '#ffffff',
         immediateRender: false,
-        scrollTrigger: { ...base, start: 'top top', end: '25% top' },
+        scrollTrigger: { ...base, start: '20% top', end: '60% top' },
       });
 
-      /* Scroll indicator vanishes fast (0% → 12%) */
+      /* Phone shadow fades in once phone is smaller (40% → 65%) */
+      gsap.to('.hero-phone-img', {
+        filter: 'drop-shadow(0 30px 80px rgba(0, 0, 0, 0.18))',
+        immediateRender: false,
+        scrollTrigger: { ...base, start: '40% top', end: '65% top' },
+      });
+
+      /* Headline fades out as phone begins to shrink (0% → 20%) */
+      gsap.to('.hero-headline', {
+        opacity: 0,
+        y: -60,
+        immediateRender: false,
+        scrollTrigger: { ...base, start: 'top top', end: '20% top' },
+      });
+
+      /* Scroll indicator vanishes fast (0% → 10%) */
       gsap.to('.hero-scroll-indicator', {
         opacity: 0,
         y: -20,
         immediateRender: false,
-        scrollTrigger: { ...base, start: 'top top', end: '12% top' },
+        scrollTrigger: { ...base, start: 'top top', end: '10% top' },
       });
 
-      /* Dark overlay fades out → white bg (15% → 50%) */
-      gsap.to('.hero-dark-overlay', {
-        opacity: 0,
-        immediateRender: false,
-        scrollTrigger: { ...base, start: '15% top', end: '50% top' },
-      });
-
-      /* Phone rises from below into center (10% → 60%) */
-      gsap.fromTo(
-        '.hero-phone',
-        { yPercent: 120, scale: 1.1, opacity: 0 },
-        {
-          yPercent: 0,
-          scale: 1,
-          opacity: 1,
-          immediateRender: false,
-          scrollTrigger: { ...base, start: '10% top', end: '60% top' },
-        }
-      );
-
-      /* Floating cards stagger in (55% → 80%) */
+      /* Floating cards stagger in once phone is near final size (65% → 85%) */
       gsap.fromTo(
         '.hero-card',
         { y: 40, opacity: 0, scale: 0.92 },
@@ -89,7 +94,7 @@ export function Hero() {
           scale: 1,
           stagger: 0.02,
           immediateRender: false,
-          scrollTrigger: { ...base, start: '55% top', end: '80% top' },
+          scrollTrigger: { ...base, start: '65% top', end: '85% top' },
         }
       );
     }, sectionRef);
@@ -99,11 +104,8 @@ export function Hero() {
 
   return (
     <section ref={sectionRef} className={styles.hero}>
-      <div className={styles.stickyFrame}>
-        {/* ── Dark cinematic overlay ── */}
-        <div className={`${styles.darkOverlay} hero-dark-overlay`} />
-
-        {/* ── Opening: headline + scroll indicator ── */}
+      <div className={`${styles.stickyFrame} hero-sticky-frame`}>
+        {/* ── Opening: headline + scroll indicator (overlays the phone) ── */}
         <div className={styles.opening}>
           <h1 className={`${styles.headline} hero-headline`}>
             Rate your resume today.
@@ -148,12 +150,12 @@ export function Hero() {
               <span className={styles.cardValue}>40%</span>
             </div>
 
-            {/* iPhone */}
+            {/* iPhone — starts at 5x scale, IS the dark fill */}
             <div className={`${styles.phoneFrame} hero-phone`}>
               <img
                 src="/iphone.png"
                 alt="iPhone showing resume score of 8.5 out of 10"
-                className={styles.phoneImage}
+                className={`${styles.phoneImage} hero-phone-img`}
                 draggable={false}
               />
             </div>
