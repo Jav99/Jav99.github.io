@@ -12,131 +12,113 @@ export function Hero() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      /* ── Staggered headline reveal ── */
-      gsap.fromTo(
+      /* ────────────────────────────────────────────
+       * ENTRANCE TIMELINE — plays once on load
+       * ──────────────────────────────────────────── */
+      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+
+      /* Staggered headline reveal */
+      tl.fromTo(
         '.hero-line',
         { y: 80, opacity: 0, skewY: 3 },
-        {
-          y: 0,
-          opacity: 1,
-          skewY: 0,
-          duration: 1,
-          stagger: 0.12,
-          ease: 'power4.out',
-          delay: 0.2,
-        }
+        { y: 0, opacity: 1, skewY: 0, duration: 1, stagger: 0.12 },
+        0.2
       );
 
-      /* ── Subtitle + CTAs fade up ── */
-      gsap.fromTo(
+      /* Subtitle + CTAs fade up */
+      tl.fromTo(
         '.hero-fade',
         { y: 30, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: 'power3.out',
-          delay: 0.7,
-        }
+        { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' },
+        0.6
       );
 
-      /* ── Phone scale-in ── */
-      gsap.fromTo(
+      /* Phone fades in at 2x (CSS already sets scale(2) + opacity:0) */
+      tl.to(
         '.hero-phone',
-        { scale: 2.2, opacity: 0 },
-        {
-          scale: 2,
-          opacity: 1,
-          duration: 1.2,
-          ease: 'power3.out',
-          delay: 0.5,
-        }
+        { opacity: 1, duration: 1, ease: 'power2.out' },
+        0.4
       );
 
-      /* ── Floating cards stagger in ── */
-      gsap.fromTo(
+      /* Floating cards stagger in */
+      tl.fromTo(
         '.hero-card',
-        { y: 40, opacity: 0, scale: 0.9 },
+        { y: 30, opacity: 0, scale: 0.92 },
         {
           y: 0,
           opacity: 1,
           scale: 1,
           duration: 0.7,
-          stagger: 0.12,
-          ease: 'back.out(1.4)',
-          delay: 0.9,
+          stagger: 0.1,
+          ease: 'back.out(1.2)',
+        },
+        0.9
+      );
+
+      /* ────────────────────────────────────────────
+       * SCROLL-DRIVEN — scrub animations
+       * All use immediateRender:false so they don't
+       * conflict with the entrance timeline.
+       * ──────────────────────────────────────────── */
+      const scrollDefaults = {
+        trigger: sectionRef.current,
+        scrub: true, /* true = 1:1 with scroll, no lag */
+      };
+
+      /* Phone shrinks 2x → 1x and drifts up */
+      gsap.fromTo(
+        '.hero-phone',
+        { scale: 2, y: 0 },
+        {
+          scale: 1,
+          y: -50,
+          immediateRender: false,
+          scrollTrigger: {
+            ...scrollDefaults,
+            start: 'top top',
+            end: '80% top',
+          },
         }
       );
 
-      /* ── Scroll-driven: phone shrinks 2x → 1x ── */
-      gsap.to('.hero-phone', {
-        scale: 1,
-        y: -60,
+      /* Headline parallax up + fade */
+      gsap.to('.hero-content', {
+        y: -80,
+        opacity: 0,
+        immediateRender: false,
         scrollTrigger: {
-          trigger: sectionRef.current,
+          ...scrollDefaults,
           start: 'top top',
-          end: 'bottom top',
-          scrub: 1.5,
+          end: '45% top',
         },
       });
 
-      /* ── Scroll-driven: cards drift outward + fade ── */
+      /* Cards drift outward + fade — starts slightly later */
+      const cardScrollTrigger = {
+        ...scrollDefaults,
+        start: '15% top',
+        end: '70% top',
+      };
+
       gsap.to('.ats-card', {
-        x: -70,
-        y: -50,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: '20% top',
-          end: 'bottom top',
-          scrub: 1.5,
-        },
+        x: -60, y: -40, opacity: 0,
+        immediateRender: false,
+        scrollTrigger: cardScrollTrigger,
       });
       gsap.to('.engagement-card', {
-        x: -80,
-        y: 40,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: '20% top',
-          end: 'bottom top',
-          scrub: 1.5,
-        },
+        x: -70, y: 30, opacity: 0,
+        immediateRender: false,
+        scrollTrigger: { ...cardScrollTrigger },
       });
       gsap.to('.expert-card', {
-        x: 70,
-        y: -55,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: '20% top',
-          end: 'bottom top',
-          scrub: 1.5,
-        },
+        x: 60, y: -45, opacity: 0,
+        immediateRender: false,
+        scrollTrigger: { ...cardScrollTrigger },
       });
       gsap.to('.interview-card', {
-        x: 80,
-        y: 45,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: '20% top',
-          end: 'bottom top',
-          scrub: 1.5,
-        },
-      });
-
-      /* ── Scroll-driven: headline parallax up ── */
-      gsap.to('.hero-content', {
-        y: -100,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: '40% top',
-          scrub: 1,
-        },
+        x: 70, y: 35, opacity: 0,
+        immediateRender: false,
+        scrollTrigger: { ...cardScrollTrigger },
       });
     }, sectionRef);
 

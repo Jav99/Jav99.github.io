@@ -130,7 +130,9 @@
   z-index: 5;
   flex-shrink: 0;
   will-change: transform, opacity;
+  transform: scale(2);
   transform-origin: center center;
+  opacity: 0; /* hidden until GSAP entrance timeline fades it in */
 }
 
 .phoneImage {
