@@ -1,128 +1,126 @@
-/* ── Hero section ─────────────────────────────────────────── */
+/* ── Hero section — 300vh tall scroll runway ─────────────── */
 .hero {
   position: relative;
   width: 100%;
-  overflow-x: clip;
-  overflow-y: visible;
-  padding-top: 120px;
-  min-height: 100vh;
+  height: 300vh;
 }
 
-/* ── Content: headline + subtitle + CTAs ─────────────────── */
-.content {
-  position: relative;
+/* ── Sticky frame — stays viewport-locked while section scrolls ─ */
+.stickyFrame {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Dark cinematic overlay ──────────────────────────────── */
+.darkOverlay {
+  position: absolute;
+  inset: 0;
+  background: #0a0a0f;
+  z-index: 15;
+  pointer-events: none;
+}
+
+/* ── Opening: headline + scroll indicator ────────────────── */
+.opening {
+  position: absolute;
+  inset: 0;
   z-index: 20;
-  text-align: center;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 32px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 32px;
+  pointer-events: none;
 }
 
 .headline {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(48px, 9vw, 96px);
-  font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: -0.04em;
-  color: #0f172a;
-  overflow: hidden;
-}
-
-.heroLine {
-  display: block;
+  font-size: clamp(32px, 7vw, 72px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  max-width: 800px;
   will-change: transform, opacity;
 }
 
-.subtitle {
-  margin-top: 28px;
-  font-size: 18px;
-  line-height: 1.7;
-  color: #64748b;
-  max-width: 520px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.ctas {
+/* ── Scroll indicator ────────────────────────────────────── */
+.scrollIndicator {
   display: flex;
-  gap: 16px;
-  justify-content: center;
-  margin-top: 40px;
-  flex-wrap: wrap;
-}
-
-.ctaPrimary {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 16px 36px;
-  background: #0f172a;
-  color: #ffffff;
-  border-radius: 999px;
-  font-size: 15px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: background 300ms ease, transform 300ms ease, box-shadow 300ms ease;
-  min-height: 48px;
+  gap: 12px;
+  margin-top: 48px;
+  will-change: transform, opacity;
+  pointer-events: auto;
 }
 
-.ctaPrimary:hover {
-  background: #1e293b;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.15);
+.scrollText {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.5);
 }
 
-.ctaSecondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px 36px;
-  background: transparent;
-  color: #334155;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 999px;
-  font-size: 15px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: border-color 300ms ease, background 300ms ease, transform 300ms ease;
-  min-height: 48px;
+.scrollDots {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
 }
 
-.ctaSecondary:hover {
-  border-color: #cbd5e1;
-  background: #f8fafc;
-  transform: translateY(-2px);
+.scrollDots span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  animation: dotPulse 2s ease-in-out infinite;
 }
 
-/* ── Showcase area: phone + floating cards ────────────────── */
+.scrollDots span:nth-child(1)  { animation-delay: 0s; }
+.scrollDots span:nth-child(2)  { animation-delay: 0.1s; }
+.scrollDots span:nth-child(3)  { animation-delay: 0.2s; }
+.scrollDots span:nth-child(4)  { animation-delay: 0.3s; }
+.scrollDots span:nth-child(5)  { animation-delay: 0.1s; }
+.scrollDots span:nth-child(6)  { animation-delay: 0.2s; }
+.scrollDots span:nth-child(7)  { animation-delay: 0.3s; }
+.scrollDots span:nth-child(8)  { animation-delay: 0.4s; }
+.scrollDots span:nth-child(9)  { animation-delay: 0.2s; }
+.scrollDots span:nth-child(10) { animation-delay: 0.3s; }
+.scrollDots span:nth-child(11) { animation-delay: 0.4s; }
+.scrollDots span:nth-child(12) { animation-delay: 0.5s; }
+.scrollDots span:nth-child(13) { animation-delay: 0.3s; }
+.scrollDots span:nth-child(14) { animation-delay: 0.4s; }
+.scrollDots span:nth-child(15) { animation-delay: 0.5s; }
+.scrollDots span:nth-child(16) { animation-delay: 0.6s; }
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 1; }
+}
+
+/* ── Showcase: phone + floating cards ────────────────────── */
 .showcase {
-  position: relative;
-  padding: 80px 0 60px;
-  overflow: visible;
-}
-
-@media (min-width: 768px) {
-  .showcase {
-    padding-top: 100px;
-  }
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ── Phone area ──────────────────────────────────────────── */
 .phoneArea {
   position: relative;
+  width: 100%;
   max-width: 1100px;
-  margin: 0 auto;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 480px;
   padding: 0 24px;
-}
-
-@media (min-width: 768px) {
-  .phoneArea {
-    min-height: 650px;
-  }
 }
 
 .phoneFrame {
@@ -130,23 +128,27 @@
   z-index: 5;
   flex-shrink: 0;
   will-change: transform, opacity;
-  transform: scale(2);
   transform-origin: center center;
-  opacity: 0; /* hidden until GSAP entrance timeline fades it in */
 }
 
 .phoneImage {
   display: block;
-  width: 240px;
+  width: 260px;
   height: auto;
-  filter: drop-shadow(0 25px 80px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 30px 80px rgba(0, 0, 0, 0.18));
   user-select: none;
   -webkit-user-drag: none;
 }
 
 @media (min-width: 768px) {
   .phoneImage {
-    width: 320px;
+    width: 340px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .phoneImage {
+    width: 380px;
   }
 }
 
@@ -157,7 +159,7 @@
   border-radius: 16px;
   padding: 16px 20px;
   box-shadow:
-    0 2px 16px rgba(0, 0, 0, 0.06),
+    0 4px 24px rgba(0, 0, 0, 0.08),
     0 0 1px rgba(0, 0, 0, 0.08);
   z-index: 10;
   will-change: transform, opacity;
@@ -165,31 +167,31 @@
 
 /* ATS Score — top left */
 .atsCard {
-  left: 5%;
-  top: 10%;
+  left: 8%;
+  top: 18%;
 }
 
 /* Engagement — bottom left */
 .engagementCard {
-  left: 2%;
-  bottom: 8%;
-  background: rgba(215, 245, 255, 0.65);
+  left: 4%;
+  bottom: 15%;
+  background: rgba(215, 245, 255, 0.75);
   backdrop-filter: blur(12px);
 }
 
 /* Expert Rating — top right */
 .expertCard {
-  right: 2%;
-  top: 22%;
+  right: 4%;
+  top: 24%;
   max-width: 230px;
-  background: rgba(255, 252, 228, 0.75);
+  background: rgba(255, 252, 228, 0.8);
   backdrop-filter: blur(12px);
 }
 
 /* Interview Ready — bottom right */
 .interviewCard {
-  right: 5%;
-  bottom: 18%;
+  right: 8%;
+  bottom: 22%;
   display: flex;
   align-items: center;
   gap: 10px;
