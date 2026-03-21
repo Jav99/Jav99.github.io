@@ -101,7 +101,22 @@ export function Hero() {
       return len;
     });
 
+    /* ── Compute initial scale so the phone screen fills viewport ── */
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    let phoneW = 220;
+    if (vw >= 1024) phoneW = 310;
+    else if (vw >= 768) phoneW = 270;
+    const phoneH = phoneW * (1200 / 556);
+    /* Screen area is roughly 90% width, 93% height of the image */
+    const screenW = phoneW * 0.90;
+    const screenH = phoneH * 0.93;
+    const initialScale = Math.max(vw / screenW, vh / screenH) * 1.08;
+
     const ctx = gsap.context(() => {
+      /* ── Set phone to fill viewport immediately ── */
+      gsap.set('.hero-phone', { xPercent: -50, yPercent: -50, scale: initialScale });
+
       /* ── Entrance: headline + scroll indicator ── */
       const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
       tl.fromTo('.hero-headline', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1.2 }, 0.3);
@@ -110,12 +125,12 @@ export function Hero() {
       const base = { trigger: sectionRef.current, scrub: true };
 
       /* ══════════════════════════════════════════════
-       * PHASE 1 — Cinematic Reveal (0–30%)
+       * PHASE 1 — iPhone shrinks from fullscreen to normal (0–40%)
        * ══════════════════════════════════════════════ */
 
       gsap.to('.hero-headline', {
         opacity: 0, y: -60, immediateRender: false,
-        scrollTrigger: { ...base, start: 'top top', end: '18% top' },
+        scrollTrigger: { ...base, start: 'top top', end: '12% top' },
       });
 
       gsap.to('.hero-scroll-indicator', {
@@ -125,16 +140,13 @@ export function Hero() {
 
       gsap.to('.hero-dark-overlay', {
         opacity: 0, ease: 'power3.out', immediateRender: false,
-        scrollTrigger: { ...base, start: 'top top', end: '30% top' },
+        scrollTrigger: { ...base, start: '5% top', end: '35% top' },
       });
 
-      gsap.fromTo('.hero-phone',
-        { opacity: 0, scale: 0.85 },
-        {
-          opacity: 1, scale: 1, ease: 'power3.out', immediateRender: false,
-          scrollTrigger: { ...base, start: 'top top', end: '30% top' },
-        }
-      );
+      gsap.to('.hero-phone', {
+        scale: 1, ease: 'power3.out', immediateRender: false,
+        scrollTrigger: { ...base, start: 'top top', end: '40% top' },
+      });
 
       /* ══════════════════════════════════════════════
        * PHASE 2 — Floating elements enter (20–70%)

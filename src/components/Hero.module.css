@@ -98,9 +98,7 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%) scale(0.85);
-  z-index: 10;
-  opacity: 0;
+  z-index: 16;
   will-change: transform, opacity, filter;
   filter: drop-shadow(0 0 0 transparent);
 }
