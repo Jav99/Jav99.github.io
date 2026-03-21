@@ -107,25 +107,19 @@
 
 .phoneImage {
   display: block;
-  height: 60vh;
-  max-height: 580px;
-  width: auto;
+  width: 220px;
+  height: auto;
+  aspect-ratio: 556 / 1200;
+  object-fit: contain;
   user-select: none;
   -webkit-user-drag: none;
   pointer-events: none;
 }
 
-/* Slightly larger on wide viewports */
 @media (min-width: 768px) {
-  .phoneImage {
-    height: 68vh;
-    max-height: 640px;
-  }
+  .phoneImage { width: 270px; }
 }
 
 @media (min-width: 1024px) {
-  .phoneImage {
-    height: 74vh;
-    max-height: 700px;
-  }
+  .phoneImage { width: 310px; }
 }
