@@ -31,47 +31,75 @@ interface FloatConfig {
   wobbleAmp: number; wobbleFreq: number;
 }
 
+/*
+ * Final positions reference the image:
+ * - Phone center, elements arranged around it
+ * - Resume doc: upper-left
+ * - Donut chart: right, slightly above center (partially behind phone)
+ * - Purple squiggle: large, weaves right side and behind phone
+ * - Teal squiggle curl: left area
+ * - Chat bubbles: lower-left, overlapping
+ * - Triangles: lower-right cluster
+ * - Dots/shapes scattered as accents
+ */
 const FLOAT_CONFIGS: FloatConfig[] = [
   /* 0: Resume icon — top-left */
-  { startX: -55, startY: -50, finalX: -30, finalY: -22, startRot: -25, finalRot: -2, enter: 0.20, wobbleAmp: 3, wobbleFreq: 2.5 },
+  { startX: -60, startY: -55, finalX: -28, finalY: -24, startRot: -25, finalRot: -2, enter: 0.20, wobbleAmp: 3, wobbleFreq: 2.5 },
   /* 1: Chat bubble coral — bottom-left */
-  { startX: -50, startY: 55, finalX: -12, finalY: 24, startRot: 20, finalRot: 0, enter: 0.24, wobbleAmp: 4, wobbleFreq: 2.0 },
-  /* 2: Chat bubble orange — bottom-left offset */
-  { startX: -55, startY: 50, finalX: -20, finalY: 18, startRot: -15, finalRot: 3, enter: 0.27, wobbleAmp: 3, wobbleFreq: 3.0 },
-  /* 3: Donut chart — top-right */
-  { startX: 55, startY: -50, finalX: 22, finalY: -16, startRot: 30, finalRot: 0, enter: 0.22, wobbleAmp: 4, wobbleFreq: 1.8 },
+  { startX: -55, startY: 60, finalX: -14, finalY: 22, startRot: 20, finalRot: 0, enter: 0.24, wobbleAmp: 4, wobbleFreq: 2.0 },
+  /* 2: Chat bubble orange — bottom-left offset, overlapping */
+  { startX: -60, startY: 55, finalX: -10, finalY: 16, startRot: -15, finalRot: 3, enter: 0.27, wobbleAmp: 3, wobbleFreq: 3.0 },
+  /* 3: Donut chart — right, slightly above center */
+  { startX: 60, startY: -45, finalX: 20, finalY: -8, startRot: 30, finalRot: 0, enter: 0.22, wobbleAmp: 4, wobbleFreq: 1.8 },
   /* 4: Large triangle amber — bottom-right */
-  { startX: 55, startY: 55, finalX: 22, finalY: 20, startRot: 45, finalRot: 0, enter: 0.25, wobbleAmp: 3, wobbleFreq: 2.2 },
-  /* 5: Med triangle teal — bottom-right offset */
-  { startX: 50, startY: 55, finalX: 30, finalY: 15, startRot: -30, finalRot: 5, enter: 0.28, wobbleAmp: 2.5, wobbleFreq: 2.8 },
-  /* 6: Small triangle blue — bottom-right far */
-  { startX: 60, startY: 50, finalX: 35, finalY: 25, startRot: -50, finalRot: -10, enter: 0.30, wobbleAmp: 2, wobbleFreq: 3.2 },
-  /* 7: Squiggle purple — top-right area */
-  { startX: 55, startY: -55, finalX: 14, finalY: -6, startRot: 15, finalRot: 0, enter: 0.23, wobbleAmp: 3.5, wobbleFreq: 1.5 },
-  /* 8: Squiggle teal — bottom-left area */
-  { startX: -60, startY: 55, finalX: -24, finalY: 6, startRot: -20, finalRot: 0, enter: 0.26, wobbleAmp: 3, wobbleFreq: 2.0 },
-  /* 9: Dot purple */
-  { startX: -50, startY: -55, finalX: -18, finalY: -32, startRot: 0, finalRot: 0, enter: 0.30, wobbleAmp: 2, wobbleFreq: 4.0 },
-  /* 10: Dot amber */
-  { startX: 50, startY: 50, finalX: 16, finalY: 30, startRot: 0, finalRot: 0, enter: 0.32, wobbleAmp: 2, wobbleFreq: 3.5 },
-  /* 11: Dot coral */
-  { startX: -55, startY: 50, finalX: -32, finalY: 10, startRot: 0, finalRot: 0, enter: 0.35, wobbleAmp: 1.5, wobbleFreq: 3.0 },
+  { startX: 60, startY: 60, finalX: 24, finalY: 18, startRot: 45, finalRot: 0, enter: 0.25, wobbleAmp: 3, wobbleFreq: 2.2 },
+  /* 5: Med triangle teal — right of large, slightly above */
+  { startX: 55, startY: 55, finalX: 32, finalY: 10, startRot: -30, finalRot: 5, enter: 0.28, wobbleAmp: 2.5, wobbleFreq: 2.8 },
+  /* 6: Small triangle dark blue — far bottom-right */
+  { startX: 65, startY: 55, finalX: 36, finalY: 24, startRot: -50, finalRot: -10, enter: 0.30, wobbleAmp: 2, wobbleFreq: 3.2 },
+  /* 7: Large purple squiggle — weaves right side, behind phone */
+  { startX: 55, startY: -55, finalX: 6, finalY: 2, startRot: 15, finalRot: 0, enter: 0.21, wobbleAmp: 3.5, wobbleFreq: 1.5 },
+  /* 8: Teal squiggle curl — left area */
+  { startX: -65, startY: 50, finalX: -24, finalY: 2, startRot: -20, finalRot: 0, enter: 0.26, wobbleAmp: 3, wobbleFreq: 2.0 },
+  /* 9: Dot purple — upper-left accent */
+  { startX: -55, startY: -55, finalX: -20, finalY: -34, startRot: 0, finalRot: 0, enter: 0.30, wobbleAmp: 2, wobbleFreq: 4.0 },
+  /* 10: Dot amber — right side accent */
+  { startX: 55, startY: 50, finalX: 18, finalY: 30, startRot: 0, finalRot: 0, enter: 0.32, wobbleAmp: 2, wobbleFreq: 3.5 },
+  /* 11: Dot coral — left mid accent */
+  { startX: -60, startY: 50, finalX: -34, finalY: 8, startRot: 0, finalRot: 0, enter: 0.35, wobbleAmp: 1.5, wobbleFreq: 3.0 },
+  /* ── 5 NEW ELEMENTS ── */
+  /* 12: Checkmark badge (green circle + check) — top-right area */
+  { startX: 55, startY: -60, finalX: 28, finalY: -22, startRot: 35, finalRot: 0, enter: 0.23, wobbleAmp: 3, wobbleFreq: 2.4 },
+  /* 13: Bar chart icon (blue) — left mid */
+  { startX: -60, startY: -45, finalX: -32, finalY: -8, startRot: -20, finalRot: 0, enter: 0.25, wobbleAmp: 2.5, wobbleFreq: 2.6 },
+  /* 14: Lightning bolt (amber) — top accent */
+  { startX: 30, startY: -60, finalX: 10, finalY: -32, startRot: 25, finalRot: -5, enter: 0.29, wobbleAmp: 3, wobbleFreq: 3.0 },
+  /* 15: Purple loop squiggle — bottom area behind phone */
+  { startX: -50, startY: 60, finalX: -4, finalY: 28, startRot: 10, finalRot: 0, enter: 0.24, wobbleAmp: 3.5, wobbleFreq: 1.8 },
+  /* 16: Dot teal — lower-right accent */
+  { startX: 60, startY: 60, finalX: 38, finalY: 16, startRot: 0, finalRot: 0, enter: 0.33, wobbleAmp: 1.5, wobbleFreq: 3.8 },
 ];
+
+const TOTAL_ELEMENTS = FLOAT_CONFIGS.length;
 
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const elRefs = useRef<(HTMLDivElement | null)[]>([]);
   const squiggle1Ref = useRef<SVGPathElement>(null);
   const squiggle2Ref = useRef<SVGPathElement>(null);
+  const squiggle3Ref = useRef<SVGPathElement>(null);
   const donutCenterRef = useRef<SVGCircleElement>(null);
 
   useLayoutEffect(() => {
     /* ── Squiggle dash setup ── */
-    const sq1 = squiggle1Ref.current;
-    const sq2 = squiggle2Ref.current;
-    let sq1Len = 0, sq2Len = 0;
-    if (sq1) { sq1Len = sq1.getTotalLength(); sq1.style.strokeDasharray = String(sq1Len); sq1.style.strokeDashoffset = String(sq1Len); }
-    if (sq2) { sq2Len = sq2.getTotalLength(); sq2.style.strokeDasharray = String(sq2Len); sq2.style.strokeDashoffset = String(sq2Len); }
+    const squiggles = [squiggle1Ref.current, squiggle2Ref.current, squiggle3Ref.current];
+    const sqLens = squiggles.map(sq => {
+      if (!sq) return 0;
+      const len = sq.getTotalLength();
+      sq.style.strokeDasharray = String(len);
+      sq.style.strokeDashoffset = String(len);
+      return len;
+    });
 
     const ctx = gsap.context(() => {
       /* ── Entrance: headline + scroll indicator ── */
@@ -85,25 +113,21 @@ export function Hero() {
        * PHASE 1 — Cinematic Reveal (0–30%)
        * ══════════════════════════════════════════════ */
 
-      /* Headline exits */
       gsap.to('.hero-headline', {
         opacity: 0, y: -60, immediateRender: false,
         scrollTrigger: { ...base, start: 'top top', end: '18% top' },
       });
 
-      /* Scroll indicator exits */
       gsap.to('.hero-scroll-indicator', {
         opacity: 0, y: -20, immediateRender: false,
         scrollTrigger: { ...base, start: 'top top', end: '5% top' },
       });
 
-      /* Dark overlay dissolves */
       gsap.to('.hero-dark-overlay', {
         opacity: 0, ease: 'power3.out', immediateRender: false,
         scrollTrigger: { ...base, start: 'top top', end: '30% top' },
       });
 
-      /* Phone fades in + scales 0.85 → 1.0 */
       gsap.fromTo('.hero-phone',
         { opacity: 0, scale: 0.85 },
         {
@@ -114,7 +138,7 @@ export function Hero() {
 
       /* ══════════════════════════════════════════════
        * PHASE 2 — Floating elements enter (20–70%)
-       * Custom onUpdate for wobble + easeOutBack
+       * PHASE 3 — End frame (70–100%)
        * ══════════════════════════════════════════════ */
 
       ScrollTrigger.create({
@@ -123,10 +147,9 @@ export function Hero() {
         end: 'bottom bottom',
         scrub: true,
         onUpdate: (self) => {
-          const p = self.progress; // 0→1
+          const p = self.progress;
 
-          /* Animate each floating element */
-          for (let i = 0; i < 12; i++) {
+          for (let i = 0; i < TOTAL_ELEMENTS; i++) {
             const el = elRefs.current[i];
             if (!el) continue;
             const c = FLOAT_CONFIGS[i];
@@ -143,7 +166,6 @@ export function Hero() {
               let y = lerp(c.startY, c.finalY, easedP);
               const rot = lerp(c.startRot, c.finalRot, easedP);
 
-              /* Mid-flight wobble — diminishes near arrival */
               const wobbleFade = 1 - elP;
               x += Math.sin(elP * Math.PI * c.wobbleFreq) * c.wobbleAmp * wobbleFade;
               y += Math.cos(elP * Math.PI * c.wobbleFreq * 0.7) * c.wobbleAmp * 0.6 * wobbleFade;
@@ -154,43 +176,37 @@ export function Hero() {
             }
           }
 
-          /* Squiggle stroke-dash "drawing" animation */
-          if (sq1 && sq1Len) {
-            const sq1P = clamp((p - FLOAT_CONFIGS[7].enter) / 0.30, 0, 1);
-            const sq1Eased = 1 - Math.pow(1 - sq1P, 3);
-            sq1.style.strokeDashoffset = String(sq1Len * (1 - sq1Eased));
-          }
-          if (sq2 && sq2Len) {
-            const sq2P = clamp((p - FLOAT_CONFIGS[8].enter) / 0.30, 0, 1);
-            const sq2Eased = 1 - Math.pow(1 - sq2P, 3);
-            sq2.style.strokeDashoffset = String(sq2Len * (1 - sq2Eased));
+          /* Squiggle stroke-dash animations */
+          const sqIndices = [7, 8, 15]; // indices of squiggle elements
+          for (let s = 0; s < 3; s++) {
+            const sq = squiggles[s];
+            const len = sqLens[s];
+            if (!sq || !len) continue;
+            const sqP = clamp((p - FLOAT_CONFIGS[sqIndices[s]].enter) / 0.30, 0, 1);
+            const sqEased = 1 - Math.pow(1 - sqP, 3);
+            sq.style.strokeDashoffset = String(len * (1 - sqEased));
           }
 
           /* Donut center fill matches background */
           if (donutCenterRef.current) {
             const bgP = clamp((p - 0.70) / 0.30, 0, 1);
             const bgEased = 1 - Math.pow(1 - bgP, 3);
-            const r = Math.round(lerp(10, 255, bgEased));
-            const g = Math.round(lerp(10, 255, bgEased));
-            const b = Math.round(lerp(10, 255, bgEased));
-            donutCenterRef.current.setAttribute('fill', `rgb(${r},${g},${b})`);
+            const v = Math.round(lerp(10, 255, bgEased));
+            donutCenterRef.current.setAttribute('fill', `rgb(${v},${v},${v})`);
           }
         },
       });
 
-      /* ══════════════════════════════════════════════
-       * PHASE 3 — Cohesive End Frame (70–100%)
-       * ══════════════════════════════════════════════ */
+      /* ── Phase 3 background + shadow ── */
 
-      /* Background: #0a0a0a → #ffffff */
       gsap.to('.hero-sticky-frame', {
         backgroundColor: '#ffffff', ease: 'power3.out', immediateRender: false,
         scrollTrigger: { ...base, start: '70% top', end: '100% top' },
       });
 
-      /* Phone shadow lightens */
-      gsap.to('.hero-phone-frame', {
-        boxShadow: '0 40px 100px rgba(0,0,0,0.12)', ease: 'power3.out', immediateRender: false,
+      gsap.to('.hero-phone', {
+        filter: 'drop-shadow(0 25px 60px rgba(0,0,0,0.18))',
+        ease: 'power3.out', immediateRender: false,
         scrollTrigger: { ...base, start: '70% top', end: '100% top' },
       });
     }, sectionRef);
@@ -217,7 +233,7 @@ export function Hero() {
           </div>
         </div>
 
-        {/* ══════ 12 Floating elements ══════ */}
+        {/* ══════ 17 Floating elements (z-index: 8, behind phone) ══════ */}
 
         {/* 0: Resume/document icon */}
         <div ref={setElRef(0)} className={styles.floatingEl}>
@@ -256,134 +272,111 @@ export function Hero() {
 
         {/* 3: Donut chart (4 segments) */}
         <div ref={setElRef(3)} className={styles.floatingEl}>
-          <svg width="120" height="120" viewBox="0 0 120 120" fill="none" aria-hidden="true">
-            <circle cx="60" cy="60" r="48" stroke="#1D9E75" strokeWidth="22" strokeDasharray="100.53 301.59" strokeDashoffset="0" transform="rotate(-90 60 60)" />
-            <circle cx="60" cy="60" r="48" stroke="#3B8BD4" strokeWidth="22" strokeDasharray="75.4 301.59" strokeDashoffset="-100.53" transform="rotate(-90 60 60)" />
-            <circle cx="60" cy="60" r="48" stroke="#EF9F27" strokeWidth="22" strokeDasharray="60.32 301.59" strokeDashoffset="-175.93" transform="rotate(-90 60 60)" />
-            <circle cx="60" cy="60" r="48" stroke="#E24B4A" strokeWidth="22" strokeDasharray="65.34 301.59" strokeDashoffset="-236.25" transform="rotate(-90 60 60)" />
-            <circle ref={donutCenterRef} cx="60" cy="60" r="37" fill="#0a0a0a" />
+          <svg width="140" height="140" viewBox="0 0 140 140" fill="none" aria-hidden="true">
+            <circle cx="70" cy="70" r="55" stroke="#1D9E75" strokeWidth="24" strokeDasharray="115.2 345.6" strokeDashoffset="0" transform="rotate(-90 70 70)" />
+            <circle cx="70" cy="70" r="55" stroke="#3B8BD4" strokeWidth="24" strokeDasharray="86.4 345.6" strokeDashoffset="-115.2" transform="rotate(-90 70 70)" />
+            <circle cx="70" cy="70" r="55" stroke="#EF9F27" strokeWidth="24" strokeDasharray="69.12 345.6" strokeDashoffset="-201.6" transform="rotate(-90 70 70)" />
+            <circle cx="70" cy="70" r="55" stroke="#E24B4A" strokeWidth="24" strokeDasharray="75.28 345.6" strokeDashoffset="-270.72" transform="rotate(-90 70 70)" />
+            <circle ref={donutCenterRef} cx="70" cy="70" r="43" fill="#0a0a0a" />
           </svg>
         </div>
 
         {/* 4: Large triangle (amber) */}
         <div ref={setElRef(4)} className={styles.floatingEl}>
-          <svg width="100" height="90" viewBox="0 0 100 90" fill="none" aria-hidden="true">
-            <polygon points="50,5 95,85 5,85" fill="#EF9F27" />
+          <svg width="110" height="100" viewBox="0 0 110 100" fill="none" aria-hidden="true">
+            <polygon points="55,5 105,95 5,95" fill="#EF9F27" />
           </svg>
         </div>
 
         {/* 5: Medium triangle (teal) */}
         <div ref={setElRef(5)} className={styles.floatingEl}>
-          <svg width="60" height="55" viewBox="0 0 60 55" fill="none" aria-hidden="true">
-            <polygon points="30,3 57,52 3,52" fill="#1D9E75" />
+          <svg width="65" height="58" viewBox="0 0 65 58" fill="none" aria-hidden="true">
+            <polygon points="32,3 62,55 2,55" fill="#1D9E75" />
           </svg>
         </div>
 
-        {/* 6: Small triangle (blue) */}
+        {/* 6: Small triangle (dark blue) */}
         <div ref={setElRef(6)} className={styles.floatingEl}>
-          <svg width="40" height="36" viewBox="0 0 40 36" fill="none" aria-hidden="true">
-            <polygon points="20,2 38,34 2,34" fill="#3B8BD4" />
+          <svg width="42" height="38" viewBox="0 0 42 38" fill="none" aria-hidden="true">
+            <polygon points="21,2 40,36 2,36" fill="#1e3a5f" />
           </svg>
         </div>
 
-        {/* 7: Squiggle curve (purple) */}
+        {/* 7: Large purple squiggle — weaves across right side */}
         <div ref={setElRef(7)} className={styles.floatingEl}>
-          <svg width="200" height="100" viewBox="0 0 200 100" fill="none" aria-hidden="true">
-            <path ref={squiggle1Ref} d="M10 80 C30 10, 60 90, 90 40 S150 10, 190 50" stroke="#7F77DD" strokeWidth="5" strokeLinecap="round" fill="none" />
+          <svg width="320" height="280" viewBox="0 0 320 280" fill="none" aria-hidden="true">
+            <path ref={squiggle1Ref} d="M20 240 C40 180, 80 260, 100 200 S140 100, 160 140 C180 180, 200 80, 240 120 S280 40, 300 80 C310 100, 290 140, 260 120 C230 100, 260 60, 300 40" stroke="#7F77DD" strokeWidth="5.5" strokeLinecap="round" fill="none" />
           </svg>
         </div>
 
-        {/* 8: Squiggle curl (teal) */}
+        {/* 8: Teal squiggle curl — left area */}
         <div ref={setElRef(8)} className={styles.floatingEl}>
           <svg width="120" height="100" viewBox="0 0 120 100" fill="none" aria-hidden="true">
             <path ref={squiggle2Ref} d="M10 50 C20 10, 50 10, 45 50 C40 90, 80 90, 75 50 C70 20, 110 20, 110 50" stroke="#1D9E75" strokeWidth="4.5" strokeLinecap="round" fill="none" />
           </svg>
         </div>
 
-        {/* 9: Dot (purple) */}
+        {/* 9: Dot purple */}
         <div ref={setElRef(9)} className={styles.floatingEl}>
           <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#7F77DD" /></svg>
         </div>
 
-        {/* 10: Dot (amber) */}
+        {/* 10: Dot amber */}
         <div ref={setElRef(10)} className={styles.floatingEl}>
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="#EF9F27" /></svg>
         </div>
 
-        {/* 11: Dot (coral) */}
+        {/* 11: Dot coral */}
         <div ref={setElRef(11)} className={styles.floatingEl}>
           <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="6" fill="#E24B4A" /></svg>
         </div>
 
-        {/* ══════ iPhone ══════ */}
+        {/* ── 5 NEW ELEMENTS ── */}
+
+        {/* 12: Checkmark badge — green circle with white check */}
+        <div ref={setElRef(12)} className={styles.floatingEl}>
+          <svg width="50" height="50" viewBox="0 0 50 50" fill="none" aria-hidden="true">
+            <circle cx="25" cy="25" r="22" fill="#1D9E75" />
+            <path d="M15 25l7 7 13-14" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          </svg>
+        </div>
+
+        {/* 13: Bar chart icon */}
+        <div ref={setElRef(13)} className={styles.floatingEl}>
+          <svg width="56" height="50" viewBox="0 0 56 50" fill="none" aria-hidden="true">
+            <rect x="2" y="28" width="12" height="20" rx="2" fill="#3B8BD4" opacity="0.5" />
+            <rect x="18" y="16" width="12" height="32" rx="2" fill="#3B8BD4" opacity="0.7" />
+            <rect x="34" y="6" width="12" height="42" rx="2" fill="#3B8BD4" />
+          </svg>
+        </div>
+
+        {/* 14: Lightning bolt */}
+        <div ref={setElRef(14)} className={styles.floatingEl}>
+          <svg width="36" height="56" viewBox="0 0 36 56" fill="none" aria-hidden="true">
+            <polygon points="22,0 6,26 16,26 10,56 30,22 18,22" fill="#EF9F27" />
+          </svg>
+        </div>
+
+        {/* 15: Purple loop squiggle — bottom, behind phone */}
+        <div ref={setElRef(15)} className={styles.floatingEl}>
+          <svg width="180" height="140" viewBox="0 0 180 140" fill="none" aria-hidden="true">
+            <path ref={squiggle3Ref} d="M10 70 C30 10, 70 10, 70 60 C70 110, 30 120, 50 80 C70 40, 120 40, 110 80 C100 120, 150 130, 170 80" stroke="#7F77DD" strokeWidth="5" strokeLinecap="round" fill="none" />
+          </svg>
+        </div>
+
+        {/* 16: Dot teal */}
+        <div ref={setElRef(16)} className={styles.floatingEl}>
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7.5" fill="#1D9E75" /></svg>
+        </div>
+
+        {/* ══════ iPhone — real image ══════ */}
         <div className={`${styles.phoneContainer} hero-phone`}>
-          <div className={`${styles.phoneFrame} hero-phone-frame`}>
-            <div className={styles.phoneScreen}>
-              {/* Notch */}
-              <div className={styles.notchBar}>
-                <div className={styles.notch}>
-                  <div className={styles.cameraDot} />
-                </div>
-              </div>
-
-              <div className={styles.phoneContent}>
-                {/* Avatar */}
-                <div className={styles.avatar}>JS</div>
-
-                {/* Score heading */}
-                <span className={styles.scoreHeading}>YOUR RESUME SCORE</span>
-
-                {/* Gauge */}
-                <div className={styles.gaugeContainer}>
-                  <svg className={styles.gaugeSvg} viewBox="0 0 130 80">
-                    <defs>
-                      <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#1D9E75" />
-                        <stop offset="100%" stopColor="#3B8BD4" />
-                      </linearGradient>
-                    </defs>
-                    <path d="M15 70 A50 50 0 0 1 115 70" stroke="#f1f5f9" strokeWidth="10" fill="none" strokeLinecap="round" />
-                    <path d="M15 70 A50 50 0 0 1 115 70" stroke="url(#gaugeGrad)" strokeWidth="10" fill="none" strokeLinecap="round"
-                      strokeDasharray="157" strokeDashoffset="23.5" />
-                  </svg>
-                  <div className={styles.gaugeScore}>
-                    <span className={styles.gaugeBig}>8.5</span>
-                    <span className={styles.gaugeSmall}>/ 10</span>
-                  </div>
-                </div>
-
-                {/* Stars */}
-                <div className={styles.stars}>
-                  {[1, 2, 3, 4].map(i => <span key={i} className={styles.star}>&#9733;</span>)}
-                  <span className={`${styles.star} ${styles.starDim}`}>&#9733;</span>
-                </div>
-
-                {/* Progress */}
-                <div className={styles.progressSection}>
-                  <div className={styles.progressLabel}>
-                    <span>Profile Completion</span>
-                    <span>85%</span>
-                  </div>
-                  <div className={styles.progressTrack}>
-                    <div className={styles.progressFill} />
-                  </div>
-                </div>
-
-                {/* Improvement tags */}
-                <div className={styles.improveSection}>
-                  <div className={styles.improveHeading}>Areas for Improvement</div>
-                  <div className={styles.tags}>
-                    <span className={`${styles.tag} ${styles.tagAts}`}>ATS</span>
-                    <span className={`${styles.tag} ${styles.tagExp}`}>Experience</span>
-                    <span className={`${styles.tag} ${styles.tagSkills}`}>Skills</span>
-                  </div>
-                </div>
-
-                {/* CTA */}
-                <button className={styles.ctaBtn} type="button">Learn More</button>
-              </div>
-            </div>
-          </div>
+          <img
+            src="/iphone.png"
+            alt="iPhone showing resume score of 8.5 out of 10"
+            className={styles.phoneImage}
+            draggable={false}
+          />
         </div>
       </div>
     </section>
