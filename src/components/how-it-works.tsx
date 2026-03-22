@@ -68,14 +68,15 @@ export function HowItWorks() {
         }
       );
 
-      /* Parallax on large background numbers */
+      /* Parallax on large background numbers + color fade to mint */
       gsap.utils.toArray<HTMLElement>(".step-number").forEach((el) => {
         gsap.to(el, {
           y: -30,
+          color: "#1D9E75",
           scrollTrigger: {
             trigger: el,
-            start: "top bottom",
-            end: "bottom top",
+            start: "top 85%",
+            end: "top 40%",
             scrub: 2,
           },
         });
