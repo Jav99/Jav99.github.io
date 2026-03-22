@@ -6,15 +6,17 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const stats = [
-  { value: "500+", label: "Executives Coached" },
-  { value: "10,000+", label: "Resumes Reviewed" },
-  { value: "$2.4M", label: "Salary Negotiated" },
-  { value: "98%", label: "Client Satisfaction" },
+const items = [
+  { company: "Google", insight: "Rejects 97% of resumes in under 6 seconds" },
+  { company: "McKinsey", insight: "Screens for strategic language, not job duties" },
+  { company: "Goldman Sachs", insight: "Values quantified impact over responsibilities" },
+  { company: "Apple", insight: "Prioritizes narrative clarity and personal brand" },
+  { company: "Amazon", insight: "Filters for leadership principles in every bullet" },
+  { company: "Deloitte", insight: "Ranks candidates by measurable outcomes first" },
 ];
 
 /* Triple the items for seamless infinite loop */
-const marqueeItems = [...stats, ...stats, ...stats];
+const marqueeItems = [...items, ...items, ...items];
 
 export function SocialProof() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -61,15 +63,15 @@ export function SocialProof() {
         ref={trackRef}
         className="flex items-center gap-0 whitespace-nowrap will-change-transform"
       >
-        {marqueeItems.map((stat, i) => (
-          <div key={i} className="flex items-center gap-8 px-8 md:px-12 shrink-0">
-            <span className="font-serif text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
-              {stat.value}
+        {marqueeItems.map((item, i) => (
+          <div key={i} className="flex items-center gap-4 px-8 md:px-12 shrink-0">
+            <span className="font-serif text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
+              {item.company}
             </span>
-            <span className="text-xs uppercase tracking-[0.2em] text-slate-400 font-medium">
-              {stat.label}
+            <span className="text-xs uppercase tracking-[0.15em] text-slate-400 font-medium max-w-[220px] whitespace-normal leading-tight">
+              {item.insight}
             </span>
-            <span className="text-slate-200 text-2xl select-none" aria-hidden="true">
+            <span className="text-slate-200 text-2xl select-none ml-4" aria-hidden="true">
               /
             </span>
           </div>
