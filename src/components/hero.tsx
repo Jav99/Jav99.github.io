@@ -114,38 +114,47 @@ export function Hero() {
     const initialScale = Math.max(vw / screenW, vh / screenH) * 1.08;
 
     const ctx = gsap.context(() => {
-      /* ── Set phone to fill viewport immediately ── */
-      gsap.set('.hero-phone', { xPercent: -50, yPercent: -50, scale: initialScale });
-
-      /* ── Entrance: headline + scroll indicator ── */
-      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
-      tl.fromTo('.hero-headline', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1.2 }, 0.3);
-      tl.fromTo('.hero-scroll-indicator', { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, 0.9);
+      /* ── Phone starts hidden; will appear on scroll ── */
+      gsap.set('.hero-phone', { xPercent: -50, yPercent: -50, scale: initialScale, opacity: 0 });
 
       const base = { trigger: sectionRef.current, scrub: true };
 
       /* ══════════════════════════════════════════════
-       * PHASE 1 — iPhone shrinks from fullscreen to normal (0–40%)
+       * PHASE 1 — Text fades, then iPhone appears & shrinks (0–40%)
+       * Headline & indicator scrub both ways so they reappear on scroll-up
        * ══════════════════════════════════════════════ */
 
-      gsap.to('.hero-headline', {
-        opacity: 0, y: -60, immediateRender: false,
-        scrollTrigger: { ...base, start: 'top top', end: '12% top' },
+      gsap.fromTo('.hero-headline',
+        { opacity: 1, y: 0 },
+        {
+          opacity: 0, y: -60, immediateRender: false,
+          scrollTrigger: { ...base, start: 'top top', end: '10% top' },
+        }
+      );
+
+      gsap.fromTo('.hero-scroll-indicator',
+        { opacity: 1, y: 0 },
+        {
+          opacity: 0, y: -20, immediateRender: false,
+          scrollTrigger: { ...base, start: 'top top', end: '5% top' },
+        }
+      );
+
+      /* Phone fades in quickly once scrolling begins */
+      gsap.to('.hero-phone', {
+        opacity: 1, immediateRender: false,
+        scrollTrigger: { ...base, start: '5% top', end: '15% top' },
       });
 
-      gsap.to('.hero-scroll-indicator', {
-        opacity: 0, y: -20, immediateRender: false,
-        scrollTrigger: { ...base, start: 'top top', end: '5% top' },
+      /* Phone scales down from fullscreen to normal */
+      gsap.to('.hero-phone', {
+        scale: 1, ease: 'power3.out', immediateRender: false,
+        scrollTrigger: { ...base, start: '8% top', end: '40% top' },
       });
 
       gsap.to('.hero-dark-overlay', {
         opacity: 0, ease: 'power3.out', immediateRender: false,
-        scrollTrigger: { ...base, start: '5% top', end: '35% top' },
-      });
-
-      gsap.to('.hero-phone', {
-        scale: 1, ease: 'power3.out', immediateRender: false,
-        scrollTrigger: { ...base, start: 'top top', end: '40% top' },
+        scrollTrigger: { ...base, start: '15% top', end: '40% top' },
       });
 
       /* ══════════════════════════════════════════════
