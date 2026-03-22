@@ -87,24 +87,24 @@ export function Navbar() {
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileOpen}
         >
-          <AnimatePresence mode="wait" initial={false}>
+          <AnimatePresence mode="popLayout" initial={false}>
             {mobileOpen ? (
               <motion.span
                 key="close"
-                initial={{ opacity: 0, rotate: -90, scale: 0.8 }}
-                animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                exit={{ opacity: 0, rotate: 90, scale: 0.8 }}
-                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                initial={{ opacity: 0, rotate: -90 }}
+                animate={{ opacity: 1, rotate: 0 }}
+                exit={{ opacity: 0, rotate: 90 }}
+                transition={{ duration: 0.2 }}
               >
                 <X className="w-6 h-6 text-white" />
               </motion.span>
             ) : (
               <motion.span
                 key="menu"
-                initial={{ opacity: 0, rotate: 90, scale: 0.8 }}
-                animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                exit={{ opacity: 0, rotate: -90, scale: 0.8 }}
-                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                initial={{ opacity: 0, rotate: 90 }}
+                animate={{ opacity: 1, rotate: 0 }}
+                exit={{ opacity: 0, rotate: -90 }}
+                transition={{ duration: 0.2 }}
               >
                 <Menu className="w-6 h-6 text-white" />
               </motion.span>

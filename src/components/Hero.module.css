@@ -1,6 +1,7 @@
 /* ── Hero section — 500vh tall scroll runway ─────────────── */
 .hero {
   position: relative;
+  z-index: 0;
   width: 100%;
   height: 500vh;
 }
