@@ -116,7 +116,7 @@ export function Testimonials() {
                   onClick={() => toggle(i)}
                   className={`w-full flex items-center justify-between gap-4 py-6 px-6 text-left transition-colors duration-200 ${
                     isOpen
-                      ? "border-l-[3px] border-l-[#7C3AED] bg-slate-50"
+                      ? "border-l-[3px] border-l-[#1D9E75] bg-slate-50"
                       : "border-l-[3px] border-l-transparent hover:bg-slate-100/60"
                   }`}
                   aria-expanded={isOpen}
