@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button";
 gsap.registerPlugin(ScrollTrigger);
 
 const credentials = [
-  "Ex-Head of Recruiting",
-  "Tier-1 Tech",
-  "10,000+ Resumes",
-  "500+ Executives",
+  "15 Years in Recruiting",
+  "Career Strategist",
+  "Resume Specialist",
+  "Interview Coach",
 ];
 
 export function About() {
@@ -100,7 +100,7 @@ export function About() {
             <div className="aspect-[4/5] rounded-3xl bg-gradient-to-br from-teal-50 to-slate-50 border border-slate-100 overflow-hidden">
               <img
                 src="/hannah.jpg"
-                alt="Hannah White — Career Strategist and Ex-Recruiter"
+                alt="Hannah White, Career Strategist and Resume Specialist"
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = "/hannah.svg";
@@ -118,16 +118,17 @@ export function About() {
               Meet Hannah White
             </h2>
             <p className="text-lg text-slate-500 leading-relaxed mt-6">
-              I spent a decade as Head of Recruiting at companies you'd
-              recognize instantly. I've sat across the table from 10,000+
-              candidates. I know exactly what makes a hiring manager stop
-              scrolling—and what makes them hit delete.
+              After 15 years in recruiting, I've reviewed thousands of resumes.
+              Most of them made the same mistakes. Good candidates with real
+              experience were getting passed over because their resume didn't
+              communicate their value in the first six seconds.
             </p>
             <p className="text-lg text-slate-500 leading-relaxed mt-4">
-              Now I use that insider knowledge to architect resumes that don't
-              just get interviews—they command top-tier offers. No templates.
-              No AI-generated filler. Just sharp, strategic positioning that
-              reflects your actual value.
+              I started this because I got tired of watching talented people
+              sell themselves short. I know what recruiters and hiring managers
+              actually look for, and I use that knowledge to rewrite resumes
+              that land interviews. No templates, no filler. Just clean,
+              strategic positioning built on what actually works.
             </p>
 
             {/* Credential Tags */}
