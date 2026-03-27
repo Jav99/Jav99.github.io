@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const items = [
-  { company: "Google", insight: "Rejects 97% of resumes in under 6 seconds" },
+  { company: "Google", insight: "Most resumes are rejected in under 6 seconds" },
   { company: "McKinsey", insight: "Screens for strategic language, not job duties" },
   { company: "Goldman Sachs", insight: "Values quantified impact over responsibilities" },
   { company: "Apple", insight: "Prioritizes narrative clarity and personal brand" },
