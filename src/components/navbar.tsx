@@ -45,8 +45,14 @@ export function Navbar() {
         {/* Brand */}
         <a
           href="/"
-          className="font-serif text-xl font-semibold tracking-tight text-white"
+          className="flex items-center gap-2 font-serif text-xl font-semibold tracking-tight text-white"
         >
+          <img
+            src="/hannah-logo.png"
+            alt=""
+            className="h-10 md:h-12 w-auto"
+            draggable={false}
+          />
           Hannah White
         </a>
 
