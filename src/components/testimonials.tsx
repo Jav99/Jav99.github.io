@@ -10,32 +10,32 @@ const faqs = [
   {
     question: "What services do you offer?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vehicula nulla at urna fermentum, eget tincidunt arcu venenatis. Sed auctor ligula in justo bibendum, a facilisis lorem placerat.",
+      "Resume rewrites, LinkedIn profile optimization, and full career positioning packages. Every service is personally handled by Hannah. No templates, no outsourcing.",
   },
   {
     question: "How does the process work from start to finish?",
     answer:
-      "Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Donec sed odio dui, vestibulum id ligula porta felis euismod semper.",
+      "Start with a free AI resume audit to see your score. Choose a package, then Hannah personally rewrites your resume using recruiter tested strategy. You'll receive your final draft within 72 hours, plus one round of revisions.",
   },
   {
     question: "How long does a typical project take?",
     answer:
-      "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Aenean lacinia bibendum nulla sed consectetur.",
+      "Most resume rewrites are delivered within 72 hours. The LinkedIn Bundle typically takes 3 to 4 business days since it includes your profile optimization and banner design.",
   },
   {
     question: "What does it cost?",
     answer:
-      "Maecenas faucibus mollis interdum. Duis mollis est non commodo luctus, nisi erat porttitor ligula. Fusce dapibus tellus ac cursus commodo, tortor mauris condimentum nibh.",
+      "The Resume Rewrite is $149 and the LinkedIn Bundle is $249. Both are one time investments. No subscriptions, no hidden fees.",
   },
   {
     question: "Do you work with clients remotely?",
     answer:
-      "Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Donec ullamcorper nulla non metus auctor fringilla.",
+      "Yes, 100%. Everything is handled online. Clients come from across the US and internationally. You'll upload your resume, receive your rewrite by email, and submit revision notes all without a single meeting unless you want one.",
   },
   {
     question: "How do I get started?",
     answer:
-      "Nulla vitae elit libero, a pharetra augue. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.",
+      "Use the free AI resume audit at the top of this page. Once you see your score, pick the package that fits your goals and check out. Hannah will get started within 24 hours of purchase.",
   },
 ];
 
