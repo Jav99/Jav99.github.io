@@ -48,7 +48,7 @@ export function Navbar() {
           className="flex items-center"
         >
           <img
-            src="/hannah-logo.png"
+            src="/IMG_2853.png"
             alt="Hannah White"
             className="h-[68px] md:h-[72px] w-auto"
             draggable={false}
