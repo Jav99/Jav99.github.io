@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useLayoutEffect, useCallback } from 'react';
+import { useRef, useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Hero.module.css';
@@ -219,9 +219,6 @@ export function Hero() {
   }, []);
 
   const setElRef = (i: number) => (el: HTMLDivElement | null) => { elRefs.current[i] = el; };
-  const videoRef = useCallback((el: HTMLVideoElement | null) => {
-    if (el) el.playbackRate = 0.4;
-  }, []);
 
   return (
     <section ref={sectionRef} className={styles.hero}>
@@ -230,7 +227,6 @@ export function Hero() {
         {/* ── Video background ── */}
         <div className={`${styles.videoBg} hero-video-bg`}>
           <video
-            ref={videoRef}
             autoPlay
             muted
             loop
