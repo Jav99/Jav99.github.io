@@ -50,7 +50,7 @@ export function Navbar() {
           <img
             src="/hannah-logo.png"
             alt=""
-            className="h-14 md:h-16 w-auto"
+            className="h-[72px] md:h-[80px] w-auto"
             draggable={false}
           />
           Hannah White
