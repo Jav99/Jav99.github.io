@@ -1,4 +1,4 @@
-/* ── Hero section — 500vh tall scroll runway ─────────────── */
+/* ── Hero section scroll runway ─────────────────────────── */
 .hero {
   position: relative;
   z-index: 0;
@@ -6,7 +6,7 @@
   height: 500vh;
 }
 
-/* ── Sticky frame — viewport-locked while section scrolls ── */
+/* ── Sticky frame ─────────────────────────────────────────── */
 .stickyFrame {
   position: sticky;
   top: 0;
@@ -16,16 +16,62 @@
   background: #0a0a0a;
 }
 
-/* ── Dark overlay — covers everything, dissolves to reveal ── */
+/* ── Video background ─────────────────────────────────────── */
+.videoBg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  will-change: transform, opacity;
+}
+
+.videoBg video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Mobile gradient fallback ─────────────────────────────── */
+.mobileBg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(ellipse at 50% 40%, #1a1040 0%, #0a0a0a 70%);
+  will-change: transform, opacity;
+}
+
+.mobileBg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(120, 60, 200, 0.12) 0%, transparent 60%);
+  animation: auraPulse 6s ease-in-out infinite;
+}
+
+@keyframes auraPulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.15); }
+}
+
+/* ── Video dark overlay ───────────────────────────────────── */
+.videoOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.40);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ── Dark overlay (scene transition) ──────────────────────── */
 .darkOverlay {
   position: absolute;
   inset: 0;
   background: #0a0a0a;
-  z-index: 15;
+  z-index: 5;
   pointer-events: none;
+  opacity: 0;
 }
 
-/* ── Opening: headline + scroll indicator ────────────────── */
+/* ── Opening: headline + scroll indicator ─────────────────── */
 .opening {
   position: absolute;
   inset: 0;
@@ -40,17 +86,17 @@
 
 .headline {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(28px, 6vw, 64px);
-  font-weight: 400;
-  line-height: 1.15;
+  font-size: clamp(32px, 7vw, 72px);
+  font-weight: 600;
+  line-height: 1.1;
   letter-spacing: -0.02em;
-  color: rgba(255, 255, 255, 0.85);
+  color: #fff;
   text-align: center;
   max-width: 800px;
   will-change: transform, opacity;
 }
 
-/* ── Scroll indicator ────────────────────────────────────── */
+/* ── Scroll indicator ─────────────────────────────────────── */
 .scrollIndicator {
   display: flex;
   flex-direction: column;
@@ -83,7 +129,7 @@
   50% { transform: rotate(45deg) translateY(6px); }
 }
 
-/* ── Floating elements — z-index 8, behind phone ─────────── */
+/* ── Floating elements ────────────────────────────────────── */
 .floatingEl {
   position: absolute;
   left: 50%;
@@ -94,7 +140,7 @@
   pointer-events: none;
 }
 
-/* ── iPhone — real image, z-index 10, in front ───────────── */
+/* ── iPhone ───────────────────────────────────────────────── */
 .phoneContainer {
   position: absolute;
   left: 50%;
