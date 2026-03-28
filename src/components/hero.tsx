@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useLayoutEffect, useState } from 'react';
+import { useRef, useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Hero.module.css';
@@ -60,12 +60,6 @@ export function Hero() {
   const squiggle2Ref = useRef<SVGPathElement>(null);
   const squiggle3Ref = useRef<SVGPathElement>(null);
   const donutCenterRef = useRef<SVGCircleElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
-  }, []);
-
   useLayoutEffect(() => {
     const squiggles = [squiggle1Ref.current, squiggle2Ref.current, squiggle3Ref.current];
     const sqLens = squiggles.map(sq => {
@@ -233,23 +227,19 @@ export function Hero() {
     <section ref={sectionRef} className={styles.hero}>
       <div className={`${styles.stickyFrame} hero-sticky-frame`}>
 
-        {/* ── Video / Mobile gradient background ── */}
-        {isMobile ? (
-          <div className={`${styles.mobileBg} hero-video-bg`} />
-        ) : (
-          <div className={`${styles.videoBg} hero-video-bg`}>
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect fill='%230a0a0a' width='1' height='1'/%3E%3C/svg%3E"
-            >
-              <source src="/hero-bg.mp4" type="video/mp4" />
-            </video>
-          </div>
-        )}
+        {/* ── Video background ── */}
+        <div className={`${styles.videoBg} hero-video-bg`}>
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect fill='%230a0a0a' width='1' height='1'/%3E%3C/svg%3E"
+          >
+            <source src="/hero-bg.mp4" type="video/mp4" />
+          </video>
+        </div>
 
         {/* ── Video dark overlay (readability) ── */}
         <div className={`${styles.videoOverlay} hero-video-overlay`} />
