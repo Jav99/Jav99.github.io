@@ -70,18 +70,26 @@ export function Hero() {
       return len;
     });
 
+    /* ── Compute initial scale so the phone screen fills viewport ── */
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    let phoneW = 220;
+    if (vw >= 1024) phoneW = 310;
+    else if (vw >= 768) phoneW = 270;
+    const phoneH = phoneW * (1200 / 556);
+    const screenW = phoneW * 0.90;
+    const screenH = phoneH * 0.93;
+    const initialScale = Math.max(vw / screenW, vh / screenH) * 1.08;
+
     const ctx = gsap.context(() => {
       /* ── Initial states ── */
-      gsap.set('.hero-phone', { xPercent: -50, yPercent: -50, scale: 0.85, opacity: 0 });
+      gsap.set('.hero-phone', { xPercent: -50, yPercent: -50, scale: initialScale, opacity: 0 });
       gsap.set('.hero-dark-overlay', { opacity: 0 });
 
       const base = { trigger: sectionRef.current, scrub: true };
 
       /* ════════════════════════════════════════════════
-       * PHASE 1: Video hero visible, text on top (0-20%)
-       *   - Headline + scroll indicator fade out
-       *   - Video scales down and fades out
-       *   - Dark overlay fades in to bridge the transition
+       * PHASE 1: Video fades out, text fades, iPhone zooms in
        * ════════════════════════════════════════════════ */
 
       /* Headline fades out on scroll (reversible) */
@@ -101,12 +109,12 @@ export function Hero() {
         }
       );
 
-      /* Video/mobile bg scales down and fades out */
+      /* Video fades out (no scale) */
       gsap.fromTo('.hero-video-bg',
-        { scale: 1, opacity: 1 },
+        { opacity: 1 },
         {
-          scale: 0.6, opacity: 0, immediateRender: false,
-          scrollTrigger: { ...base, start: '4% top', end: '22% top' },
+          opacity: 0, immediateRender: false,
+          scrollTrigger: { ...base, start: '4% top', end: '18% top' },
         }
       );
 
@@ -115,36 +123,25 @@ export function Hero() {
         { opacity: 1 },
         {
           opacity: 0, immediateRender: false,
-          scrollTrigger: { ...base, start: '4% top', end: '18% top' },
+          scrollTrigger: { ...base, start: '4% top', end: '16% top' },
         }
       );
 
-      /* Dark overlay bridges video-out to scene-in */
-      gsap.fromTo('.hero-dark-overlay',
-        { opacity: 0 },
-        {
-          opacity: 1, immediateRender: false,
-          scrollTrigger: { ...base, start: '8% top', end: '16% top' },
-        }
-      );
-
-      gsap.to('.hero-dark-overlay', {
-        opacity: 0, immediateRender: false,
-        scrollTrigger: { ...base, start: '22% top', end: '38% top' },
-      });
-
-      /* ════════════════════════════════════════════════
-       * PHASE 2: iPhone fades in and settles (15-35%)
-       * ════════════════════════════════════════════════ */
-
+      /* iPhone fades in as video fades out, starts large and shrinks */
       gsap.to('.hero-phone', {
         opacity: 1, immediateRender: false,
-        scrollTrigger: { ...base, start: '14% top', end: '22% top' },
+        scrollTrigger: { ...base, start: '8% top', end: '16% top' },
       });
 
       gsap.to('.hero-phone', {
         scale: 1, ease: 'power3.out', immediateRender: false,
-        scrollTrigger: { ...base, start: '14% top', end: '35% top' },
+        scrollTrigger: { ...base, start: '8% top', end: '40% top' },
+      });
+
+      /* Dark overlay dissolves after phone settles */
+      gsap.to('.hero-dark-overlay', {
+        opacity: 0, immediateRender: false,
+        scrollTrigger: { ...base, start: '22% top', end: '38% top' },
       });
 
       /* ════════════════════════════════════════════════
