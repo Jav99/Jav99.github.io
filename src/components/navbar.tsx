@@ -25,9 +25,15 @@ export function Navbar() {
     (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
       e.preventDefault();
       setMobileOpen(false);
+      if (href === "#") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
       const target = document.querySelector(href);
       if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        const offset = 80;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: "smooth" });
       }
     },
     []
@@ -53,7 +59,7 @@ export function Navbar() {
             className="h-10 md:h-12 w-auto"
             draggable={false}
           />
-          <span className="text-[9px] md:text-[10px] uppercase tracking-[0.2em] text-slate-400 font-medium">
+          <span className="text-[9px] md:text-[10px] uppercase tracking-[0.2em] text-white font-medium">
             Hannah White
           </span>
         </a>
