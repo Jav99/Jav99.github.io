@@ -38,7 +38,7 @@ export function Navbar() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
         scrolled
           ? "bg-slate-950/95 backdrop-blur-xl border-b border-slate-800 shadow-lg"
-          : "bg-slate-950"
+          : "bg-transparent"
       }`}
       style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
     >

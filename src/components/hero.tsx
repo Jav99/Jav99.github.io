@@ -1,13 +1,13 @@
 'use client';
 
-import { useRef, useLayoutEffect } from 'react';
+import { useRef, useEffect, useLayoutEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Hero.module.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* ─── Easing helpers ───────────────────────────────────── */
+/* ── Easing helpers ─────────────────────────────────────── */
 function easeOutBack(t: number) {
   const c1 = 1.70158;
   const c3 = c1 + 1;
@@ -22,7 +22,7 @@ function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
 }
 
-/* ─── Floating element config ──────────────────────────── */
+/* ── Floating element config ────────────────────────────── */
 interface FloatConfig {
   startX: number; startY: number;
   finalX: number; finalY: number;
@@ -31,52 +31,23 @@ interface FloatConfig {
   wobbleAmp: number; wobbleFreq: number;
 }
 
-/*
- * Final positions reference the image:
- * - Phone center, elements arranged around it
- * - Resume doc: upper-left
- * - Donut chart: right, slightly above center (partially behind phone)
- * - Purple squiggle: large, weaves right side and behind phone
- * - Teal squiggle curl: left area
- * - Chat bubbles: lower-left, overlapping
- * - Triangles: lower-right cluster
- * - Dots/shapes scattered as accents
- */
 const FLOAT_CONFIGS: FloatConfig[] = [
-  /* 0: Resume icon — top-left */
   { startX: -60, startY: -55, finalX: -28, finalY: -24, startRot: -25, finalRot: -2, enter: 0.20, wobbleAmp: 3, wobbleFreq: 2.5 },
-  /* 1: Chat bubble coral — bottom-left */
   { startX: -55, startY: 60, finalX: -14, finalY: 22, startRot: 20, finalRot: 0, enter: 0.24, wobbleAmp: 4, wobbleFreq: 2.0 },
-  /* 2: Chat bubble orange — bottom-left offset, overlapping */
   { startX: -60, startY: 55, finalX: -10, finalY: 16, startRot: -15, finalRot: 3, enter: 0.27, wobbleAmp: 3, wobbleFreq: 3.0 },
-  /* 3: Donut chart — right, slightly above center */
   { startX: 60, startY: -45, finalX: 20, finalY: -8, startRot: 30, finalRot: 0, enter: 0.22, wobbleAmp: 4, wobbleFreq: 1.8 },
-  /* 4: Large triangle amber — bottom-right */
   { startX: 60, startY: 60, finalX: 24, finalY: 18, startRot: 45, finalRot: 0, enter: 0.25, wobbleAmp: 3, wobbleFreq: 2.2 },
-  /* 5: Med triangle teal — right of large, slightly above */
   { startX: 55, startY: 55, finalX: 32, finalY: 10, startRot: -30, finalRot: 5, enter: 0.28, wobbleAmp: 2.5, wobbleFreq: 2.8 },
-  /* 6: Small triangle dark blue — far bottom-right */
   { startX: 65, startY: 55, finalX: 36, finalY: 24, startRot: -50, finalRot: -10, enter: 0.30, wobbleAmp: 2, wobbleFreq: 3.2 },
-  /* 7: Large purple squiggle — weaves right side, behind phone */
   { startX: 55, startY: -55, finalX: 6, finalY: 2, startRot: 15, finalRot: 0, enter: 0.21, wobbleAmp: 3.5, wobbleFreq: 1.5 },
-  /* 8: Teal squiggle curl — left area */
   { startX: -65, startY: 50, finalX: -24, finalY: 2, startRot: -20, finalRot: 0, enter: 0.26, wobbleAmp: 3, wobbleFreq: 2.0 },
-  /* 9: Dot purple — upper-left accent */
   { startX: -55, startY: -55, finalX: -20, finalY: -34, startRot: 0, finalRot: 0, enter: 0.30, wobbleAmp: 2, wobbleFreq: 4.0 },
-  /* 10: Dot amber — right side accent */
   { startX: 55, startY: 50, finalX: 18, finalY: 30, startRot: 0, finalRot: 0, enter: 0.32, wobbleAmp: 2, wobbleFreq: 3.5 },
-  /* 11: Dot coral — left mid accent */
   { startX: -60, startY: 50, finalX: -34, finalY: 8, startRot: 0, finalRot: 0, enter: 0.35, wobbleAmp: 1.5, wobbleFreq: 3.0 },
-  /* ── 5 NEW ELEMENTS ── */
-  /* 12: Checkmark badge (green circle + check) — top-right area */
   { startX: 55, startY: -60, finalX: 28, finalY: -22, startRot: 35, finalRot: 0, enter: 0.23, wobbleAmp: 3, wobbleFreq: 2.4 },
-  /* 13: Bar chart icon (blue) — left mid */
   { startX: -60, startY: -45, finalX: -32, finalY: -8, startRot: -20, finalRot: 0, enter: 0.25, wobbleAmp: 2.5, wobbleFreq: 2.6 },
-  /* 14: Lightning bolt (amber) — top accent */
   { startX: 30, startY: -60, finalX: 10, finalY: -32, startRot: 25, finalRot: -5, enter: 0.29, wobbleAmp: 3, wobbleFreq: 3.0 },
-  /* 15: Purple loop squiggle — bottom area behind phone */
   { startX: -50, startY: 60, finalX: -4, finalY: 28, startRot: 10, finalRot: 0, enter: 0.24, wobbleAmp: 3.5, wobbleFreq: 1.8 },
-  /* 16: Dot teal — lower-right accent */
   { startX: 60, startY: 60, finalX: 38, finalY: 16, startRot: 0, finalRot: 0, enter: 0.33, wobbleAmp: 1.5, wobbleFreq: 3.8 },
 ];
 
@@ -89,9 +60,13 @@ export function Hero() {
   const squiggle2Ref = useRef<SVGPathElement>(null);
   const squiggle3Ref = useRef<SVGPathElement>(null);
   const donutCenterRef = useRef<SVGCircleElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   useLayoutEffect(() => {
-    /* ── Squiggle dash setup ── */
     const squiggles = [squiggle1Ref.current, squiggle2Ref.current, squiggle3Ref.current];
     const sqLens = squiggles.map(sq => {
       if (!sq) return 0;
@@ -101,34 +76,26 @@ export function Hero() {
       return len;
     });
 
-    /* ── Compute initial scale so the phone screen fills viewport ── */
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    let phoneW = 220;
-    if (vw >= 1024) phoneW = 310;
-    else if (vw >= 768) phoneW = 270;
-    const phoneH = phoneW * (1200 / 556);
-    /* Screen area is roughly 90% width, 93% height of the image */
-    const screenW = phoneW * 0.90;
-    const screenH = phoneH * 0.93;
-    const initialScale = Math.max(vw / screenW, vh / screenH) * 1.08;
-
     const ctx = gsap.context(() => {
-      /* ── Phone starts hidden; will appear on scroll ── */
-      gsap.set('.hero-phone', { xPercent: -50, yPercent: -50, scale: initialScale, opacity: 0 });
+      /* ── Initial states ── */
+      gsap.set('.hero-phone', { xPercent: -50, yPercent: -50, scale: 0.85, opacity: 0 });
+      gsap.set('.hero-dark-overlay', { opacity: 0 });
 
       const base = { trigger: sectionRef.current, scrub: true };
 
-      /* ══════════════════════════════════════════════
-       * PHASE 1 — Text fades, then iPhone appears & shrinks (0–40%)
-       * Headline & indicator scrub both ways so they reappear on scroll-up
-       * ══════════════════════════════════════════════ */
+      /* ════════════════════════════════════════════════
+       * PHASE 1: Video hero visible, text on top (0-20%)
+       *   - Headline + scroll indicator fade out
+       *   - Video scales down and fades out
+       *   - Dark overlay fades in to bridge the transition
+       * ════════════════════════════════════════════════ */
 
+      /* Headline fades out on scroll (reversible) */
       gsap.fromTo('.hero-headline',
         { opacity: 1, y: 0 },
         {
-          opacity: 0, y: -60, immediateRender: false,
-          scrollTrigger: { ...base, start: 'top top', end: '10% top' },
+          opacity: 0, y: -50, immediateRender: false,
+          scrollTrigger: { ...base, start: 'top top', end: '8% top' },
         }
       );
 
@@ -136,31 +103,60 @@ export function Hero() {
         { opacity: 1, y: 0 },
         {
           opacity: 0, y: -20, immediateRender: false,
-          scrollTrigger: { ...base, start: 'top top', end: '5% top' },
+          scrollTrigger: { ...base, start: 'top top', end: '4% top' },
         }
       );
 
-      /* Phone fades in quickly once scrolling begins */
-      gsap.to('.hero-phone', {
-        opacity: 1, immediateRender: false,
-        scrollTrigger: { ...base, start: '5% top', end: '15% top' },
-      });
+      /* Video/mobile bg scales down and fades out */
+      gsap.fromTo('.hero-video-bg',
+        { scale: 1, opacity: 1 },
+        {
+          scale: 0.6, opacity: 0, immediateRender: false,
+          scrollTrigger: { ...base, start: '4% top', end: '22% top' },
+        }
+      );
 
-      /* Phone scales down from fullscreen to normal */
-      gsap.to('.hero-phone', {
-        scale: 1, ease: 'power3.out', immediateRender: false,
-        scrollTrigger: { ...base, start: '8% top', end: '40% top' },
-      });
+      /* Video overlay fades with the video */
+      gsap.fromTo('.hero-video-overlay',
+        { opacity: 1 },
+        {
+          opacity: 0, immediateRender: false,
+          scrollTrigger: { ...base, start: '4% top', end: '18% top' },
+        }
+      );
+
+      /* Dark overlay bridges video-out to scene-in */
+      gsap.fromTo('.hero-dark-overlay',
+        { opacity: 0 },
+        {
+          opacity: 1, immediateRender: false,
+          scrollTrigger: { ...base, start: '8% top', end: '16% top' },
+        }
+      );
 
       gsap.to('.hero-dark-overlay', {
-        opacity: 0, ease: 'power3.out', immediateRender: false,
-        scrollTrigger: { ...base, start: '15% top', end: '40% top' },
+        opacity: 0, immediateRender: false,
+        scrollTrigger: { ...base, start: '22% top', end: '38% top' },
       });
 
-      /* ══════════════════════════════════════════════
-       * PHASE 2 — Floating elements enter (20–70%)
-       * PHASE 3 — End frame (70–100%)
-       * ══════════════════════════════════════════════ */
+      /* ════════════════════════════════════════════════
+       * PHASE 2: iPhone fades in and settles (15-35%)
+       * ════════════════════════════════════════════════ */
+
+      gsap.to('.hero-phone', {
+        opacity: 1, immediateRender: false,
+        scrollTrigger: { ...base, start: '14% top', end: '22% top' },
+      });
+
+      gsap.to('.hero-phone', {
+        scale: 1, ease: 'power3.out', immediateRender: false,
+        scrollTrigger: { ...base, start: '14% top', end: '35% top' },
+      });
+
+      /* ════════════════════════════════════════════════
+       * PHASE 3: Floating elements enter (20-70%)
+       * PHASE 4: End frame, bg goes white (70-100%)
+       * ════════════════════════════════════════════════ */
 
       ScrollTrigger.create({
         trigger: sectionRef.current,
@@ -197,8 +193,7 @@ export function Hero() {
             }
           }
 
-          /* Squiggle stroke-dash animations */
-          const sqIndices = [7, 8, 15]; // indices of squiggle elements
+          const sqIndices = [7, 8, 15];
           for (let s = 0; s < 3; s++) {
             const sq = squiggles[s];
             const len = sqLens[s];
@@ -208,7 +203,6 @@ export function Hero() {
             sq.style.strokeDashoffset = String(len * (1 - sqEased));
           }
 
-          /* Donut center fill matches background */
           if (donutCenterRef.current) {
             const bgP = clamp((p - 0.70) / 0.30, 0, 1);
             const bgEased = 1 - Math.pow(1 - bgP, 3);
@@ -217,8 +211,6 @@ export function Hero() {
           }
         },
       });
-
-      /* ── Phase 3 background + shadow ── */
 
       gsap.to('.hero-sticky-frame', {
         backgroundColor: '#ffffff', ease: 'power3.out', immediateRender: false,
@@ -240,13 +232,35 @@ export function Hero() {
   return (
     <section ref={sectionRef} className={styles.hero}>
       <div className={`${styles.stickyFrame} hero-sticky-frame`}>
-        {/* ── Dark overlay ── */}
+
+        {/* ── Video / Mobile gradient background ── */}
+        {isMobile ? (
+          <div className={`${styles.mobileBg} hero-video-bg`} />
+        ) : (
+          <div className={`${styles.videoBg} hero-video-bg`}>
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect fill='%230a0a0a' width='1' height='1'/%3E%3C/svg%3E"
+            >
+              <source src="/hero-bg.mp4" type="video/mp4" />
+            </video>
+          </div>
+        )}
+
+        {/* ── Video dark overlay (readability) ── */}
+        <div className={`${styles.videoOverlay} hero-video-overlay`} />
+
+        {/* ── Dark overlay (scene transition bridge) ── */}
         <div className={`${styles.darkOverlay} hero-dark-overlay`} />
 
-        {/* ── Opening: headline + scroll indicator ── */}
+        {/* ── Headline + scroll indicator ── */}
         <div className={styles.opening}>
           <h1 className={`${styles.headline} hero-headline`}>
-            Rate your resume today.
+            Rate your resume.
           </h1>
           <div className={`${styles.scrollIndicator} hero-scroll-indicator`}>
             <span className={styles.scrollText}>Scroll</span>
@@ -254,7 +268,7 @@ export function Hero() {
           </div>
         </div>
 
-        {/* ══════ 17 Floating elements (z-index: 8, behind phone) ══════ */}
+        {/* ══════ 17 Floating elements ══════ */}
 
         {/* 0: Resume/document icon */}
         <div ref={setElRef(0)} className={styles.floatingEl}>
@@ -291,7 +305,7 @@ export function Hero() {
           </svg>
         </div>
 
-        {/* 3: Donut chart (4 segments) */}
+        {/* 3: Donut chart */}
         <div ref={setElRef(3)} className={styles.floatingEl}>
           <svg width="140" height="140" viewBox="0 0 140 140" fill="none" aria-hidden="true">
             <circle cx="70" cy="70" r="55" stroke="#1D9E75" strokeWidth="24" strokeDasharray="115.2 345.6" strokeDashoffset="0" transform="rotate(-90 70 70)" />
@@ -323,14 +337,14 @@ export function Hero() {
           </svg>
         </div>
 
-        {/* 7: Large purple squiggle — weaves across right side */}
+        {/* 7: Large purple squiggle */}
         <div ref={setElRef(7)} className={styles.floatingEl}>
           <svg width="320" height="280" viewBox="0 0 320 280" fill="none" aria-hidden="true">
             <path ref={squiggle1Ref} d="M20 240 C40 180, 80 260, 100 200 S140 100, 160 140 C180 180, 200 80, 240 120 S280 40, 300 80 C310 100, 290 140, 260 120 C230 100, 260 60, 300 40" stroke="#7F77DD" strokeWidth="5.5" strokeLinecap="round" fill="none" />
           </svg>
         </div>
 
-        {/* 8: Teal squiggle curl — left area */}
+        {/* 8: Teal squiggle curl */}
         <div ref={setElRef(8)} className={styles.floatingEl}>
           <svg width="120" height="100" viewBox="0 0 120 100" fill="none" aria-hidden="true">
             <path ref={squiggle2Ref} d="M10 50 C20 10, 50 10, 45 50 C40 90, 80 90, 75 50 C70 20, 110 20, 110 50" stroke="#1D9E75" strokeWidth="4.5" strokeLinecap="round" fill="none" />
@@ -352,9 +366,7 @@ export function Hero() {
           <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="6" fill="#E24B4A" /></svg>
         </div>
 
-        {/* ── 5 NEW ELEMENTS ── */}
-
-        {/* 12: Checkmark badge — green circle with white check */}
+        {/* 12: Checkmark badge */}
         <div ref={setElRef(12)} className={styles.floatingEl}>
           <svg width="50" height="50" viewBox="0 0 50 50" fill="none" aria-hidden="true">
             <circle cx="25" cy="25" r="22" fill="#1D9E75" />
@@ -378,7 +390,7 @@ export function Hero() {
           </svg>
         </div>
 
-        {/* 15: Purple loop squiggle — bottom, behind phone */}
+        {/* 15: Purple loop squiggle */}
         <div ref={setElRef(15)} className={styles.floatingEl}>
           <svg width="180" height="140" viewBox="0 0 180 140" fill="none" aria-hidden="true">
             <path ref={squiggle3Ref} d="M10 70 C30 10, 70 10, 70 60 C70 110, 30 120, 50 80 C70 40, 120 40, 110 80 C100 120, 150 130, 170 80" stroke="#7F77DD" strokeWidth="5" strokeLinecap="round" fill="none" />
@@ -390,7 +402,7 @@ export function Hero() {
           <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7.5" fill="#1D9E75" /></svg>
         </div>
 
-        {/* ══════ iPhone — real image ══════ */}
+        {/* ══════ iPhone ══════ */}
         <div className={`${styles.phoneContainer} hero-phone`}>
           <img
             src="/iphone.png"
