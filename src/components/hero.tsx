@@ -247,7 +247,8 @@ export function Hero() {
         {/* ── Headline + scroll indicator ── */}
         <div className={styles.opening}>
           <h1 className={`${styles.headline} hero-headline`}>
-            Rate your resume.
+            Your resume is costing you interviews.
+            <span className={styles.headlineAccent}>Find out why.</span>
           </h1>
           <div className={`${styles.scrollIndicator} hero-scroll-indicator`}>
             <span className={styles.scrollText}>Scroll</span>
