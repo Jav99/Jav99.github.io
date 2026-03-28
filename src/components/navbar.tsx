@@ -35,7 +35,7 @@ export function Navbar() {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 bg-transparent"
+      className="fixed top-0 left-0 right-0 z-50 bg-slate-950"
       style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
     >
       <nav
