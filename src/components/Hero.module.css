@@ -16,52 +16,38 @@
   background: #0a0a0a;
 }
 
-/* ── Video background ─────────────────────────────────────── */
-.videoBg {
+/* ── Static cosmic background image ──────────────────────── */
+.cosmicBg {
   position: absolute;
   inset: 0;
   z-index: 1;
+  background-image: url('/hero-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   will-change: opacity;
 }
 
-.videoBg video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ── Mobile gradient fallback ─────────────────────────────── */
-.mobileBg {
+/* ── Star canvas layer ───────────────────────────────────── */
+.starCanvas {
   position: absolute;
   inset: 0;
-  z-index: 1;
-  background: radial-gradient(ellipse at 50% 40%, #1a1040 0%, #0a0a0a 70%);
-  will-change: transform, opacity;
-}
-
-.mobileBg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 50% 50%, rgba(120, 60, 200, 0.12) 0%, transparent 60%);
-  animation: auraPulse 6s ease-in-out infinite;
-}
-
-@keyframes auraPulse {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.15); }
-}
-
-/* ── Video dark overlay ───────────────────────────────────── */
-.videoOverlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.40);
   z-index: 2;
+  will-change: opacity;
   pointer-events: none;
 }
 
-/* ── Dark overlay (scene transition) ──────────────────────── */
+/* ── Dark overlay over background (readability) ──────────── */
+.bgOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.30);
+  z-index: 3;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+/* ── Dark overlay (scene transition) ─────────────────────── */
 .darkOverlay {
   position: absolute;
   inset: 0;
@@ -71,7 +57,7 @@
   opacity: 0;
 }
 
-/* ── Opening: headline + scroll indicator ─────────────────── */
+/* ── Opening: headline + scroll indicator ────────────────── */
 .opening {
   position: absolute;
   inset: 0;
@@ -125,7 +111,7 @@
   margin-top: 16px;
 }
 
-/* ── Scroll indicator ─────────────────────────────────────── */
+/* ── Scroll indicator ────────────────────────────────────── */
 .scrollIndicator {
   display: flex;
   flex-direction: column;
@@ -158,7 +144,7 @@
   50% { transform: rotate(45deg) translateY(6px); }
 }
 
-/* ── Floating elements ────────────────────────────────────── */
+/* ── Floating elements ───────────────────────────────────── */
 .floatingEl {
   position: absolute;
   left: 50%;
@@ -169,7 +155,7 @@
   pointer-events: none;
 }
 
-/* ── iPhone ───────────────────────────────────────────────── */
+/* ── iPhone ──────────────────────────────────────────────── */
 .phoneContainer {
   position: absolute;
   left: 50%;
