@@ -1,25 +1,43 @@
 'use client';
 
-import { useRef, useLayoutEffect } from 'react';
+import { useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Hero.module.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* ── Easing helpers ─────────────────────────────────────── */
+/* ── Helpers ────────────────────────────────────────────── */
 function easeOutBack(t: number) {
   const c1 = 1.70158;
   const c3 = c1 + 1;
   return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
 }
-
 function clamp(v: number, lo: number, hi: number) {
   return Math.max(lo, Math.min(hi, v));
 }
-
 function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
+}
+function rand(min: number, max: number) {
+  return min + Math.random() * (max - min);
+}
+
+/* ── Star types ─────────────────────────────────────────── */
+interface Star {
+  x: number; y: number;
+  radius: number;
+  speed: number;
+  phase: number;
+}
+interface ShootingStar {
+  x: number; y: number;
+  angle: number;
+  speed: number;
+  length: number;
+  born: number;
+  lifespan: number;
+  direction: number;
 }
 
 /* ── Floating element config ────────────────────────────── */
@@ -50,16 +68,142 @@ const FLOAT_CONFIGS: FloatConfig[] = [
   { startX: -50, startY: 60, finalX: -4, finalY: 28, startRot: 10, finalRot: 0, enter: 0.24, wobbleAmp: 3.5, wobbleFreq: 1.8 },
   { startX: 60, startY: 60, finalX: 38, finalY: 16, startRot: 0, finalRot: 0, enter: 0.33, wobbleAmp: 1.5, wobbleFreq: 3.8 },
 ];
-
 const TOTAL_ELEMENTS = FLOAT_CONFIGS.length;
 
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const elRefs = useRef<(HTMLDivElement | null)[]>([]);
   const squiggle1Ref = useRef<SVGPathElement>(null);
   const squiggle2Ref = useRef<SVGPathElement>(null);
   const squiggle3Ref = useRef<SVGPathElement>(null);
   const donutCenterRef = useRef<SVGCircleElement>(null);
+  const animatingRef = useRef(true);
+
+  /* ── Canvas star animation ── */
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx2d = canvas.getContext('2d');
+    if (!ctx2d) return;
+
+    const isMobile = window.innerWidth < 768;
+    const starCount = isMobile ? rand(40, 60) : rand(80, 120);
+
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
+
+    /* Init stars */
+    const stars: Star[] = Array.from({ length: starCount }, () => ({
+      x: rand(0, w),
+      y: rand(0, h),
+      radius: rand(0.5, 2),
+      speed: rand(0.003, 0.008),
+      phase: rand(0, Math.PI * 2),
+    }));
+
+    /* Shooting star state (desktop only) */
+    const shootingStars: ShootingStar[] = [];
+    let lastSpawn = 0;
+    let spawnInterval = rand(2000, 4000);
+
+    /* Resize handler */
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        w = window.innerWidth;
+        h = window.innerHeight;
+        canvas.width = w;
+        canvas.height = h;
+        stars.forEach(s => {
+          s.x = rand(0, w);
+          s.y = rand(0, h);
+        });
+      }, 150);
+    };
+    window.addEventListener('resize', onResize);
+
+    /* Animation loop */
+    let rafId: number;
+    const animate = (timestamp: number) => {
+      if (!animatingRef.current) { rafId = requestAnimationFrame(animate); return; }
+
+      ctx2d.clearRect(0, 0, w, h);
+
+      /* Twinkling stars */
+      for (const s of stars) {
+        const opacity = 0.6 + 0.4 * Math.sin(timestamp * s.speed + s.phase);
+        ctx2d.beginPath();
+        ctx2d.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx2d.fillStyle = `rgba(255,255,255,${opacity})`;
+        ctx2d.fill();
+      }
+
+      /* Shooting stars (desktop only) */
+      if (!isMobile) {
+        if (timestamp - lastSpawn > spawnInterval && shootingStars.length < 2) {
+          const dir = Math.random() > 0.5 ? 1 : -1;
+          const angle = rand(15, 30) * (Math.PI / 180);
+          shootingStars.push({
+            x: rand(w * 0.1, w * 0.9),
+            y: rand(0, h * 0.3),
+            angle,
+            speed: rand(600, 900),
+            length: rand(80, 150),
+            born: timestamp,
+            lifespan: rand(600, 1200),
+            direction: dir,
+          });
+          lastSpawn = timestamp;
+          spawnInterval = rand(2000, 4000);
+        }
+
+        for (let i = shootingStars.length - 1; i >= 0; i--) {
+          const ss = shootingStars[i];
+          const age = timestamp - ss.born;
+          if (age > ss.lifespan) { shootingStars.splice(i, 1); continue; }
+
+          const progress = age / ss.lifespan;
+          const fadeOut = 1 - Math.pow(progress, 2);
+          const dt = age / 1000;
+          const headX = ss.x + Math.cos(ss.angle) * ss.speed * dt * ss.direction;
+          const headY = ss.y + Math.sin(ss.angle) * ss.speed * dt;
+          const tailX = headX - Math.cos(ss.angle) * ss.length * ss.direction;
+          const tailY = headY - Math.sin(ss.angle) * ss.length;
+
+          const grad = ctx2d.createLinearGradient(tailX, tailY, headX, headY);
+          grad.addColorStop(0, `rgba(255,255,255,0)`);
+          grad.addColorStop(0.7, `rgba(255,255,255,${0.3 * fadeOut})`);
+          grad.addColorStop(1, `rgba(255,255,255,${0.9 * fadeOut})`);
+
+          ctx2d.save();
+          ctx2d.shadowColor = 'rgba(255,255,255,0.6)';
+          ctx2d.shadowBlur = 6;
+          ctx2d.beginPath();
+          ctx2d.moveTo(tailX, tailY);
+          ctx2d.lineTo(headX, headY);
+          ctx2d.strokeStyle = grad;
+          ctx2d.lineWidth = 1.5;
+          ctx2d.stroke();
+          ctx2d.restore();
+        }
+      }
+
+      rafId = requestAnimationFrame(animate);
+    };
+    rafId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', onResize);
+      clearTimeout(resizeTimer);
+    };
+  }, []);
+
+  /* ── GSAP scroll animations ── */
   useLayoutEffect(() => {
     const squiggles = [squiggle1Ref.current, squiggle2Ref.current, squiggle3Ref.current];
     const sqLens = squiggles.map(sq => {
@@ -70,7 +214,6 @@ export function Hero() {
       return len;
     });
 
-    /* ── Compute initial scale so the phone screen fills viewport ── */
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     let phoneW = 220;
@@ -82,73 +225,58 @@ export function Hero() {
     const initialScale = Math.max(vw / screenW, vh / screenH) * 1.08;
 
     const ctx = gsap.context(() => {
-      /* ── Initial states ── */
       gsap.set('.hero-phone', { xPercent: -50, yPercent: -50, scale: initialScale, opacity: 0 });
       gsap.set('.hero-dark-overlay', { opacity: 0 });
 
       const base = { trigger: sectionRef.current, scrub: true };
 
-      /* ════════════════════════════════════════════════
-       * PHASE 1: Video fades out, text fades, iPhone zooms in
-       * ════════════════════════════════════════════════ */
-
-      /* Headline fades out on scroll (reversible) */
+      /* Headline + scroll indicator fade (reversible) */
       gsap.fromTo('.hero-headline',
         { opacity: 1, y: 0 },
-        {
-          opacity: 0, y: -50, immediateRender: false,
-          scrollTrigger: { ...base, start: 'top top', end: '8% top' },
-        }
+        { opacity: 0, y: -50, immediateRender: false, scrollTrigger: { ...base, start: 'top top', end: '8% top' } }
       );
-
       gsap.fromTo('.hero-scroll-indicator',
         { opacity: 1, y: 0 },
-        {
-          opacity: 0, y: -20, immediateRender: false,
-          scrollTrigger: { ...base, start: 'top top', end: '4% top' },
-        }
+        { opacity: 0, y: -20, immediateRender: false, scrollTrigger: { ...base, start: 'top top', end: '4% top' } }
       );
 
-      /* Video fades out (no scale) */
-      gsap.fromTo('.hero-video-bg',
+      /* Cosmic bg + canvas + overlay fade out together */
+      gsap.fromTo('.hero-cosmic-bg',
+        { opacity: 1 },
+        { opacity: 0, immediateRender: false, scrollTrigger: { ...base, start: '4% top', end: '18% top' } }
+      );
+      gsap.fromTo('.hero-star-canvas',
         { opacity: 1 },
         {
           opacity: 0, immediateRender: false,
-          scrollTrigger: { ...base, start: '4% top', end: '18% top' },
+          scrollTrigger: {
+            ...base, start: '4% top', end: '18% top',
+            onUpdate: (self) => { animatingRef.current = self.progress < 0.95; },
+          },
         }
       );
-
-      /* Video overlay fades with the video */
-      gsap.fromTo('.hero-video-overlay',
+      gsap.fromTo('.hero-bg-overlay',
         { opacity: 1 },
-        {
-          opacity: 0, immediateRender: false,
-          scrollTrigger: { ...base, start: '4% top', end: '16% top' },
-        }
+        { opacity: 0, immediateRender: false, scrollTrigger: { ...base, start: '4% top', end: '16% top' } }
       );
 
-      /* iPhone fades in as video fades out, starts large and shrinks */
+      /* iPhone fades in large, shrinks to normal */
       gsap.to('.hero-phone', {
         opacity: 1, immediateRender: false,
         scrollTrigger: { ...base, start: '8% top', end: '16% top' },
       });
-
       gsap.to('.hero-phone', {
         scale: 1, ease: 'power3.out', immediateRender: false,
         scrollTrigger: { ...base, start: '8% top', end: '40% top' },
       });
 
-      /* Dark overlay dissolves after phone settles */
+      /* Dark overlay dissolves */
       gsap.to('.hero-dark-overlay', {
         opacity: 0, immediateRender: false,
         scrollTrigger: { ...base, start: '22% top', end: '38% top' },
       });
 
-      /* ════════════════════════════════════════════════
-       * PHASE 3: Floating elements enter (20-70%)
-       * PHASE 4: End frame, bg goes white (70-100%)
-       * ════════════════════════════════════════════════ */
-
+      /* Floating elements (20-70%) + end frame (70-100%) */
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: 'top top',
@@ -156,48 +284,37 @@ export function Hero() {
         scrub: true,
         onUpdate: (self) => {
           const p = self.progress;
-
           for (let i = 0; i < TOTAL_ELEMENTS; i++) {
             const el = elRefs.current[i];
             if (!el) continue;
             const c = FLOAT_CONFIGS[i];
             const elSettle = Math.min(c.enter + 0.35, 0.70);
-
             if (p < c.enter) {
               el.style.opacity = '0';
               el.style.transform = `translate(calc(-50% + ${c.startX}vw), calc(-50% + ${c.startY}vh)) rotate(${c.startRot}deg)`;
             } else {
               const elP = clamp((p - c.enter) / (elSettle - c.enter), 0, 1);
               const easedP = easeOutBack(elP);
-
               let x = lerp(c.startX, c.finalX, easedP);
               let y = lerp(c.startY, c.finalY, easedP);
               const rot = lerp(c.startRot, c.finalRot, easedP);
-
               const wobbleFade = 1 - elP;
               x += Math.sin(elP * Math.PI * c.wobbleFreq) * c.wobbleAmp * wobbleFade;
               y += Math.cos(elP * Math.PI * c.wobbleFreq * 0.7) * c.wobbleAmp * 0.6 * wobbleFade;
-
-              const elOpacity = clamp(elP * 4, 0, 1);
-              el.style.opacity = String(elOpacity);
+              el.style.opacity = String(clamp(elP * 4, 0, 1));
               el.style.transform = `translate(calc(-50% + ${x.toFixed(2)}vw), calc(-50% + ${y.toFixed(2)}vh)) rotate(${rot.toFixed(2)}deg)`;
             }
           }
-
           const sqIndices = [7, 8, 15];
           for (let s = 0; s < 3; s++) {
-            const sq = squiggles[s];
-            const len = sqLens[s];
+            const sq = squiggles[s]; const len = sqLens[s];
             if (!sq || !len) continue;
             const sqP = clamp((p - FLOAT_CONFIGS[sqIndices[s]].enter) / 0.30, 0, 1);
-            const sqEased = 1 - Math.pow(1 - sqP, 3);
-            sq.style.strokeDashoffset = String(len * (1 - sqEased));
+            sq.style.strokeDashoffset = String(len * (1 - (1 - Math.pow(1 - sqP, 3))));
           }
-
           if (donutCenterRef.current) {
             const bgP = clamp((p - 0.70) / 0.30, 0, 1);
-            const bgEased = 1 - Math.pow(1 - bgP, 3);
-            const v = Math.round(lerp(10, 255, bgEased));
+            const v = Math.round(lerp(10, 255, 1 - Math.pow(1 - bgP, 3)));
             donutCenterRef.current.setAttribute('fill', `rgb(${v},${v},${v})`);
           }
         },
@@ -207,7 +324,6 @@ export function Hero() {
         backgroundColor: '#ffffff', ease: 'power3.out', immediateRender: false,
         scrollTrigger: { ...base, start: '70% top', end: '100% top' },
       });
-
       gsap.to('.hero-phone', {
         filter: 'drop-shadow(0 25px 60px rgba(0,0,0,0.18))',
         ease: 'power3.out', immediateRender: false,
@@ -218,33 +334,25 @@ export function Hero() {
     return () => ctx.revert();
   }, []);
 
-  const setElRef = (i: number) => (el: HTMLDivElement | null) => { elRefs.current[i] = el; };
+  const setElRef = useCallback((i: number) => (el: HTMLDivElement | null) => { elRefs.current[i] = el; }, []);
 
   return (
     <section ref={sectionRef} className={styles.hero}>
       <div className={`${styles.stickyFrame} hero-sticky-frame`}>
 
-        {/* ── Video background ── */}
-        <div className={`${styles.videoBg} hero-video-bg`}>
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect fill='%230a0a0a' width='1' height='1'/%3E%3C/svg%3E"
-          >
-            <source src="/hero-bg.mp4" type="video/mp4" />
-          </video>
-        </div>
+        {/* Static cosmic background image */}
+        <div className={`${styles.cosmicBg} hero-cosmic-bg`} />
 
-        {/* ── Video dark overlay (readability) ── */}
-        <div className={`${styles.videoOverlay} hero-video-overlay`} />
+        {/* Animated star canvas */}
+        <canvas ref={canvasRef} className={`${styles.starCanvas} hero-star-canvas`} />
 
-        {/* ── Dark overlay (scene transition bridge) ── */}
+        {/* Dark overlay for text readability */}
+        <div className={`${styles.bgOverlay} hero-bg-overlay`} />
+
+        {/* Dark overlay for scene transition */}
         <div className={`${styles.darkOverlay} hero-dark-overlay`} />
 
-        {/* ── Headline + scroll indicator ── */}
+        {/* Headline + scroll indicator */}
         <div className={styles.opening}>
           <h1 className={`${styles.headline} hero-headline`}>
             Your resume is costing you interviews.
@@ -256,16 +364,13 @@ export function Hero() {
           </div>
         </div>
 
-        {/* ══════ 17 Floating elements ══════ */}
-
-        {/* 0: Resume/document icon */}
+        {/* 17 Floating elements */}
         <div ref={setElRef(0)} className={styles.floatingEl}>
           <svg width="100" height="120" viewBox="0 0 100 120" fill="none" aria-hidden="true">
             <rect x="5" y="5" width="80" height="105" rx="6" fill="#EAF2FB" stroke="#3B8BD4" strokeWidth="3" />
             <path d="M60 5v22h22" stroke="#3B8BD4" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
             <polygon points="60,5 82,27 60,27" fill="#d0e3f5" />
-            <circle cx="35" cy="42" r="12" fill="#d0e8e0" />
-            <circle cx="35" cy="40" r="5" fill="#1D9E75" />
+            <circle cx="35" cy="42" r="12" fill="#d0e8e0" /><circle cx="35" cy="40" r="5" fill="#1D9E75" />
             <path d="M25 52c0-5 4.5-9 10-9s10 4 10 9" stroke="#1D9E75" strokeWidth="2" fill="none" strokeLinecap="round" />
             <rect x="20" y="62" width="50" height="3" rx="1.5" fill="#3B8BD4" opacity="0.4" />
             <rect x="20" y="72" width="40" height="3" rx="1.5" fill="#3B8BD4" opacity="0.3" />
@@ -273,18 +378,12 @@ export function Hero() {
             <rect x="20" y="92" width="30" height="3" rx="1.5" fill="#3B8BD4" opacity="0.2" />
           </svg>
         </div>
-
-        {/* 1: Chat bubble (coral) */}
         <div ref={setElRef(1)} className={styles.floatingEl}>
           <svg width="80" height="70" viewBox="0 0 80 70" fill="none" aria-hidden="true">
             <path d="M5 10c0-5.5 4.5-10 10-10h50c5.5 0 10 4.5 10 10v30c0 5.5-4.5 10-10 10H30l-15 15V50H15c-5.5 0-10-4.5-10-10V10z" fill="#E24B4A" />
-            <circle cx="28" cy="25" r="4" fill="#fff" />
-            <circle cx="42" cy="25" r="4" fill="#fff" />
-            <circle cx="56" cy="25" r="4" fill="#fff" />
+            <circle cx="28" cy="25" r="4" fill="#fff" /><circle cx="42" cy="25" r="4" fill="#fff" /><circle cx="56" cy="25" r="4" fill="#fff" />
           </svg>
         </div>
-
-        {/* 2: Smaller chat bubble (orange) */}
         <div ref={setElRef(2)} className={styles.floatingEl}>
           <svg width="70" height="60" viewBox="0 0 70 60" fill="none" aria-hidden="true">
             <path d="M5 8c0-4.4 3.6-8 8-8h40c4.4 0 8 3.6 8 8v24c0 4.4-3.6 8-8 8H25l-12 12V40H13c-4.4 0-8-3.6-8-8V8z" fill="#F28C50" />
@@ -292,8 +391,6 @@ export function Hero() {
             <rect x="16" y="22" width="22" height="3" rx="1.5" fill="#fff" opacity="0.6" />
           </svg>
         </div>
-
-        {/* 3: Donut chart */}
         <div ref={setElRef(3)} className={styles.floatingEl}>
           <svg width="140" height="140" viewBox="0 0 140 140" fill="none" aria-hidden="true">
             <circle cx="70" cy="70" r="55" stroke="#1D9E75" strokeWidth="24" strokeDasharray="115.2 345.6" strokeDashoffset="0" transform="rotate(-90 70 70)" />
@@ -303,101 +400,43 @@ export function Hero() {
             <circle ref={donutCenterRef} cx="70" cy="70" r="43" fill="#0a0a0a" />
           </svg>
         </div>
-
-        {/* 4: Large triangle (amber) */}
-        <div ref={setElRef(4)} className={styles.floatingEl}>
-          <svg width="110" height="100" viewBox="0 0 110 100" fill="none" aria-hidden="true">
-            <polygon points="55,5 105,95 5,95" fill="#EF9F27" />
-          </svg>
-        </div>
-
-        {/* 5: Medium triangle (teal) */}
-        <div ref={setElRef(5)} className={styles.floatingEl}>
-          <svg width="65" height="58" viewBox="0 0 65 58" fill="none" aria-hidden="true">
-            <polygon points="32,3 62,55 2,55" fill="#1D9E75" />
-          </svg>
-        </div>
-
-        {/* 6: Small triangle (dark blue) */}
-        <div ref={setElRef(6)} className={styles.floatingEl}>
-          <svg width="42" height="38" viewBox="0 0 42 38" fill="none" aria-hidden="true">
-            <polygon points="21,2 40,36 2,36" fill="#1e3a5f" />
-          </svg>
-        </div>
-
-        {/* 7: Large purple squiggle */}
+        <div ref={setElRef(4)} className={styles.floatingEl}><svg width="110" height="100" viewBox="0 0 110 100" fill="none" aria-hidden="true"><polygon points="55,5 105,95 5,95" fill="#EF9F27" /></svg></div>
+        <div ref={setElRef(5)} className={styles.floatingEl}><svg width="65" height="58" viewBox="0 0 65 58" fill="none" aria-hidden="true"><polygon points="32,3 62,55 2,55" fill="#1D9E75" /></svg></div>
+        <div ref={setElRef(6)} className={styles.floatingEl}><svg width="42" height="38" viewBox="0 0 42 38" fill="none" aria-hidden="true"><polygon points="21,2 40,36 2,36" fill="#1e3a5f" /></svg></div>
         <div ref={setElRef(7)} className={styles.floatingEl}>
           <svg width="320" height="280" viewBox="0 0 320 280" fill="none" aria-hidden="true">
             <path ref={squiggle1Ref} d="M20 240 C40 180, 80 260, 100 200 S140 100, 160 140 C180 180, 200 80, 240 120 S280 40, 300 80 C310 100, 290 140, 260 120 C230 100, 260 60, 300 40" stroke="#7F77DD" strokeWidth="5.5" strokeLinecap="round" fill="none" />
           </svg>
         </div>
-
-        {/* 8: Teal squiggle curl */}
         <div ref={setElRef(8)} className={styles.floatingEl}>
           <svg width="120" height="100" viewBox="0 0 120 100" fill="none" aria-hidden="true">
             <path ref={squiggle2Ref} d="M10 50 C20 10, 50 10, 45 50 C40 90, 80 90, 75 50 C70 20, 110 20, 110 50" stroke="#1D9E75" strokeWidth="4.5" strokeLinecap="round" fill="none" />
           </svg>
         </div>
-
-        {/* 9: Dot purple */}
-        <div ref={setElRef(9)} className={styles.floatingEl}>
-          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#7F77DD" /></svg>
-        </div>
-
-        {/* 10: Dot amber */}
-        <div ref={setElRef(10)} className={styles.floatingEl}>
-          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="#EF9F27" /></svg>
-        </div>
-
-        {/* 11: Dot coral */}
-        <div ref={setElRef(11)} className={styles.floatingEl}>
-          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="6" fill="#E24B4A" /></svg>
-        </div>
-
-        {/* 12: Checkmark badge */}
+        <div ref={setElRef(9)} className={styles.floatingEl}><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#7F77DD" /></svg></div>
+        <div ref={setElRef(10)} className={styles.floatingEl}><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="#EF9F27" /></svg></div>
+        <div ref={setElRef(11)} className={styles.floatingEl}><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="6" fill="#E24B4A" /></svg></div>
         <div ref={setElRef(12)} className={styles.floatingEl}>
           <svg width="50" height="50" viewBox="0 0 50 50" fill="none" aria-hidden="true">
-            <circle cx="25" cy="25" r="22" fill="#1D9E75" />
-            <path d="M15 25l7 7 13-14" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+            <circle cx="25" cy="25" r="22" fill="#1D9E75" /><path d="M15 25l7 7 13-14" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
           </svg>
         </div>
-
-        {/* 13: Bar chart icon */}
         <div ref={setElRef(13)} className={styles.floatingEl}>
           <svg width="56" height="50" viewBox="0 0 56 50" fill="none" aria-hidden="true">
-            <rect x="2" y="28" width="12" height="20" rx="2" fill="#3B8BD4" opacity="0.5" />
-            <rect x="18" y="16" width="12" height="32" rx="2" fill="#3B8BD4" opacity="0.7" />
-            <rect x="34" y="6" width="12" height="42" rx="2" fill="#3B8BD4" />
+            <rect x="2" y="28" width="12" height="20" rx="2" fill="#3B8BD4" opacity="0.5" /><rect x="18" y="16" width="12" height="32" rx="2" fill="#3B8BD4" opacity="0.7" /><rect x="34" y="6" width="12" height="42" rx="2" fill="#3B8BD4" />
           </svg>
         </div>
-
-        {/* 14: Lightning bolt */}
-        <div ref={setElRef(14)} className={styles.floatingEl}>
-          <svg width="36" height="56" viewBox="0 0 36 56" fill="none" aria-hidden="true">
-            <polygon points="22,0 6,26 16,26 10,56 30,22 18,22" fill="#EF9F27" />
-          </svg>
-        </div>
-
-        {/* 15: Purple loop squiggle */}
+        <div ref={setElRef(14)} className={styles.floatingEl}><svg width="36" height="56" viewBox="0 0 36 56" fill="none" aria-hidden="true"><polygon points="22,0 6,26 16,26 10,56 30,22 18,22" fill="#EF9F27" /></svg></div>
         <div ref={setElRef(15)} className={styles.floatingEl}>
           <svg width="180" height="140" viewBox="0 0 180 140" fill="none" aria-hidden="true">
             <path ref={squiggle3Ref} d="M10 70 C30 10, 70 10, 70 60 C70 110, 30 120, 50 80 C70 40, 120 40, 110 80 C100 120, 150 130, 170 80" stroke="#7F77DD" strokeWidth="5" strokeLinecap="round" fill="none" />
           </svg>
         </div>
+        <div ref={setElRef(16)} className={styles.floatingEl}><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7.5" fill="#1D9E75" /></svg></div>
 
-        {/* 16: Dot teal */}
-        <div ref={setElRef(16)} className={styles.floatingEl}>
-          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7.5" fill="#1D9E75" /></svg>
-        </div>
-
-        {/* ══════ iPhone ══════ */}
+        {/* iPhone */}
         <div className={`${styles.phoneContainer} hero-phone`}>
-          <img
-            src="/iphone.png"
-            alt="iPhone showing resume score of 8.5 out of 10"
-            className={styles.phoneImage}
-            draggable={false}
-          />
+          <img src="/iphone.png" alt="iPhone showing resume score of 8.5 out of 10" className={styles.phoneImage} draggable={false} />
         </div>
       </div>
     </section>
