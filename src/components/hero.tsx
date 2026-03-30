@@ -107,7 +107,7 @@ export function Hero() {
     /* Shooting star state (desktop only) */
     const shootingStars: ShootingStar[] = [];
     let lastSpawn = 0;
-    let spawnInterval = rand(2000, 4000);
+    let spawnInterval = isMobile ? rand(3000, 5000) : rand(2000, 4000);
 
     /* Resize handler */
     let resizeTimer: ReturnType<typeof setTimeout>;
@@ -142,9 +142,10 @@ export function Hero() {
         ctx2d.fill();
       }
 
-      /* Shooting stars (desktop only) */
-      if (!isMobile) {
-        if (timestamp - lastSpawn > spawnInterval && shootingStars.length < 2) {
+      /* Shooting stars */
+      {
+        const maxActive = isMobile ? 1 : 2;
+        if (timestamp - lastSpawn > spawnInterval && shootingStars.length < maxActive) {
           const dir = Math.random() > 0.5 ? 1 : -1;
           const angle = rand(15, 30) * (Math.PI / 180);
           shootingStars.push({
@@ -158,7 +159,7 @@ export function Hero() {
             direction: dir,
           });
           lastSpawn = timestamp;
-          spawnInterval = rand(2000, 4000);
+          spawnInterval = isMobile ? rand(3000, 5000) : rand(2000, 4000);
         }
 
         for (let i = shootingStars.length - 1; i >= 0; i--) {
