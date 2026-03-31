@@ -30,9 +30,9 @@
 }
 
 @keyframes cinematicGlow {
-  0%   { filter: hue-rotate(75deg) brightness(1) saturate(1); }
-  50%  { filter: hue-rotate(75deg) brightness(1.12) saturate(1.15); }
-  100% { filter: hue-rotate(75deg) brightness(1.05) saturate(1.08); }
+  0%   { filter: brightness(1) saturate(1); }
+  50%  { filter: brightness(1.12) saturate(1.15); }
+  100% { filter: brightness(1.05) saturate(1.08); }
 }
 
 /* ── Star canvas layer ───────────────────────────────────── */
