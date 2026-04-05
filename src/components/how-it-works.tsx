@@ -107,7 +107,7 @@ export function HowItWorks() {
           {steps.map((step) => (
             <div
               key={step.number}
-              className="step-card relative text-center md:text-left"
+              className="step-card relative text-center"
             >
               <span className="step-number text-7xl md:text-8xl font-bold text-slate-100 font-serif leading-none select-none block">
                 {step.number}

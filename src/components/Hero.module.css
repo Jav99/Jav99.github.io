@@ -48,7 +48,7 @@
 .bgOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.30);
+  background: rgba(0, 0, 0, 0.50);
   z-index: 3;
   pointer-events: none;
   will-change: opacity;
@@ -88,6 +88,10 @@
   max-width: 860px;
   will-change: transform, opacity;
   position: relative;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    0 8px 24px rgba(0, 0, 0, 0.6),
+    0 0 80px rgba(0, 0, 0, 0.4);
 }
 
 .headline::before {
@@ -114,8 +118,11 @@
   font-size: 0.55em;
   font-weight: 400;
   letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.80);
   margin-top: 16px;
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(0, 0, 0, 0.4);
 }
 
 /* ── Scroll indicator ────────────────────────────────────── */

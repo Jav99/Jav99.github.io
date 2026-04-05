@@ -394,10 +394,10 @@ export function Hero() {
         </div>
         <div ref={setElRef(3)} className={styles.floatingEl}>
           <svg width="140" height="140" viewBox="0 0 140 140" fill="none" aria-hidden="true">
-            <circle cx="70" cy="70" r="55" stroke="#1D9E75" strokeWidth="24" strokeDasharray="115.2 345.6" strokeDashoffset="0" transform="rotate(-90 70 70)" />
-            <circle cx="70" cy="70" r="55" stroke="#3B8BD4" strokeWidth="24" strokeDasharray="86.4 345.6" strokeDashoffset="-115.2" transform="rotate(-90 70 70)" />
-            <circle cx="70" cy="70" r="55" stroke="#EF9F27" strokeWidth="24" strokeDasharray="69.12 345.6" strokeDashoffset="-201.6" transform="rotate(-90 70 70)" />
-            <circle cx="70" cy="70" r="55" stroke="#E24B4A" strokeWidth="24" strokeDasharray="75.28 345.6" strokeDashoffset="-270.72" transform="rotate(-90 70 70)" />
+            <circle cx="70" cy="70" r="55" stroke="#5EEAD4" strokeWidth="24" strokeDasharray="115.2 345.6" strokeDashoffset="0" transform="rotate(-90 70 70)" />
+            <circle cx="70" cy="70" r="55" stroke="#3B82F6" strokeWidth="24" strokeDasharray="86.4 345.6" strokeDashoffset="-115.2" transform="rotate(-90 70 70)" />
+            <circle cx="70" cy="70" r="55" stroke="#FACC15" strokeWidth="24" strokeDasharray="69.12 345.6" strokeDashoffset="-201.6" transform="rotate(-90 70 70)" />
+            <circle cx="70" cy="70" r="55" stroke="#EF4444" strokeWidth="24" strokeDasharray="75.28 345.6" strokeDashoffset="-270.72" transform="rotate(-90 70 70)" />
             <circle ref={donutCenterRef} cx="70" cy="70" r="43" fill="#0a0a0a" />
           </svg>
         </div>

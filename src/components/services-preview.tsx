@@ -18,7 +18,7 @@ const plans = [
     features: [
       "Full resume rewrite",
       "ATS-optimized formatting",
-      "48-hour turnaround",
+      "72-hour turnaround",
       "1 round of revisions",
     ],
     featured: false,
