@@ -1,0 +1,1359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>[Company Name] — LinkedIn Rebuild Template</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   HANNAH WHITE — LINKEDIN REBUILD TEMPLATE
+   Print-ready, 8.5 × 11", Cream + Forest + Mint system
+   ============================================================ */
+
+:root {
+  --mint: #8ECDB5;
+  --forest: #0E3B2E;
+  --cream: #F0ECE4;
+  --emerald: #0D7C5F;
+  --sage: #A8D4BC;
+  --sage-tint: #DDEAE0;     /* sage at low intensity for fills */
+  --body: #4A4A4A;
+  --rule: #C9C2B5;          /* warm muted rule for non-accent dividers */
+  --serif: "Lora", "GT Alpina", "Playfair Display", Georgia, serif;
+  --sans: "Inter", "Neue Haas Grotesk", "Proxima Nova", system-ui, sans-serif;
+  --mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+@page { size: 8.5in 11in; margin: 0; }
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #2a2a2a;
+  font-family: var(--sans);
+  color: var(--body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.viewer {
+  padding: 48px 0 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+/* On screens narrower than the page (e.g. mobile), scale the whole
+   document down so it fits the viewport without horizontal clipping.
+   The 8.5in pages are preserved at print size; a JS scaler sets
+   --screen-scale based on the viewport width. */
+@media screen and (max-width: 816px) {
+  html, body { background: #1f1f1d; overflow-x: hidden; }
+  .viewer {
+    padding: 0;
+    gap: 0;
+    width: 100vw;
+    align-items: flex-start;   /* anchor to the left so transform-origin: top-left lands at x=0 */
+  }
+  .page {
+    transform: scale(var(--screen-scale, 1));
+    transform-origin: top left;
+    margin-bottom: 0;
+    /* the .page's layout box is still 8.5in wide; pull the unused space back so the next
+       page doesn't get pushed by the un-scaled layout width */
+    margin-right: calc((var(--screen-scale, 1) - 1) * 8.5in);
+    box-shadow: none;
+  }
+}
+
+.page {
+  width: 8.5in;
+  height: 11in;
+  background: var(--cream);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.35), 0 2px 6px rgba(0,0,0,0.2);
+  page-break-after: always;
+  break-after: page;
+}
+
+.page-pad {
+  position: absolute;
+  inset: 0.85in;
+}
+
+/* ---------- Page chrome (top + bottom rails) ---------- */
+.rail-top,
+.rail-bottom {
+  position: absolute;
+  left: 0.85in;
+  right: 0.85in;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--sans);
+  font-size: 7.5pt;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--body);
+  opacity: 0.55;
+}
+.rail-top    { top: 0.45in; }
+.rail-bottom { bottom: 0.45in; }
+.rail-bottom .pageno { color: var(--forest); opacity: 1; font-weight: 600; letter-spacing: 0.12em; }
+.rail-bottom .pageno em { font-style: normal; color: var(--mint); font-weight: 700; padding-right: 6px; }
+
+/* ---------- Section header system ---------- */
+.kicker {
+  font-family: var(--sans);
+  font-size: 9pt;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--emerald);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 22pt;
+}
+.kicker .num {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 38pt;
+  letter-spacing: -0.02em;
+  color: var(--mint);
+  line-height: 0.9;
+  text-transform: none;
+}
+.kicker .num::after {
+  content: "";
+  display: inline-block;
+  width: 28pt;
+  height: 1px;
+  background: var(--mint);
+  vertical-align: middle;
+  margin: 0 0 8pt 14pt;
+}
+
+h1.section-title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 28pt;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--forest);
+  margin: 0 0 18pt;
+}
+
+h2.subhead {
+  font-family: var(--sans);
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--forest);
+  margin: 0 0 10pt;
+}
+
+h3.why {
+  font-family: var(--sans);
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--emerald);
+  margin: 0 0 10pt;
+}
+
+/* ---------- Body text ---------- */
+.body, p.body {
+  font-family: var(--sans);
+  font-size: 10.5pt;
+  line-height: 1.65;
+  color: var(--body);
+  margin: 0 0 10pt;
+}
+.body strong { color: var(--forest); font-weight: 600; }
+
+.meta-row {
+  font-family: var(--sans);
+  font-size: 9.5pt;
+  line-height: 1.55;
+  color: var(--body);
+}
+.meta-row .label {
+  display: inline-block;
+  min-width: 96pt;
+  color: var(--forest);
+  font-weight: 600;
+}
+
+/* ---------- Dividers ---------- */
+.rule-mint {
+  height: 1px;
+  background: var(--mint);
+  border: 0;
+  margin: 16pt 0;
+}
+.rule-mint.tight { margin: 12pt 0; }
+.rule-mint.loose { margin: 22pt 0; }
+
+/* ---------- Copy-paste block ---------- */
+.copy-block {
+  position: relative;
+  background: var(--sage-tint);
+  border: 1px solid var(--sage);
+  padding: 18pt 20pt 18pt;
+  /* Top margin must clear the hanging __head label (pulled up by -32pt). */
+  margin: 36pt 0 0;
+}
+.copy-block__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: -32pt 0 14pt;
+}
+.copy-label {
+  font-family: var(--sans);
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--emerald);
+  background: var(--cream);
+  padding: 0 10pt 0 0;
+}
+.copy-label .arrow { color: var(--mint); padding-right: 4pt; font-weight: 800; }
+.char-pill {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 7.5pt;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--forest);
+  background: var(--mint);
+  padding: 4pt 10pt;
+  border-radius: 999px;
+}
+.copy-text {
+  font-family: var(--mono);
+  font-size: 9.5pt;
+  line-height: 1.7;
+  color: var(--forest);
+  white-space: pre-wrap;
+}
+.copy-text p { margin: 0 0 9pt; }
+.copy-text p:last-child { margin-bottom: 0; }
+
+/* ---------- "OLD" callout (no copy treatment) ---------- */
+.old-block {
+  border: 1px dashed var(--rule);
+  padding: 14pt 18pt;
+  background: transparent;
+}
+.old-block .old-label {
+  font-family: var(--sans);
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--body);
+  opacity: 0.7;
+  margin-bottom: 8pt;
+}
+.old-block .old-text {
+  font-family: var(--sans);
+  font-size: 10pt;
+  line-height: 1.55;
+  color: var(--body);
+  font-style: italic;
+}
+
+/* ---------- Cover ---------- */
+.page-cover {
+  background: var(--forest);
+  color: var(--cream);
+}
+.page-cover .rail-top,
+.page-cover .rail-bottom {
+  color: var(--cream);
+  opacity: 0.7;
+}
+.page-cover .rail-bottom .pageno { color: var(--mint); }
+
+/* ---------- Bracketed variable styling ---------- */
+.var {
+  /* Slight visual hint that this is a swap point, but still readable */
+  color: inherit;
+}
+
+/* ---------- Numbered list (skills, 7-day, 30-day) ---------- */
+.num-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: nl;
+}
+.num-list > li {
+  counter-increment: nl;
+  position: relative;
+  padding: 0 0 0 42pt;
+  margin: 0 0 13pt;
+  min-height: 22pt;
+  font-family: var(--sans);
+  font-size: 10.5pt;
+  line-height: 1.55;
+  color: var(--body);
+}
+.num-list > li::before {
+  content: counter(nl, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: -2pt;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 18pt;
+  letter-spacing: -0.02em;
+  color: var(--mint);
+  line-height: 1;
+  width: 30pt;
+}
+.num-list.tight > li { margin-bottom: 8pt; }
+.num-list .item-strong { color: var(--forest); font-weight: 600; }
+
+/* ---------- Skill list — pinned top 3 (filled mint chips) ---------- */
+.skill-pinned {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8pt;
+  margin: 0 0 18pt;
+}
+.skill-pinned > li {
+  list-style: none;
+  background: var(--mint);
+  color: var(--forest);
+  padding: 14pt 14pt 13pt;
+  display: flex;
+  flex-direction: column;
+  gap: 6pt;
+  min-height: 64pt;
+}
+.skill-pinned .rank {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14pt;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--forest);
+  opacity: 0.7;
+}
+.skill-pinned .name {
+  font-family: var(--sans);
+  font-size: 10.5pt;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--forest);
+}
+
+/* ---------- Skill list — next 7 (bordered chips) ---------- */
+.skill-next {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6pt 14pt;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18pt;
+}
+.skill-next > li {
+  font-family: var(--sans);
+  font-size: 10pt;
+  line-height: 1.5;
+  color: var(--body);
+  display: grid;
+  grid-template-columns: 22pt 1fr;
+  align-items: baseline;
+  border-bottom: 1px dotted var(--rule);
+  padding: 6pt 0 5pt;
+}
+.skill-next > li .n {
+  font-family: var(--mono);
+  font-size: 8.5pt;
+  color: var(--emerald);
+  font-weight: 600;
+}
+
+/* ---------- Skill categories ---------- */
+.skill-cat {
+  display: grid;
+  grid-template-columns: 78pt 1fr;
+  gap: 0 14pt;
+  align-items: baseline;
+  padding: 9pt 0;
+  border-top: 1px solid var(--rule);
+}
+.skill-cat:last-child { border-bottom: 1px solid var(--rule); }
+.skill-cat .cat-label {
+  font-family: var(--sans);
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--forest);
+}
+.skill-cat .cat-body {
+  font-family: var(--sans);
+  font-size: 9.5pt;
+  line-height: 1.55;
+  color: var(--body);
+}
+
+/* ---------- Settings checklist ---------- */
+.check-list { list-style: none; padding: 0; margin: 0; }
+.check-list > li {
+  display: grid;
+  grid-template-columns: 22pt 1fr;
+  column-gap: 12pt;
+  padding: 12pt 0 12pt;
+  border-top: 1px solid var(--rule);
+}
+.check-list > li:last-child { border-bottom: 1px solid var(--rule); }
+.check-list .box {
+  width: 14pt;
+  height: 14pt;
+  border: 1.25pt solid var(--forest);
+  background: transparent;
+  margin-top: 1pt;
+}
+.check-list .item-label {
+  font-family: var(--sans);
+  font-size: 9pt;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--forest);
+  margin: 0 0 6pt;
+}
+.check-list .item-set {
+  font-family: var(--sans);
+  font-size: 10pt;
+  line-height: 1.5;
+  color: var(--body);
+  margin: 0 0 4pt;
+}
+.check-list .item-set strong {
+  color: var(--forest);
+  font-weight: 600;
+  margin-right: 6pt;
+  letter-spacing: 0.04em;
+  font-size: 8.5pt;
+  text-transform: uppercase;
+}
+.check-list .item-why {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 9.5pt;
+  line-height: 1.55;
+  color: var(--forest);
+  margin: 0;
+}
+
+/* ---------- Image placeholder (photo, banner) ---------- */
+.img-ph {
+  position: relative;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      var(--sage-tint) 0,
+      var(--sage-tint) 6px,
+      var(--cream) 6px,
+      var(--cream) 12px
+    );
+  border: 1px solid var(--sage);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.img-ph .ph-tag {
+  font-family: var(--mono);
+  font-size: 8pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--forest);
+  background: var(--cream);
+  padding: 4pt 10pt;
+  border: 1px solid var(--sage);
+}
+
+/* ---------- Two-up grid used by photo/banner page ---------- */
+.two-up {
+  display: grid;
+  grid-template-columns: 2.1in 1fr;
+  column-gap: 22pt;
+  align-items: start;
+}
+
+/* ---------- Editorial display number (Overview, divider pages) ---------- */
+.display-num {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 96pt;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--mint);
+}
+
+/* ---------- Pull quote ---------- */
+.pull {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18pt;
+  line-height: 1.35;
+  color: var(--forest);
+  letter-spacing: -0.005em;
+}
+
+/* ---------- Density modifier: applied to pages whose content
+   was overflowing the printable area. Tightens vertical rhythm
+   without changing the visual system. ---------- */
+.page.tight .kicker          { margin-bottom: 12pt; }
+.page.tight h1.section-title { margin-bottom: 12pt; font-size: 26pt; }
+.page.tight .rule-mint       { margin: 10pt 0; }
+.page.tight .rule-mint.loose { margin: 12pt 0; }
+.page.tight h2.subhead       { margin-top: 10pt; }
+.page.tight .copy-block      { padding: 12pt 18pt 12pt; margin-top: 34pt; }
+.page.tight .copy-text       { line-height: 1.5; }
+.page.tight .copy-text p     { margin-bottom: 5pt; }
+.page.tight .body            { margin-bottom: 8pt; line-height: 1.55; }
+
+/* When printing, drop the gray viewer shell so each page renders clean */
+@media print {
+  body { background: white; }
+  .viewer { padding: 0; gap: 0; }
+  .page { box-shadow: none; }
+}
+
+</style>
+<template id="__bundler_thumbnail" data-bg-color="#0E3B2E">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#0E3B2E"/>
+    <rect x="240" y="180" width="720" height="440" fill="#F0ECE4"/>
+    <rect x="290" y="260" width="180" height="6" fill="#8ECDB5"/>
+    <rect x="290" y="300" width="500" height="18" fill="#0E3B2E"/>
+    <rect x="290" y="330" width="380" height="18" fill="#0E3B2E"/>
+    <rect x="290" y="400" width="620" height="2" fill="#8ECDB5"/>
+    <rect x="290" y="430" width="280" height="8" fill="#4A4A4A" opacity="0.5"/>
+    <rect x="290" y="450" width="320" height="8" fill="#4A4A4A" opacity="0.5"/>
+    <rect x="290" y="470" width="240" height="8" fill="#4A4A4A" opacity="0.5"/>
+    <rect x="290" y="540" width="620" height="50" fill="#DDEAE0" stroke="#A8D4BC" stroke-width="2"/>
+  </svg>
+</template>
+<script>
+  // Scale 8.5"-wide pages to fit narrow viewports (mobile) without clipping.
+  (function () {
+    function applyScale() {
+      var pageWidthPx = 8.5 * 96; // CSS px per inch
+      var vw = document.documentElement.clientWidth;
+      var root = document.documentElement;
+      if (vw < pageWidthPx) {
+        var scale = vw / pageWidthPx;
+        root.style.setProperty('--screen-scale', scale);
+        // Reserve correct collapsed height for each scaled page.
+        var pages = document.querySelectorAll('.page');
+        pages.forEach(function (p) {
+          p.style.height = '11in';
+          p.style.marginBottom = '0';
+          // Set a wrapper-style outer height via the element itself
+          // by giving it a scaled effective height through margin-bottom.
+          p.style.marginBottom = ((scale - 1) * 11 * 96) + 'px';
+        });
+      } else {
+        root.style.removeProperty('--screen-scale');
+        document.querySelectorAll('.page').forEach(function (p) {
+          p.style.marginBottom = '';
+        });
+      }
+    }
+    window.addEventListener('resize', applyScale);
+    window.addEventListener('orientationchange', applyScale);
+    document.addEventListener('DOMContentLoaded', applyScale);
+    applyScale();
+  })();
+</script>
+</head>
+<body>
+<div class="viewer">
+
+  <!-- ============================================================
+       PAGE 1 — COVER
+       ============================================================ -->
+  <section class="page page-cover" data-screen-label="01 Cover" aria-label="Cover">
+
+    <!-- Top rail: brand wordmark, document tag -->
+    <div class="rail-top">
+      <span><span class="var">[Company Name]</span></span>
+      <span>Confidential — Client Deliverable</span>
+    </div>
+
+    <!-- Logo placeholder, top-left of page body -->
+    <div style="position:absolute; top:1.55in; left:0.85in;">
+      <div style="width:130px; height:80px; border:1.5px dashed #8ECDB5; display:flex; align-items:center; justify-content:center; font-family:var(--mono, ui-monospace, monospace); font-size:9pt; letter-spacing:0.24em; text-transform:uppercase; color:#8ECDB5;">
+        [ LOGO ]
+      </div>
+    </div>
+
+    <!-- Hairline accent rule -->
+    <div style="position:absolute; top:3.8in; left:0.85in; width:1.6in; height:1px; background:#8ECDB5;"></div>
+
+    <!-- Title block -->
+    <div style="position:absolute; top:4.05in; left:0.85in; right:0.85in;">
+      <div style="font-family:var(--sans); font-size:8.5pt; font-weight:600; letter-spacing:0.32em; text-transform:uppercase; color:#8ECDB5; margin-bottom:18pt;">
+        LinkedIn Rebuild
+      </div>
+      <h1 style="font-family:var(--serif); font-weight:500; font-size:54pt; line-height:1.05; letter-spacing:-0.02em; color:#F0ECE4; margin:0 0 28pt; max-width:6in;">
+        <span class="var">[Client Full Name]</span>
+      </h1>
+      <div style="font-family:var(--serif); font-style:italic; font-weight:400; font-size:18pt; line-height:1.3; color:#A8D4BC; max-width:5.2in;">
+        A paste-ready rebuild of your profile, calibrated for the search you’re running.
+      </div>
+    </div>
+
+    <!-- Lower meta block -->
+    <div style="position:absolute; bottom:1.55in; left:0.85in; right:0.85in;">
+      <div style="height:1px; background:#8ECDB5; opacity:0.4; margin-bottom:18pt;"></div>
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:24pt;">
+        <div>
+          <div style="font-family:var(--sans); font-size:7.5pt; font-weight:600; letter-spacing:0.28em; text-transform:uppercase; color:#A8D4BC; margin-bottom:8pt;">Prepared by</div>
+          <div style="font-family:var(--serif); font-size:13pt; color:#F0ECE4; line-height:1.3;"><span class="var">[Company Name]</span> Team</div>
+        </div>
+        <div>
+          <div style="font-family:var(--sans); font-size:7.5pt; font-weight:600; letter-spacing:0.28em; text-transform:uppercase; color:#A8D4BC; margin-bottom:8pt;">Delivered</div>
+          <div style="font-family:var(--serif); font-size:13pt; color:#F0ECE4; line-height:1.3;"><span class="var">[Delivery Date]</span></div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:var(--sans); font-size:7.5pt; font-weight:600; letter-spacing:0.28em; text-transform:uppercase; color:#A8D4BC; margin-bottom:8pt;">Online</div>
+          <div style="font-family:var(--serif); font-style:italic; font-size:13pt; color:#8ECDB5; line-height:1.3;">[companywebsite.com]</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom rail -->
+    <div class="rail-bottom">
+      <span>Version 1.0</span>
+      <span class="pageno"><em>01</em>Cover</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PAGE 2 — OVERVIEW
+       ============================================================ -->
+  <section class="page" data-screen-label="02 Overview" aria-label="Overview">
+    <div class="rail-top">
+      <span><span class="var">[Company Name]</span> × <span class="var">[Client Full Name]</span></span>
+      <span>LinkedIn Rebuild</span>
+    </div>
+
+    <div class="page-pad">
+      <!-- Display kicker — outsized italic numeral, editorial -->
+      <div style="display:grid; grid-template-columns:auto 1fr; column-gap:24pt; align-items:end; margin-bottom:30pt;">
+        <span class="display-num">00</span>
+        <div style="padding-bottom:14pt;">
+          <div style="font-family:var(--sans); font-size:9pt; font-weight:600; letter-spacing:0.32em; text-transform:uppercase; color:var(--emerald); margin-bottom:8pt;">Overview</div>
+          <h1 class="section-title" style="margin:0;">What we changed,<br/>and why.</h1>
+        </div>
+      </div>
+
+      <hr class="rule-mint loose" />
+
+      <!-- Main editorial body -->
+      <div style="display:grid; grid-template-columns:1fr 1.7fr; column-gap:32pt; align-items:start;">
+
+        <!-- Sidebar: how to read this document -->
+        <aside style="border-top:2px solid var(--forest); padding-top:14pt;">
+          <div style="font-family:var(--sans); font-size:8pt; font-weight:700; letter-spacing:0.24em; text-transform:uppercase; color:var(--forest); margin-bottom:14pt;">How to read this</div>
+          <p style="font-family:var(--serif); font-style:italic; font-size:11pt; line-height:1.5; color:var(--forest); margin:0 0 12pt;">Paste-ready, top to bottom.</p>
+          <p class="body" style="font-size:9.5pt; line-height:1.6; margin:0 0 10pt;">Each section that needs an action shows the exact text in a <strong>copy block</strong>, then a <strong>Why It Works</strong> note explaining the call.</p>
+          <p class="body" style="font-size:9.5pt; line-height:1.6; margin:0;">Work through it in order, or jump to the section you want to tackle first. Variables in <span style="color:var(--emerald); font-family:var(--mono); font-size:9pt;">[brackets]</span> are swap points.</p>
+        </aside>
+
+        <!-- Main body -->
+        <div>
+          <p class="pull" style="margin:0 0 18pt; max-width:4.6in;">
+            <span class="var">[Client first name]</span>, here’s your full LinkedIn rebuild.
+          </p>
+          <p class="body">We’ve targeted <strong><span class="var">[target role]</span></strong> roles at <strong><span class="var">[target company type or industry]</span></strong>, consistent with the resume rebuild we delivered <span class="var">[when]</span>.</p>
+          <p class="body">You confirmed you’re conducting <strong><span class="var">[an active / a passive]</span></strong> search <span class="var">[context note]</span>. Every recommendation in this rebuild is calibrated for that constraint.</p>
+          <p class="body"><span class="var">[2–3 sentences explaining how active/passive status shaped the rebuild — what we leaned into, what we held back, and which surfaces we prioritized for recruiter discoverability versus inbound trust.]</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rail-bottom">
+      <span>Overview</span>
+      <span class="pageno"><em>02</em>of 13</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PAGE 3 — 01 PROFILE PHOTO & BANNER
+       ============================================================ -->
+  <section class="page tight" data-screen-label="03 Photo & Banner" aria-label="Profile photo and banner">
+    <div class="rail-top">
+      <span><span class="var">[Company Name]</span> × <span class="var">[Client Full Name]</span></span>
+      <span>LinkedIn Rebuild</span>
+    </div>
+
+    <div class="page-pad" style="display:flex; flex-direction:column;">
+      <div class="kicker" style="margin-bottom:14pt;"><span class="num">01</span><span>Section</span></div>
+      <h1 class="section-title" style="margin-bottom:0;">Profile Photo &amp; Banner</h1>
+
+      <hr class="rule-mint" style="margin:14pt 0;" />
+
+      <!-- PROFILE PHOTO -->
+      <h2 class="subhead" style="margin:0 0 10pt;">Profile Photo</h2>
+
+      <div class="two-up" style="margin-bottom:16pt;">
+        <div class="img-ph" style="width:1.85in; height:1.85in; border-radius:50%;">
+          <span class="ph-tag">Headshot · 1:1</span>
+        </div>
+
+        <div>
+          <p class="body" style="margin-bottom:10pt; font-size:10pt; line-height:1.5;"><span class="var">[Assessment of current photo in 1–2 sentences. What’s working, what’s reading off-brief, and the one change with the most leverage.]</span></p>
+
+          <div style="font-family:var(--sans); font-size:8pt; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--forest); margin-bottom:14pt;">Recommendation</div>
+          <ul style="margin:0 0 8pt; padding-left:14pt; font-family:var(--sans); font-size:9.5pt; line-height:1.5; color:var(--body);">
+            <li><span class="var">[Recommendation 1 — framing, expression, attire calibrated to target role.]</span></li>
+            <li><span class="var">[Recommendation 2 — background and lighting cue.]</span></li>
+            <li><span class="var">[Recommendation 3 — what to avoid given the target audience.]</span></li>
+          </ul>
+          <p class="body" style="font-style:italic; color:var(--forest); margin:0; font-size:9.5pt; line-height:1.5;"><span class="var">[One line on budget vs. DIY options.]</span></p>
+        </div>
+      </div>
+
+      <hr class="rule-mint" style="margin:0 0 12pt;" />
+
+      <!-- BANNER -->
+      <h2 class="subhead" style="margin:0 0 10pt;">Banner Image</h2>
+
+      <div class="img-ph" style="height:0.95in; margin-bottom:10pt;">
+        <span class="ph-tag">Banner · 1584 × 396</span>
+      </div>
+
+      <p class="body" style="margin-bottom:10pt; font-size:10pt; line-height:1.5;"><span class="var">[Assessment of current banner in 1–2 sentences. Whether it’s neutral wallpaper, a brand asset that no longer fits, or a missed opportunity for the target search.]</span></p>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; column-gap:22pt;">
+        <div>
+          <div style="font-family:var(--sans); font-size:8pt; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--forest); margin-bottom:14pt;">Options</div>
+          <ul style="margin:0; padding-left:14pt; font-family:var(--sans); font-size:9.5pt; line-height:1.5; color:var(--body);">
+            <li><span class="var">[Banner option 1 tailored to the target role.]</span></li>
+            <li><span class="var">[Banner option 2 — different angle, same target.]</span></li>
+            <li><span class="var">[Banner option 3 — fallback / safest option.]</span></li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-family:var(--sans); font-size:8pt; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--forest); margin-bottom:14pt;">Avoid</div>
+          <p class="body" style="margin:0; font-size:9.5pt; line-height:1.5;"><span class="var">[1–2 lines on what to avoid — stock photos, dense text, anything that competes with the headshot.]</span></p>
+        </div>
+      </div>
+
+      <!-- Spacer pushes Why-It-Works to the bottom of the page intentionally -->
+      <div style="flex:1; min-height:14pt;"></div>
+
+      <hr class="rule-mint" style="margin:0 0 10pt;" />
+
+      <!-- Closing editorial note — anchored to bottom of printable area -->
+      <div style="display:grid; grid-template-columns:auto 1fr; column-gap:18pt; align-items:start;">
+        <div style="font-family:var(--sans); font-size:8pt; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--emerald);">Why It Works</div>
+        <p style="font-family:var(--serif); font-style:italic; font-size:11pt; line-height:1.45; color:var(--forest); margin:0; max-width:5.4in;">Photo and banner together are the first two seconds of every recruiter visit. We’ve calibrated both to the <span class="var">[target role]</span> search.</p>
+      </div>
+    </div>
+
+    <div class="rail-bottom">
+      <span>Section 01 — Profile Photo &amp; Banner</span>
+      <span class="pageno"><em>03</em>of 13</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PAGE 4 — 02 CUSTOM URL
+       ============================================================ -->
+  <section class="page" data-screen-label="04 Custom URL" aria-label="Custom URL">
+    <div class="rail-top">
+      <span><span class="var">[Company Name]</span> × <span class="var">[Client Full Name]</span></span>
+      <span>LinkedIn Rebuild</span>
+    </div>
+
+    <div class="page-pad">
+      <div class="kicker"><span class="num">02</span><span>Section</span></div>
+      <h1 class="section-title">Custom URL</h1>
+
+      <div class="meta-row" style="margin-bottom:14pt;">
+        <span class="label">What to update</span><span class="value">Your LinkedIn URL
+      </span></div>
+      <div class="meta-row">
+        <span class="label">Where in LinkedIn</span><span class="value">Profile → Edit public profile &amp; URL → “Edit your custom URL”
+      </span></div>
+
+      <hr class="rule-mint loose" />
+
+      <!-- Primary URL -->
+      <div class="copy-block">
+        <div class="copy-block__head">
+          <span class="copy-label"><span class="arrow">→</span>Copy this</span>
+          <span class="char-pill">Primary</span>
+        </div>
+        <div class="copy-text" style="font-size:12pt;">linkedin.com/in/<span class="var">[firstnamelastname]</span></div>
+      </div>
+
+      <hr class="rule-mint loose" />
+
+      <!-- Alternates -->
+      <h2 class="subhead">If taken — alternates in priority order</h2>
+      <ol class="num-list tight" style="margin-top:8pt;"><li><img class="nl-num-img" src="num/n-01.png" alt="01" /><span class="nl-body"><span class="item-strong" style="font-family:var(--mono); font-weight:500; color:var(--forest);">linkedin.com/in/<span class="var">[alternate 1]</span></span></span></li><li><img class="nl-num-img" src="num/n-02.png" alt="02" /><span class="nl-body"><span class="item-strong" style="font-family:var(--mono); font-weight:500; color:var(--forest);">linkedin.com/in/<span class="var">[alternate 2]</span></span></span></li><li><img class="nl-num-img" src="num/n-03.png" alt="03" /><span class="nl-body"><span class="item-strong" style="font-family:var(--mono); font-weight:500; color:var(--forest);">linkedin.com/in/<span class="var">[alternate 3]</span></span></span></li></ol>
+
+      <hr class="rule-mint loose" />
+
+      <h3 class="why">A note on what to avoid</h3>
+      <p class="body">Avoid embedding company names. When you change companies the URL becomes outdated and old references to it break — every CV, email signature, and conference bio you’ve handed out points at a dead link.</p>
+    </div>
+
+    <div class="rail-bottom">
+      <span>Section 02 — Custom URL</span>
+      <span class="pageno"><em>04</em>of 13</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PAGE 5 — HEADLINE
+       ============================================================ -->
+  <section class="page" data-screen-label="05 Headline" aria-label="Headline">
+    <div class="rail-top">
+      <span><span class="var">[Company Name]</span> × <span class="var">[Client Full Name]</span></span>
+      <span>LinkedIn Rebuild</span>
+    </div>
+
+    <div class="page-pad">
+      <!-- Section header -->
+      <div class="kicker"><span class="num">03</span><span>Section</span></div>
+      <h1 class="section-title">Headline</h1>
+
+      <!-- Where / What -->
+      <div class="meta-row" style="margin-bottom:14pt;">
+        <span class="label">What to update</span><span class="value">Your LinkedIn headline (under your name)
+      </span></div>
+      <div class="meta-row">
+        <span class="label">Where in LinkedIn</span><span class="value">Profile → Click pencil icon next to name
+      </span></div>
+
+      <hr class="rule-mint loose" />
+
+      <!-- OLD HEADLINE -->
+      <h2 class="subhead">Old Headline</h2>
+      <div class="old-block">
+        <div class="old-text"><span class="var">[Client’s current headline, copied exactly as it appears on their profile today.]</span></div>
+      </div>
+
+      <hr class="rule-mint loose" />
+
+      <!-- NEW HEADLINE — copy-paste block -->
+      <h2 class="subhead">New Headline</h2>
+      <div class="copy-block">
+        <div class="copy-block__head">
+          <span class="copy-label"><span class="arrow">→</span>Copy this</span>
+          <span class="char-pill"><span class="var">[X]</span> / 220</span>
+        </div>
+        <div class="copy-text"><span class="var">[New headline: Title | Outcome | Keywords]</span></div>
+      </div>
+
+      <hr class="rule-mint loose" />
+
+      <!-- WHY IT WORKS -->
+      <h3 class="why">Why It Works</h3>
+      <p class="body">The new headline uses the <strong>Title&nbsp;|&nbsp;Outcome&nbsp;|&nbsp;Keyword</strong> pattern.</p>
+      <p class="body"><span class="var">[2–3 sentences explaining the title choice. Why this title and not the title currently on the profile. Recruiter-search reasoning, not aspirational.]</span></p>
+      <p class="body"><span class="var">[2–3 sentences explaining the outcome choice. The single highest-leverage outcome the candidate has earned the right to claim, anchored to a number or scope wherever possible.]</span></p>
+      <p class="body"><span class="var">[1–2 sentences explaining the keyword choices. Which terms a recruiter would type into LinkedIn’s search to surface the candidate, and why these specifically.]</span></p>
+    </div>
+
+    <div class="rail-bottom">
+      <span>Section 03 — Headline</span>
+      <span class="pageno"><em>05</em>of 13</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PAGE 6 — ABOUT (copy block)
+       ============================================================ -->
+  <section class="page tight" data-screen-label="06 About — Copy" aria-label="About section copy">
+    <div class="rail-top">
+      <span><span class="var">[Company Name]</span> × <span class="var">[Client Full Name]</span></span>
+      <span>LinkedIn Rebuild</span>
+    </div>
+
+    <div class="page-pad">
+      <div class="kicker"><span class="num">04</span><span>Section</span></div>
+      <h1 class="section-title">About Section</h1>
+
+      <div class="meta-row" style="margin-bottom:14pt;">
+        <span class="label">What to update</span><span class="value">Your About section
+      </span></div>
+      <div class="meta-row">
+        <span class="label">Where in LinkedIn</span><span class="value">Profile → “About” section → pencil icon
+      </span></div>
+
+      <hr class="rule-mint loose" />
+
+      <!-- ABOUT — copy-paste block -->
+      <div class="copy-block">
+        <div class="copy-block__head">
+          <span class="copy-label"><span class="arrow">→</span>Copy this</span>
+          <span class="char-pill"><span class="var">[X]</span> / 2,600</span>
+        </div>
+        <div class="copy-text">
+          <p><span class="var">[First paragraph: 150–200 characters. The hook. One sentence naming what the candidate does, plus one sentence with the flagship outcome. This is what’s visible before “See more.”]</span></p>
+          <p><span class="var">[Second paragraph: 400–600 characters. The proof. Three to four sentences expanding on the flagship outcome and naming a second outcome. Specific scope, specific numbers.]</span></p>
+          <p><span class="var">[Third paragraph: 300–500 characters. The approach. What the candidate cares about, how they work, and what they’re known for. One concrete behavior or principle.]</span></p>
+          <p><span class="var">[Fourth paragraph: 200–400 characters. The connection. What kinds of conversations the candidate is open to. For active searchers, name the search. For passive, name a domain interest.]</span></p>
+          <p><span class="var">[Fifth paragraph: 100–200 characters. The contact. Direct line on how to reach the candidate.]</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rail-bottom">
+      <span>Section 04 — About Section</span>
+      <span class="pageno"><em>06</em>of 13</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PAGE 7 — ABOUT (Why It Works)
+       ============================================================ -->
+  <section class="page" data-screen-label="07 About — Why It Works" aria-label="About section reasoning">
+    <div class="rail-top">
+      <span><span class="var">[Company Name]</span> × <span class="var">[Client Full Name]</span></span>
+      <span>LinkedIn Rebuild</span>
+    </div>
+
+    <div class="page-pad">
+      <!-- Continuation header — softer than a fresh kicker -->
+      <div style="display:flex; align-items:baseline; gap:14pt; margin-bottom:18pt;">
+        <span style="font-family:var(--sans); font-size:8.5pt; font-weight:700; letter-spacing:0.28em; text-transform:uppercase; color:var(--mint);">04 cont’d</span>
+        <span style="flex:1; height:1px; background:var(--mint);"></span>
+        <span style="font-family:var(--serif); font-style:italic; font-size:11pt; color:var(--forest);">About Section</span>
+      </div>
+
+      <h1 class="section-title" style="font-size:24pt; margin-bottom:14pt;">Why It Works</h1>
+
+      <p class="body" style="font-size:11pt;">
+        We used the
+        <strong><span class="var">[Operator Story / Career Pivot]</span></strong>
+        framework.
+      </p>
+
+      <hr class="rule-mint" />
+
+      <!-- Three reasoning blocks, set with a small mint marker so the page has rhythm without icons -->
+      <div style="display:grid; grid-template-columns:14pt 1fr; column-gap:14pt; row-gap:14pt; align-items:start;">
+
+        <div style="height:10pt; width:10pt; background:var(--mint); margin-top:8pt;"></div>
+        <div>
+          <div style="font-family:var(--sans); font-size:8.5pt; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--forest); margin-bottom:14pt;">The hook · first 200 characters</div>
+          <p class="body" style="margin:0;"><span class="var">[2–3 sentences on the first 200 characters and the hook. Why this opening earns the click on “See more,” what specifically about it stops the scroll, and how it sets up the rest of the section.]</span></p>
+        </div>
+
+        <div style="height:10pt; width:10pt; background:var(--mint); margin-top:8pt;"></div>
+        <div>
+          <div style="font-family:var(--sans); font-size:8.5pt; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--forest); margin-bottom:14pt;">The proof &amp; approach</div>
+          <p class="body" style="margin:0;"><span class="var">[2–3 sentences on the proof and approach paragraphs. Why these specific outcomes, in this order, and why the “how they work” paragraph lands where it lands rather than at the top.]</span></p>
+        </div>
+
+        <div style="height:10pt; width:10pt; background:var(--mint); margin-top:8pt;"></div>
+        <div>
+          <div style="font-family:var(--sans); font-size:8.5pt; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--forest); margin-bottom:14pt;">The connection &amp; contact close</div>
+          <p class="body" style="margin:0;"><span class="var">[2–3 sentences on the connection and contact close, including why this framing fits the active/passive search status and how it filters in the right inbound and filters out the wrong inbound.]</span></p>
+        </div>
+
+      </div>
+
+      <hr class="rule-mint loose" />
+
+      <!-- Tactical footer note, in italic serif so it reads as editorial commentary -->
+      <p style="font-family:var(--serif); font-style:italic; font-size:11pt; line-height:1.55; color:var(--forest); margin:0; max-width:5.6in;">
+        Paste the block opposite verbatim. Don’t soften the verbs, don’t hedge the numbers, don’t add a sign-off — LinkedIn’s About is a search surface, not a letter.
+      </p>
+    </div>
+
+    <div class="rail-bottom">
+      <span>Section 04 — About Section</span>
+      <span class="pageno"><em>07</em>of 13</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PAGE 8 — 05 EXPERIENCE (role block)
+       ============================================================ -->
+  <section class="page tight" data-screen-label="08 Experience — Role Block" aria-label="Experience role block">
+    <div class="rail-top">
+      <span><span class="var">[Company Name]</span> × <span class="var">[Client Full Name]</span></span>
+      <span>LinkedIn Rebuild</span>
+    </div>
+
+    <div class="page-pad">
+      <div class="kicker"><span class="num">05</span><span>Section</span></div>
+      <h1 class="section-title">Experience Entries</h1>
+
+      <p class="body" style="max-width:5.6in; margin-bottom:14pt;">We’ve rewritten your <strong><span class="var">[number]</span></strong> most recent roles below. Earlier roles are fine as they appear on your resume — copy those bullets directly without expansion.</p>
+
+      <hr class="rule-mint" />
+
+      <!-- Role identity strip -->
+      <div style="display:grid; grid-template-columns:1fr auto; gap:6pt 18pt; align-items:baseline; padding:8pt 0; border-top:2px solid var(--forest); border-bottom:1px solid var(--mint);">
+        <div>
+          <div style="font-family:var(--serif); font-weight:500; font-size:18pt; line-height:1.15; letter-spacing:-0.01em; color:var(--forest);"><span class="var">[Role Title]</span></div>
+          <div style="font-family:var(--sans); font-size:10pt; color:var(--body); margin-top:3pt;"><span class="var">[Company Name]</span> &nbsp;·&nbsp; <span class="var">[Start]</span> – <span class="var">[End]</span></div>
+        </div>
+        <div style="text-align:right; font-family:var(--mono); font-size:8.5pt; letter-spacing:0.1em; color:var(--emerald);">
+          <span class="var">[Location]</span> &nbsp;/&nbsp; <span class="var">[Remote · Hybrid · On-site]</span>
+        </div>
+      </div>
+
+      <!-- CONTEXT PARAGRAPH -->
+      <h2 class="subhead" style="margin:10pt 0 0;">Context paragraph</h2>
+      <div class="copy-block">
+        <div class="copy-block__head">
+          <span class="copy-label"><span class="arrow">→</span>Copy this</span>
+          <span class="char-pill">Paragraph</span>
+        </div>
+        <div class="copy-text"><span class="var">[2–3 sentences naming the scope of the role, team size, business stage, and the mandate. Why was the candidate brought in? What was the bigger picture?]</span></div>
+      </div>
+
+      <!-- BULLETS -->
+      <h2 class="subhead" style="margin:10pt 0 0;">Bullets</h2>
+      <div class="copy-block">
+        <div class="copy-block__head">
+          <span class="copy-label"><span class="arrow">→</span>Copy this</span>
+          <span class="char-pill">4–7 bullets</span>
+        </div>
+        <div class="copy-text">
+          <p>• <span class="var">[Bullet 1: strong action verb + specific work + scope/scale + outcome with metric]</span></p>
+          <p>• <span class="var">[Bullet 2: same structure]</span></p>
+          <p>• <span class="var">[Bullet 3: same structure]</span></p>
+          <p>• <span class="var">[Bullet 4 — and optional 5–7 for senior roles or substantial scope]</span></p>
+        </div>
+      </div>
+
+      <!-- OPTIONAL MEDIA -->
+      <h2 class="subhead" style="margin:14pt 0 6pt; color:var(--emerald);">Optional · Media to attach</h2>
+      <p class="body" style="margin:0;"><span class="var">[1–3 specific links, articles, or projects to attach to this role. Skip this subsection if nothing to recommend.]</span></p>
+    </div>
+
+    <div class="rail-bottom">
+      <span>Section 05 — Experience Entries</span>
+      <span class="pageno"><em>08</em>of 13</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PAGE 9 — 05 EXPERIENCE (continuation note, editorial)
+       ============================================================ -->
+  <section class="page" data-screen-label="09 Experience — Repeat" aria-label="Experience continuation">
+    <div class="rail-top">
+      <span><span class="var">[Company Name]</span> × <span class="var">[Client Full Name]</span></span>
+      <span>LinkedIn Rebuild</span>
+    </div>
+
+    <!-- Editorial divider page: large italic instruction, no body grid -->
+    <div class="page-pad" style="display:flex; flex-direction:column; justify-content:space-between;">
+
+      <div>
+        <div style="display:flex; align-items:baseline; gap:14pt; margin-bottom:18pt;">
+          <span style="font-family:var(--sans); font-size:8.5pt; font-weight:700; letter-spacing:0.28em; text-transform:uppercase; color:var(--mint);">05 cont’d</span>
+          <span style="flex:1; height:1px; background:var(--mint);"></span>
+          <span style="font-family:var(--serif); font-style:italic; font-size:11pt; color:var(--forest);">Experience Entries</span>
+        </div>
+
+        <p class="pull" style="font-size:34pt; line-height:1.1; max-width:6in; color:var(--forest); margin:1.4in 0 0;">
+          Repeat the role block on the previous page <em style="color:var(--emerald);">for each role</em> we’re rewriting.
+        </p>
+      </div>
+
+      <!-- A small instructional rail at the bottom — restrained, no extra material -->
+      <div>
+        <hr class="rule-mint" />
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); column-gap:22pt; margin-top:10pt;">
+          <div>
+            <div style="font-family:var(--sans); font-size:8pt; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--forest); margin-bottom:14pt;">Same structure</div>
+            <p class="body" style="font-size:9.5pt; margin:0;">Role identity strip, context paragraph, four to seven bullets. No exceptions.</p>
+          </div>
+          <div>
+            <div style="font-family:var(--sans); font-size:8pt; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--forest); margin-bottom:14pt;">Order matters</div>
+            <p class="body" style="font-size:9.5pt; margin:0;">Most recent role first. Recruiters read top-down and stop at the first weak entry.</p>
+          </div>
+          <div>
+            <div style="font-family:var(--sans); font-size:8pt; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--forest); margin-bottom:14pt;">Earlier roles</div>
+            <p class="body" style="font-size:9.5pt; margin:0;">Lift bullets from your resume verbatim. Don’t expand, don’t embellish, don’t apologize.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rail-bottom">
+      <span>Section 05 — Experience Entries</span>
+      <span class="pageno"><em>09</em>of 13</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PAGE 10 — 06 SKILLS
+       ============================================================ -->
+  <section class="page tight" data-screen-label="10 Skills" aria-label="Skills">
+    <div class="rail-top">
+      <span><span class="var">[Company Name]</span> × <span class="var">[Client Full Name]</span></span>
+      <span>LinkedIn Rebuild</span>
+    </div>
+
+    <div class="page-pad">
+      <div class="kicker"><span class="num">06</span><span>Section</span></div>
+      <h1 class="section-title">Skills</h1>
+
+      <div class="meta-row" style="margin-bottom:14pt;">
+        <span class="label">What to update</span><span class="value">Skills section
+      </span></div>
+      <div class="meta-row">
+        <span class="label">Where in LinkedIn</span><span class="value">Profile → “Skills” section → pencil icon
+      </span></div>
+
+      <hr class="rule-mint loose" />
+
+      <!-- TOP 3 -->
+      <h2 class="subhead">Top 3 · Pinned</h2>
+      <ol class="skill-pinned">
+        <li><span class="rank">01</span><span class="name"><span class="var">[Skill 1]</span></span></li>
+        <li><span class="rank">02</span><span class="name"><span class="var">[Skill 2]</span></span></li>
+        <li><span class="rank">03</span><span class="name"><span class="var">[Skill 3]</span></span></li>
+      </ol>
+
+      <!-- NEXT 7 -->
+      <h2 class="subhead">Next 7 · High priority</h2>
+      <ul class="skill-next">
+        <li><span class="n">04</span><span><span class="var">[Skill 4]</span></span></li>
+        <li><span class="n">05</span><span><span class="var">[Skill 5]</span></span></li>
+        <li><span class="n">06</span><span><span class="var">[Skill 6]</span></span></li>
+        <li><span class="n">07</span><span><span class="var">[Skill 7]</span></span></li>
+        <li><span class="n">08</span><span><span class="var">[Skill 8]</span></span></li>
+        <li><span class="n">09</span><span><span class="var">[Skill 9]</span></span></li>
+        <li><span class="n">10</span><span><span class="var">[Skill 10]</span></span></li>
+      </ul>
+
+      <!-- ROUNDING OUT -->
+      <h2 class="subhead">Rounding out · Fill to 50 over time</h2>
+      <div>
+        <div class="skill-cat">
+          <div class="cat-label">Tools</div>
+          <div class="cat-body"><span class="var">[List of specific tools relevant to the target role.]</span></div>
+        </div>
+        <div class="skill-cat">
+          <div class="cat-label">Methodologies</div>
+          <div class="cat-body"><span class="var">[List of methodologies and frameworks.]</span></div>
+        </div>
+        <div class="skill-cat">
+          <div class="cat-label">Domain</div>
+          <div class="cat-body"><span class="var">[List of domain / industry terms.]</span></div>
+        </div>
+        <div class="skill-cat">
+          <div class="cat-label">Functional</div>
+          <div class="cat-body"><span class="var">[List of functional capabilities.]</span></div>
+        </div>
+      </div>
+
+      <!-- WHY THESE SKILLS -->
+      <h3 class="why" style="margin-top:18pt;">Why these skills</h3>
+      <p class="body">We replaced your existing top 3 (<span class="var">[current top 3]</span>) with a top 3 that maps to what a <strong><span class="var">[target role]</span></strong> recruiter actually searches for. <span class="var">[Brief explanation of each new top-3 choice.]</span> The new top 3 will surface you in <strong><span class="var">[seniority]</span></strong>-level searches in the <strong><span class="var">[domain]</span></strong> space.</p>
+    </div>
+
+    <div class="rail-bottom">
+      <span>Section 06 — Skills</span>
+      <span class="pageno"><em>10</em>of 13</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PAGE 11 — 07 PROFILE SETTINGS CHECKLIST
+       ============================================================ -->
+  <section class="page" data-screen-label="11 Settings Checklist" aria-label="Profile settings checklist">
+    <div class="rail-top">
+      <span><span class="var">[Company Name]</span> × <span class="var">[Client Full Name]</span></span>
+      <span>LinkedIn Rebuild</span>
+    </div>
+
+    <div class="page-pad">
+      <div class="kicker"><span class="num">07</span><span>Section</span></div>
+      <h1 class="section-title">Profile Settings Checklist</h1>
+
+      <p class="body" style="max-width:5.6in;">Run through this checklist. Each item has a one-sentence why so you understand the reasoning, not just the action.</p>
+
+      <hr class="rule-mint loose" />
+
+      <ul class="check-list">
+        <li>
+          <span class="box" aria-hidden="true"></span>
+          <div>
+            <div class="item-label">Location</div>
+            <div class="item-set"><strong>Set to</strong><span class="var">[Specific LinkedIn-formatted location]</span></div>
+            <p class="item-why"><span class="var">[One sentence on why this location string and not the candidate’s actual city.]</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="box" aria-hidden="true"></span>
+          <div>
+            <div class="item-label">Industry</div>
+            <div class="item-set"><strong>Set to</strong><span class="var">[Specific LinkedIn industry tag]</span></div>
+            <p class="item-why"><span class="var">[One sentence on why this industry tag matches recruiter filters in the target space.]</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="box" aria-hidden="true"></span>
+          <div>
+            <div class="item-label">Open to Work settings</div>
+            <div class="item-set"><strong>Set to</strong><span class="var">[Specific recommendation based on active vs. passive search]</span></div>
+            <p class="item-why"><span class="var">[One to two sentences on visibility trade-offs for this candidate’s situation.]</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="box" aria-hidden="true"></span>
+          <div>
+            <div class="item-label">Featured section</div>
+            <div class="item-set"><strong>Add</strong><span class="var">[1–3 specific pieces — talks, articles, projects, press.]</span></div>
+            <p class="item-why"><span class="var">[One sentence on what these pieces signal that the rest of the profile can’t.]</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="box" aria-hidden="true"></span>
+          <div>
+            <div class="item-label">Contact info</div>
+            <div class="item-set"><strong>Add</strong><span class="var">[Specific recommended contact methods.]</span></div>
+            <p class="item-why"><span class="var">[One sentence on which channel recruiters in this space actually use.]</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="box" aria-hidden="true"></span>
+          <div>
+            <div class="item-label">Creator mode</div>
+            <div class="item-set"><strong>Recommended</strong><span class="var">[On / Off based on candidate situation]</span></div>
+            <p class="item-why"><span class="var">[One to two sentences on what creator mode gains and what it costs for this specific search.]</span></p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="rail-bottom">
+      <span>Section 07 — Profile Settings Checklist</span>
+      <span class="pageno"><em>11</em>of 13</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PAGE 12 — 08 NEXT 7 DAYS
+       ============================================================ -->
+  <section class="page" data-screen-label="12 Next 7 Days" aria-label="Next 7 days">
+    <div class="rail-top">
+      <span><span class="var">[Company Name]</span> × <span class="var">[Client Full Name]</span></span>
+      <span>LinkedIn Rebuild</span>
+    </div>
+
+    <div class="page-pad">
+      <div class="kicker"><span class="num">08</span><span>Section</span></div>
+      <h1 class="section-title">What to do in the next 7 days</h1>
+
+      <hr class="rule-mint loose" />
+
+      <ol class="num-list"><li><img class="nl-num-img" src="num/n-01.png" alt="01" /><span class="nl-body"><span class="var">[Specific action 1 — usually paste the new headline and About.]</span></span></li><li><img class="nl-num-img" src="num/n-02.png" alt="02" /><span class="nl-body"><span class="var">[Specific action 2 — update the custom URL before anything else changes.]</span></span></li><li><img class="nl-num-img" src="num/n-03.png" alt="03" /><span class="nl-body"><span class="var">[Specific action 3 — refresh the photo and banner per Section 01.]</span></span></li><li><img class="nl-num-img" src="num/n-04.png" alt="04" /><span class="nl-body"><span class="var">[Specific action 4 — paste the rewritten current role.]</span></span></li><li><img class="nl-num-img" src="num/n-05.png" alt="05" /><span class="nl-body"><span class="var">[Specific action 5 — paste the second most recent role.]</span></span></li><li><img class="nl-num-img" src="num/n-06.png" alt="06" /><span class="nl-body"><span class="var">[Specific action 6 — re-pin the Top 3 skills.]</span></span></li><li><img class="nl-num-img" src="num/n-07.png" alt="07" /><span class="nl-body"><span class="var">[Specific action 7 — turn on the Open to Work / contact settings as recommended.]</span></span></li></ol>
+
+      <hr class="rule-mint loose" />
+
+      <!-- Closing instruction — italic serif, editorial -->
+      <p style="font-family:var(--serif); font-style:italic; font-size:13pt; line-height:1.5; color:var(--forest); margin:0; max-width:5.8in;">
+        If you only have time for two of these in week one: do <strong style="font-style:normal; color:var(--emerald);"><span class="var">[two highest-leverage actions]</span></strong>. The headline and About section drive most of the recruiter outreach you’ll see in the first thirty days.
+      </p>
+    </div>
+
+    <div class="rail-bottom">
+      <span>Section 08 — Next 7 Days</span>
+      <span class="pageno"><em>12</em>of 13</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PAGE 13 — 09 NEXT 30 DAYS + CLOSE
+       ============================================================ -->
+  <section class="page" data-screen-label="13 Next 30 Days &amp; Close" aria-label="Next 30 days and closing">
+    <div class="rail-top">
+      <span><span class="var">[Company Name]</span> × <span class="var">[Client Full Name]</span></span>
+      <span>LinkedIn Rebuild</span>
+    </div>
+
+    <div class="page-pad">
+      <div class="kicker"><span class="num">09</span><span>Section</span></div>
+      <h1 class="section-title">What to do in the next 30 days</h1>
+
+      <hr class="rule-mint" />
+
+      <ol class="num-list tight"><li><img class="nl-num-img" src="num/n-01.png" alt="01" /><span class="nl-body"><span class="var">[Longer-term action 1.]</span></span></li><li><img class="nl-num-img" src="num/n-02.png" alt="02" /><span class="nl-body"><span class="var">[Longer-term action 2.]</span></span></li><li><img class="nl-num-img" src="num/n-03.png" alt="03" /><span class="nl-body"><span class="var">[Longer-term action 3.]</span></span></li><li><img class="nl-num-img" src="num/n-04.png" alt="04" /><span class="nl-body"><span class="var">[Longer-term action 4.]</span></span></li><li><img class="nl-num-img" src="num/n-05.png" alt="05" /><span class="nl-body"><span class="var">[Longer-term action 5.]</span></span></li><li><img class="nl-num-img" src="num/n-06.png" alt="06" /><span class="nl-body"><span class="var">[Longer-term action 6.]</span></span></li><li><img class="nl-num-img" src="num/n-07.png" alt="07" /><span class="nl-body"><span class="item-strong">Schedule a quarterly check-in with yourself.</span> In three months, review whether the rebuilt profile is generating recruiter outreach in your target space. If yes, the rebuild is working. If no, send us a note and we’ll do a 15-minute audit pass at no charge.</span></li></ol>
+
+      <hr class="rule-mint loose" />
+
+      <!-- Closing letter — set apart in forest with a left-rule, editorial -->
+      <div style="margin-top:14pt; padding:18pt 22pt; background:var(--forest); color:var(--cream);">
+        <div style="font-family:var(--sans); font-size:8.5pt; font-weight:700; letter-spacing:0.28em; text-transform:uppercase; color:var(--mint); margin-bottom:14pt;">Questions?</div>
+        <p style="font-family:var(--serif); font-size:13pt; line-height:1.5; margin:0 0 12pt; color:var(--cream); max-width:5.6in;">
+          Reply to the email this PDF was attached to, or send us a note at <em style="color:var(--mint); font-style:normal;"><span class="var">[hello@companywebsite.com]</span></em>. We’re happy to clarify anything in this rebuild.
+        </p>
+        <p style="font-family:var(--sans); font-size:9.5pt; line-height:1.6; margin:0; color:var(--sage);">
+          If you’d like a future rebuild as your career evolves, we offer returning-client pricing. Most clients come back every 18–24 months as they level up.
+        </p>
+      </div>
+
+      <!-- Sign-off, on cream beneath the forest block -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:22pt;">
+        <div>
+          <p style="font-family:var(--serif); font-style:italic; font-size:15pt; color:var(--forest); margin:0 0 6pt;">Good luck with the search.</p>
+          <p style="font-family:var(--sans); font-size:9pt; letter-spacing:0.2em; text-transform:uppercase; color:var(--emerald); margin:0; font-weight:600;">— <span class="var">[Company Name]</span> Team</p>
+        </div>
+        <div style="text-align:right;">
+          <div style="display:inline-flex; align-items:center; justify-content:center; width:84px; height:48px; border:1.25px dashed var(--emerald); font-family:var(--mono); font-size:8pt; letter-spacing:0.22em; text-transform:uppercase; color:var(--emerald);">[ Logo ]</div>
+          <div style="font-family:var(--serif); font-style:italic; font-size:10pt; color:var(--emerald); margin-top:6pt;"><span class="var">[companywebsite.com]</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rail-bottom">
+      <span>Section 09 — Next 30 Days</span>
+      <span class="pageno"><em>13</em>of 13</span>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
